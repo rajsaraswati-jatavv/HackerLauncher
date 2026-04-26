@@ -295,7 +295,6 @@
     <item type="id" name="scrollViewSubnet" />
     <item type="id" name="etSubnetHost" />
     <item type="id" name="etSubnetPort" />
-    <item type="id" name="scanProgressBar" />
 
     <!-- Bluetooth Scanner -->
     <item type="id" name="tvBluetoothOutput" />
