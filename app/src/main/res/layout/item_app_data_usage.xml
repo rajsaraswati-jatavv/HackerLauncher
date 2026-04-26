@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:gravity="center_vertical"
+    android:background="#0A0A0A">
+
+    <TextView
+        android:id="@+id/textViewAppName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="#00FF00"
+        android:textSize="12sp"
+        android:fontFamily="monospace"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/textViewMobileUsage"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFF00"
+        android:textSize="11sp"
+        android:fontFamily="monospace"
+        android:gravity="end" />
+
+    <TextView
+        android:id="@+id/textViewWifiUsage"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:textColor="#00CCFF"
+        android:textSize="11sp"
+        android:fontFamily="monospace"
+        android:gravity="end"
+        android:layout_marginStart="4dp" />
+
+    <TextView
+        android:id="@+id/textViewTotalUsage"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:textColor="#FF6600"
+        android:textSize="11sp"
+        android:fontFamily="monospace"
+        android:gravity="end"
+        android:layout_marginStart="4dp" />
+</LinearLayout>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="APP CACHE CLEANER"
+        android:textColor="#00FF00"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Search & Select All Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <EditText
+            android:id="@+id/editTextSearch"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:hint="Search app..."
+            android:textColor="#00FF00"
+            android:textColorHint="#555555"
+            android:background="#111111"
+            android:fontFamily="monospace"
+            android:textSize="13sp"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
+            android:singleLine="true"
+            android:layout_marginEnd="8dp" />
+
+        <CheckBox
+            android:id="@+id/checkBoxSelectAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select All"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:buttonTint="#00FF41" />
+    </LinearLayout>
+
+    <!-- Total Cache -->
+    <TextView
+        android:id="@+id/textViewTotalCache"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Total Cache: 0 B"
+        android:textColor="#FFFF00"
+        android:textSize="14sp"
+        android:fontFamily="monospace"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Scan Progress -->
+    <ProgressBar
+        android:id="@+id/progressBarScan"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:max="100"
+        android:progress="0"
+        android:progressTint="#00FF00"
+        android:progressBackgroundTint="#1A1A1A"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Clean Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonCleanAll"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="Clean All"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            app:backgroundTint="#1B3A1B"
+            app:strokeColor="#00FF00"
+            android:layout_marginEnd="6dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonCleanSelected"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="Clean Selected"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            app:backgroundTint="#1B3A1B"
+            app:strokeColor="#00FF00" />
+    </LinearLayout>
+
+    <!-- Apps Recycler -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewApps"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#0A0A0A" />
+
+</LinearLayout>

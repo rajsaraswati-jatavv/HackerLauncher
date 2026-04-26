@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:gravity="center_vertical"
+    android:background="#0A0A0A">
+
+    <CheckBox
+        android:id="@+id/cbAppSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="#00FF00" />
+
+    <ImageView
+        android:id="@+id/ivAppIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="8dp">
+
+        <TextView
+            android:id="@+id/tvAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#00FF00"
+            android:textSize="14sp"
+            android:fontFamily="monospace" />
+
+        <TextView
+            android:id="@+id/tvAppPackageName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#888888"
+            android:textSize="11sp"
+            android:fontFamily="monospace" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvAppCacheSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFF00"
+        android:textSize="12sp"
+        android:fontFamily="monospace"
+        android:layout_marginEnd="8dp" />
+
+    <TextView
+        android:id="@+id/tvAppDataSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF6600"
+        android:textSize="12sp"
+        android:fontFamily="monospace" />
+</LinearLayout>

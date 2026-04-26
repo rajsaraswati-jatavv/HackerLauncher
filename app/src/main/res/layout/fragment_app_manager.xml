@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="APP MANAGER"
+        android:textColor="#00FF00"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Search & Filter Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <EditText
+            android:id="@+id/editTextSearch"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:hint="Search..."
+            android:textColor="#00FF00"
+            android:textColorHint="#555555"
+            android:background="#111111"
+            android:fontFamily="monospace"
+            android:textSize="13sp"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
+            android:singleLine="true"
+            android:layout_marginEnd="6dp" />
+
+        <Spinner
+            android:id="@+id/spinnerSortBy"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="#111111"
+            android:popupBackground="#111111"
+            android:layout_marginEnd="4dp" />
+
+        <Spinner
+            android:id="@+id/spinnerFilter"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="#111111"
+            android:popupBackground="#111111" />
+    </LinearLayout>
+
+    <!-- App Count -->
+    <TextView
+        android:id="@+id/textViewAppCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Apps: 0"
+        android:textColor="#00FF00"
+        android:textSize="14sp"
+        android:fontFamily="monospace"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Loading Progress -->
+    <ProgressBar
+        android:id="@+id/progressBarLoading"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:max="100"
+        android:progress="0"
+        android:progressTint="#00FF00"
+        android:progressBackgroundTint="#1A1A1A"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Action Buttons Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonBatchUninstall"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="Uninstall Selected"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="11sp"
+            app:backgroundTint="#1B3A1B"
+            app:strokeColor="#00FF00"
+            android:layout_marginEnd="6dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonExportList"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="Export List"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            app:backgroundTint="#1B3A1B"
+            app:strokeColor="#00FF00" />
+    </LinearLayout>
+
+    <!-- Apps Recycler -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewApps"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#0A0A0A" />
+
+</LinearLayout>

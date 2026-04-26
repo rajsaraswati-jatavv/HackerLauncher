@@ -45,10 +45,14 @@ class MainActivity : AppCompatActivity() {
         "battery", "ramcleaner", "processmgr", "speedtest",
         "qrscanner", "compass", "downloads", "contacts",
         "sms", "calllog", "calendar", "syscleaner",
-        // Original hacker tools
+        // Storage cleaner tools
+        "dupcleaner", "storageanalyzer", "appcache", "bigfiles",
+        // Hacker tools
         "terminal", "network", "osint", "crypto", "web",
         "anonymity", "files", "automation", "chat",
-        "root", "wifarsenal", "subnetscan", "password", "bluetooth"
+        "root", "wifarsenal", "subnetscan", "password", "bluetooth",
+        // Power tools
+        "cpumonitor", "netspeed", "appmgr", "datausage"
     )
 
     private val tabLabels = listOf(
@@ -60,10 +64,14 @@ class MainActivity : AppCompatActivity() {
         "Batt", "RAM", "Proc", "Speed",
         "QR", "Comp", "DL", "Cont",
         "SMS", "Call", "Cal", "Clean",
+        // Storage cleaner tools
+        "Dup", "Store", "Cache", "BigF",
         // Hacker tools
         "Term", "Net", "OSINT", "Crypt", "Web",
         "Anon", "Files", "Auto", "Chat",
-        "Root", "WiFi", "Sub", "Pass", "BT"
+        "Root", "WiFi", "Sub", "Pass", "BT",
+        // Power tools
+        "CPU", "NetS", "AppM", "Data"
     )
 
     private lateinit var gestureDetector: GestureDetector
@@ -128,7 +136,7 @@ class MainActivity : AppCompatActivity() {
     private fun showDisclaimer() {
         AlertDialog.Builder(this)
             .setTitle("DISCLAIMER")
-            .setMessage("HackerLauncher v6.0 Ultimate is designed for EDUCATIONAL and AUTHORIZED TESTING purposes only.\n\n" +
+            .setMessage("HackerLauncher v9.0 NEXT LEVEL is designed for EDUCATIONAL and AUTHORIZED TESTING purposes only.\n\n" +
                 "By using this application, you agree that:\n\n" +
                 "1. You will ONLY use these tools on systems you own or have explicit permission to test.\n" +
                 "2. You are solely responsible for any actions performed using this application.\n" +
@@ -186,21 +194,31 @@ class MainActivity : AppCompatActivity() {
         22 -> CallLogFragment()
         23 -> CalendarFragment()
         24 -> SystemCleanerFragment()
+        // Storage cleaner tools
+        25 -> DuplicateFileCleanerFragment()
+        26 -> StorageAnalyzerFragment()
+        27 -> AppCacheCleanerFragment()
+        28 -> BigFileFinderFragment()
         // Hacker tools
-        25 -> TerminalFragment()
-        26 -> NetworkModuleFragment()
-        27 -> OsintFragment()
-        28 -> CryptoFragment()
-        29 -> WebTestFragment()
-        30 -> AnonymityFragment()
-        31 -> FileFragment()
-        32 -> AutomationFragment()
-        33 -> ChatFragment()
-        34 -> RootToolsFragment()
-        35 -> WifiArsenalFragment()
-        36 -> SubnetScannerFragment()
-        37 -> PasswordToolsFragment()
-        38 -> BluetoothScannerFragment()
+        29 -> TerminalFragment()
+        30 -> NetworkModuleFragment()
+        31 -> OsintFragment()
+        32 -> CryptoFragment()
+        33 -> WebTestFragment()
+        34 -> AnonymityFragment()
+        35 -> FileFragment()
+        36 -> AutomationFragment()
+        37 -> ChatFragment()
+        38 -> RootToolsFragment()
+        39 -> WifiArsenalFragment()
+        40 -> SubnetScannerFragment()
+        41 -> PasswordToolsFragment()
+        42 -> BluetoothScannerFragment()
+        // Power tools
+        43 -> CpuMonitorFragment()
+        44 -> NetworkSpeedMonitorFragment()
+        45 -> AppManagerFragment()
+        46 -> DataUsageTrackerFragment()
         else -> TerminalFragment()
     }
 

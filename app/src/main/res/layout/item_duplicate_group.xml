@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="#0A0A0A">
+
+    <LinearLayout
+        android:id="@+id/layoutDuplicateHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvDuplicateFileName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#00FF00"
+            android:textSize="13sp"
+            android:fontFamily="monospace"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/tvDuplicateFileSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFF00"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:layout_marginStart="8dp" />
+
+        <TextView
+            android:id="@+id/tvDuplicateCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#888888"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:layout_marginStart="8dp" />
+
+        <TextView
+            android:id="@+id/tvDuplicateCopyCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FF6600"
+            android:textSize="11sp"
+            android:fontFamily="monospace"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutDuplicatePaths"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="4dp" />
+</LinearLayout>

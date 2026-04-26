@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="STORAGE ANALYZER"
+            android:textColor="#00FF00"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Storage Tabs -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabStorage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#111111"
+            app:tabTextColor="#00FF00"
+            app:tabSelectedTextColor="#FFFF00"
+            app:tabIndicatorColor="#00FF00"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Pie Chart View -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="8dp">
+
+            <view
+                class="com.hackerlauncher.modules.StorageAnalyzerFragment$StoragePieView"
+                android:id="@+id/storagePieView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+        </FrameLayout>
+
+        <!-- Storage Progress Bar -->
+        <ProgressBar
+            android:id="@+id/storageProgressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="12dp"
+            android:max="100"
+            android:progress="0"
+            android:progressTint="#00FF00"
+            android:progressBackgroundTint="#1A1A1A"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Total Storage -->
+        <TextView
+            android:id="@+id/textViewTotalStorage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total: --"
+            android:textColor="#00FF00"
+            android:textSize="14sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Used Storage -->
+        <TextView
+            android:id="@+id/textViewUsedStorage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Used: --"
+            android:textColor="#FFFF00"
+            android:textSize="14sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Free Storage -->
+        <TextView
+            android:id="@+id/textViewFreeStorage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Free: --"
+            android:textColor="#00FF00"
+            android:textSize="14sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Quick Clean Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonQuickClean"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Quick Clean"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            app:backgroundTint="#1B3A1B"
+            app:strokeColor="#00FF00"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Largest Files Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LARGEST FILES"
+            android:textColor="#00FF00"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Large Files Recycler -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewLargeFiles"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#0A0A0A"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Categories Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CATEGORIES"
+            android:textColor="#00FF00"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Categories Recycler -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewCategories"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#0A0A0A"
+            android:nestedScrollingEnabled="false" />
+
+    </LinearLayout>
+</ScrollView>

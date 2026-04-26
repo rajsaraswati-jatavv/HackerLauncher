@@ -13,8 +13,8 @@ android {
         applicationId "com.hackerlauncher"
         minSdk 26
         targetSdk 34
-        versionCode 8
-        versionName "8.0.0-Ultimate"
+        versionCode 9
+        versionName "9.0.0-NEXTLEVEL"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

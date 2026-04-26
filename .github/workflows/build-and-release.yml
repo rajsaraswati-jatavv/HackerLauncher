@@ -1,157 +1,102 @@
-name: Build & Release v8 Ultimate
+name: Build and Release APK
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   workflow_dispatch:
-    inputs:
-      release_version:
-        description: 'Release version (e.g., 8.0.0). Leave empty for build-only.'
-        required: false
-        default: '8.0.0'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+    - name: Create local.properties
+      run: echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.5'
-          validate-wrappers: false
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
 
-      - name: Create google-services.json
-        run: |
-          if [ -n "${{ secrets.GOOGLE_SERVICES_JSON }}" ]; then
-            echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
-          else
-            echo '{"project_info":{"project_number":"000000000000","project_id":"placeholder-project","storage_bucket":"placeholder-project.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:000000000000:android:0000000000000000","android_client_info":{"package_name":"com.hackerlauncher"}},"oauth_client":[{"client_id":"000000000000-000000000000000000000.apps.googleusercontent.com","client_type":3}],"api_key":[{"current_key":"placeholder-api-key"}],"services":{"appinvite_service":{"other_platform_oauth_client":[]}}}],"configuration_version":"1"}' > app/google-services.json
-          fi
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
 
-      - name: Create placeholder mipmap resources
-        run: |
-          mkdir -p app/src/main/res/mipmap-hdpi app/src/main/res/mipmap-mdpi app/src/main/res/mipmap-xhdpi app/src/main/res/mipmap-xxhdpi app/src/main/res/mipmap-xxxhdpi
-          python3 -c "
-          import struct, zlib
-          def create_png(w, h, color=(0, 255, 0)):
-              def chunk(ctype, data):
-                  c = ctype + data
-                  return struct.pack('>I', len(data)) + c + struct.pack('>I', zlib.crc32(c) & 0xffffffff)
-              raw = b''
-              for y in range(h):
-                  raw += b'\\x00'
-                  for x in range(w):
-                      raw += bytes(color) + b'\\xff'
-              return b'\\x89PNG\\r\\n\\x1a\\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', w, h, 8, 6, 0, 0, 0)) + chunk(b'IDAT', zlib.compress(raw)) + chunk(b'IEND', b'')
-          for size, name in [(48,'mdpi'),(72,'hdpi'),(96,'xhdpi'),(144,'xxhdpi'),(192,'xxxhdpi')]:
-              with open(f'app/src/main/res/mipmap-{name}/ic_launcher.png', 'wb') as f:
-                  f.write(create_png(size, size))
-              with open(f'app/src/main/res/mipmap-{name}/ic_launcher_round.png', 'wb') as f:
-                  f.write(create_png(size, size))
-          "
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug --stacktrace
 
-      - name: Ensure arrays.xml exists
-        run: |
-          mkdir -p app/src/main/res/values
-          if [ ! -f app/src/main/res/values/arrays.xml ]; then
-            cat > app/src/main/res/values/arrays.xml << 'XMLEOF'
-          <?xml version="1.0" encoding="utf-8"?>
-          <resources>
-            <string-array name="grid_size_entries"><item>3x3</item><item>4x4</item><item>4x5</item><item>5x5</item><item>6x6</item></string-array>
-            <string-array name="grid_size_values"><item>3x3</item><item>4x4</item><item>4x5</item><item>5x5</item><item>6x6</item></string-array>
-            <string-array name="sort_order_entries"><item>A-Z</item><item>Z-A</item><item>Install Date</item><item>Most Used</item></string-array>
-            <string-array name="sort_order_values"><item>alpha</item><item>alpha_reverse</item><item>install_date</item><item>most_used</item></string-array>
-            <string-array name="gesture_action_entries"><item>None</item><item>Open Drawer</item><item>Open Search</item><item>Open Settings</item><item>Lock Device</item><item>Notifications</item></string-array>
-            <string-array name="gesture_action_values"><item>none</item><item>drawer</item><item>search</item><item>settings</item><item>lock</item><item>notifications</item></string-array>
-            <string-array name="color_theme_entries"><item>Matrix Green</item><item>Cyber Red</item><item>Neon Blue</item><item>Purple Haze</item><item>Amber</item><item>White Ice</item></string-array>
-            <string-array name="color_theme_values"><item>matrix_green</item><item>cyber_red</item><item>neon_blue</item><item>purple_haze</item><item>amber</item><item>white_ice</item></string-array>
-            <string-array name="lock_method_entries"><item>PIN</item><item>Pattern</item><item>Biometric</item></string-array>
-            <string-array name="lock_method_values"><item>pin</item><item>pattern</item><item>biometric</item></string-array>
-          </resources>
-          XMLEOF
-          fi
+    - name: Build Release APK
+      run: ./gradlew assembleRelease --stacktrace
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+    - name: Get version info
+      id: version
+      run: |
+        VERSION_NAME=$(grep 'versionName' app/build.gradle | sed 's/.*"\(.*\)".*/\1/' | head -1)
+        VERSION_CODE=$(grep 'versionCode' app/build.gradle | sed 's/.* \([0-9]*\).*/\1/' | head -1)
+        echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+        echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+        echo "Building version: $VERSION_NAME ($VERSION_CODE)"
 
-      - name: Build Debug APK
-        run: gradle assembleDebug --no-daemon --stacktrace 2>&1 || true
+    - name: List APK files
+      run: |
+        echo "=== Debug APK ==="
+        ls -la app/build/outputs/apk/debug/ || true
+        echo "=== Release APK ==="
+        ls -la app/build/outputs/apk/release/ || true
 
-      - name: Check if APK was built
-        id: check_apk
-        run: |
-          if ls app/build/outputs/apk/debug/*.apk 1> /dev/null 2>&1; then
-            echo "apk_exists=true" >> $GITHUB_OUTPUT
-            echo "APK built successfully"
-            ls -la app/build/outputs/apk/debug/*.apk
-          else
-            echo "apk_exists=false" >> $GITHUB_OUTPUT
-            echo "APK build may have issues"
-            ls -la app/build/outputs/apk/debug/ 2>/dev/null || true
-          fi
+    - name: Upload Debug APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: HackerLauncher-debug-v${{ steps.version.outputs.version_name }}
+        path: app/build/outputs/apk/debug/*.apk
 
-      - name: Upload APK as Artifact
-        if: steps.check_apk.outputs.apk_exists == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: HackerLauncher-v8-Ultimate-debug
-          path: app/build/outputs/apk/debug/*.apk
-          retention-days: 30
+    - name: Upload Release APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: HackerLauncher-release-v${{ steps.version.outputs.version_name }}
+        path: app/build/outputs/apk/release/*.apk
 
-      - name: Create GitHub Release
-        if: steps.check_apk.outputs.apk_exists == 'true'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: v8.0.0
-          name: HackerLauncher v8.0.0 Ultimate
-          body: |
-            ## HackerLauncher v8.0.0 Ultimate
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v${{ steps.version.outputs.version_name }}
+        name: HackerLauncher v${{ steps.version.outputs.version_name }}
+        body: |
+          # HackerLauncher v${{ steps.version.outputs.version_name }}
 
-            🔥 **THE MOST POWERFUL ANDROID LAUNCHER EVER BUILT**
+          ## Next Level Features
+          - **Upgraded RAM Cleaner** - Real-time graph, hibernation, smart clean, memory leak detector, defrag visualization
+          - **Duplicate File Cleaner** - MD5 hash-based duplicate detection with category filters
+          - **Storage Analyzer** - Visual pie chart, largest files, category breakdown
+          - **App Cache Cleaner** - One-click cache cleaning for all apps
+          - **Big File Finder** - Find files larger than configurable threshold
+          - **CPU Monitor** - Real-time CPU usage graph, temperature, frequency, process killer
+          - **Network Speed Monitor** - Live speed graph, latency test, speed test
+          - **App Manager** - Batch uninstall, export, search, sort & filter
+          - **Data Usage Tracker** - Mobile/WiFi usage, per-app breakdown, usage alerts
+          - **47 Total Modules** - The most powerful Android launcher
+          - **7 Always-Running Services** - Daemon, Watchdog, KeepAlive (6 layers), Network Monitor, Process Monitor, System Monitor, Location Tracker
+          - **60+ Permissions** - Full system access
+          - **Live Wallpaper** - Matrix rain, glitch effect, particle network
+          - **Firebase Auth** - Google + GitHub login
+          - **App Lock** - Biometric/PIN lock for apps
 
-            ### 🆕 v8.0.0 Changes
-            - **FIXED**: All 30+ View ID mismatches between Kotlin code and XML layouts (RAM Cleaner, Battery Optimizer, Process Manager, System Cleaner)
-            - **FIXED**: Notification channel ID mismatches in 5 services (KeepAlive, NetworkMonitor, LocationTracker, ProcessMonitor, SystemMonitor)
-            - **FIXED**: Missing LockScreenActivity & FakeCrashActivity in AndroidManifest.xml
-            - **FIXED**: AppLockService direct instantiation bug (never instantiate Service with constructor)
-            - **FIXED**: OverlayService missing foreground notification (was getting killed on Android 8+)
-            - **FIXED**: PreferencesManager.takeLast() bug (was returning new list but not modifying original)
-            - **FIXED**: NetworkMonitorService getTotalRxBytes() dead code
-            - **FIXED**: GeofenceBroadcastReceiver putExtra type mismatch (String vs Int)
-            - **UPGRADED**: RAM Cleaner now has process whitelist, deep cache clean, clean statistics tracking
-            - **UPGRADED**: All item layouts rewritten with proper view IDs matching adapter code
-            - **UPGRADED**: Battery Optimizer now has full charging alarm UI with threshold input
-            - **UPGRADED**: Process Manager now has refresh button, CPU usage display, empty state
-            - **UPGRADED**: System Cleaner now has select all, clean selected, storage detail, junk path/category display
-
-            ### 🏠 Complete Launcher Features (20+)
-            Home Screen, App Drawer, App Search, Quick Settings, Weather Widget, App Info, App Folders, App Lock (PIN/Biometric/Intruder Photo/Fake Crash), Notification Badges, Gesture Manager, Icon Pack Manager, 6 Color Themes, Calculator, Encrypted Notes, Todo Manager, Device Info, Recent Apps, Complete Settings, Device Admin Lock, Weather Widget
-
-            ### 🛠️ 30+ Tool Modules
-            Terminal, Network, OSINT, Crypto, WebTest, Anonymity, File Manager, Automation, AI Chat, Root Tools, WiFi Arsenal, Subnet Scanner, Password Tools, Bluetooth Scanner, Clipboard Manager, Screen Recorder, Audio Recorder, Flashlight, Battery Optimizer, RAM Cleaner, Process Manager, Speed Test, QR Scanner, Compass, Download Manager, Contacts Manager, SMS Manager, Call Log, Calendar, System Cleaner
-
-            ### ⚡ ALWAYS-RUNNING SERVICES (7)
-            DaemonService, WatchdogService, KeepAliveService (6-layer), NetworkMonitorService, LocationTrackerService, ProcessMonitorService, SystemMonitorService
-
-            ### 🔒 80+ Permissions | 🎨 7 Live Wallpaper Effects
-
-            ### Disclaimer
-            For educational and authorized testing purposes only.
-          files: app/build/outputs/apk/debug/*.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        files: |
+          app/build/outputs/apk/debug/*.apk
+          app/build/outputs/apk/release/*.apk
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

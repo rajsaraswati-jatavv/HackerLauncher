@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="6dp"
+    android:gravity="center_vertical"
+    android:background="#0A0A0A">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewProcessName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#00FF00"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/textViewPid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#666666"
+            android:textSize="10sp"
+            android:fontFamily="monospace" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewCpu"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFF00"
+        android:textSize="12sp"
+        android:fontFamily="monospace"
+        android:gravity="end" />
+
+    <TextView
+        android:id="@+id/textViewMemory"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:textColor="#FF6600"
+        android:textSize="12sp"
+        android:fontFamily="monospace"
+        android:gravity="end"
+        android:layout_marginStart="8dp" />
+
+    <Button
+        android:id="@+id/buttonKill"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:text="Kill"
+        android:textColor="#000000"
+        android:backgroundTint="#FF4444"
+        android:fontFamily="monospace"
+        android:textSize="10sp"
+        android:minWidth="40dp"
+        android:layout_marginStart="8dp" />
+</LinearLayout>
