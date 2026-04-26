@@ -8,7 +8,8 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.view.animation.AnimationSet
-import android.view.animation.TranslateAnimation
+import android.content.Intent
+import com.hackerlauncher.livewallpaper.HackerWallpaperService
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -394,32 +395,4 @@ class ThemeManager private constructor(private val context: Context) {
     }
 }
 
-// ─── Hacker Wallpaper Service Stub ────────────────────────────────────────────
 
-class HackerWallpaperService : android.app.Service() {
-    companion object {
-        const val ACTION_START = "com.hackerlauncher.action.WALLPAPER_START"
-        const val ACTION_STOP = "com.hackerlauncher.action.WALLPAPER_STOP"
-    }
-
-    override fun onBind(intent: android.content.Intent?): android.os.IBinder? = null
-
-    override fun onStartCommand(intent: android.content.Intent?, flags: Int, startId: Int): Int {
-        when (intent?.action) {
-            ACTION_START -> {
-                // Start matrix rain wallpaper
-                // Implementation would use WallpaperService.Engine
-            }
-            ACTION_STOP -> {
-                stopSelf()
-            }
-        }
-        return START_NOT_STICKY
-    }
-}
-
-// ─── Intent import for wallpaper service ──────────────────────────────────────
-
-private fun Intent(action: String): android.content.Intent {
-    return android.content.Intent(action)
-}

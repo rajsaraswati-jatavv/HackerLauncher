@@ -21,67 +21,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
-// ─── App Info Data Class ──────────────────────────────────────────────────────
-
-data class AppInfo(
-    val packageName: String,
-    val activityName: String,
-    val label: String,
-    val icon: Drawable,
-    val isSystemApp: Boolean = false,
-    var notificationCount: Int = 0,
-    var isSelected: Boolean = false
-) {
-    fun getComponentName(): ComponentName = ComponentName(packageName, activityName)
-}
-
-// ─── View Mode ────────────────────────────────────────────────────────────────
-
-enum class ViewMode {
-    GRID,    // Icon + label, 4 columns
-    LIST     // Icon + name + package + size
-}
-
-// ─── Grid ViewHolder ──────────────────────────────────────────────────────────
-
-class AppGridViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val icon: ImageView = itemView.findViewById(R.id.app_icon)
-    val label: TextView = itemView.findViewById(R.id.app_label)
-    val badge: TextView = itemView.findViewById(R.id.notification_badge)
-    val checkbox: CheckBox = itemView.findViewById(R.id.app_checkbox)
-}
-
-// ─── List ViewHolder ──────────────────────────────────────────────────────────
-
-class AppListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val icon: ImageView = itemView.findViewById(R.id.app_icon)
-    val name: TextView = itemView.findViewById(R.id.app_name)
-    val pkg: TextView = itemView.findViewById(R.id.app_package)
-    val size: TextView = itemView.findViewById(R.id.app_size)
-    val badge: TextView = itemView.findViewById(R.id.notification_badge)
-    val checkbox: CheckBox = itemView.findViewById(R.id.app_checkbox)
-}
-
-// ─── DiffUtil Callback ────────────────────────────────────────────────────────
-
-class AppDiffCallback(
-    private val oldList: List<AppInfo>,
-    private val newList: List<AppInfo>
-) : DiffUtil.Callback() {
-
-    override fun getOldListSize() = oldList.size
-    override fun getNewListSize() = newList.size
-
-    override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean {
-        return oldList[oldPos].packageName == newList[newPos].packageName &&
-               oldList[oldPos].activityName == newList[newPos].activityName
-    }
-
-    override fun areContentsTheSame(oldPos: Int, newPos: Int): Boolean {
-        return oldList[oldPos] == newList[newPos]
-    }
-}
-
 // ─── App Adapter ──────────────────────────────────────────────────────────────
 
 class AppAdapter(
@@ -95,6 +34,31 @@ class AppAdapter(
     companion object {
         private const val TYPE_GRID = 0
         private const val TYPE_LIST = 1
+
+        fun fromResolveInfo(context: Context, resolveInfos: List<ResolveInfo>): List<AppInfo> {
+            val pm = context.packageManager
+            return resolveInfos.mapNotNull { info ->
+                try {
+                    val activityInfo = info.activityInfo
+                    AppInfo(
+                        packageName = activityInfo.packageName,
+                        activityName = activityInfo.name,
+                        label = info.loadLabel(pm).toString(),
+                        icon = info.loadIcon(pm),
+                        isSystemApp = (activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+                    )
+                } catch (_: Exception) { null }
+            }
+        }
+
+        fun getInstalledApps(context: Context): List<AppInfo> {
+            val pm = context.packageManager
+            val intent = Intent(Intent.ACTION_MAIN).apply {
+                addCategory(Intent.CATEGORY_LAUNCHER)
+            }
+            val resolveInfos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER)
+            return fromResolveInfo(context, resolveInfos)
+        }
     }
 
     private var apps = listOf<AppInfo>()
@@ -501,32 +465,4 @@ class AppAdapter(
         }
     }
 
-    // ─── Resolve AppInfo from ResolveInfo ──────────────────────────────────
-
-    companion object {
-        fun fromResolveInfo(context: Context, resolveInfos: List<ResolveInfo>): List<AppInfo> {
-            val pm = context.packageManager
-            return resolveInfos.mapNotNull { info ->
-                try {
-                    val activityInfo = info.activityInfo
-                    AppInfo(
-                        packageName = activityInfo.packageName,
-                        activityName = activityInfo.name,
-                        label = info.loadLabel(pm).toString(),
-                        icon = info.loadIcon(pm),
-                        isSystemApp = (activityInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
-                    )
-                } catch (_: Exception) { null }
-            }
-        }
-
-        fun getInstalledApps(context: Context): List<AppInfo> {
-            val pm = context.packageManager
-            val intent = Intent(Intent.ACTION_MAIN).apply {
-                addCategory(Intent.CATEGORY_LAUNCHER)
-            }
-            val resolveInfos = pm.queryIntentActivities(intent, PackageManager.GET_RESOLVED_FILTER)
-            return fromResolveInfo(context, resolveInfos)
-        }
-    }
 }
