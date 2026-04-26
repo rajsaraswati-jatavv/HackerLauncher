@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical">
+
+    <!-- Search Bar -->
+    <LinearLayout
+        android:id="@+id/searchBarContainer"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
+        android:background="#0A0A0A">
+
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_back"
+            android:contentDescription="Back"
+            android:tint="#00FF00"
+            android:padding="6dp" />
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="#0A1A0A"
+            android:hint="Search everything..."
+            android:textColorHint="#006600"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="14sp"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
+            android:singleLine="true"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:layout_marginStart="8dp" />
+
+        <ImageView
+            android:id="@+id/voiceSearchButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_mic"
+            android:contentDescription="Voice search"
+            android:tint="#00FF00"
+            android:padding="6dp"
+            android:layout_marginStart="4dp" />
+    </LinearLayout>
+
+    <!-- Tab Layout -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:background="#0A0A0A">
+
+        <LinearLayout
+            android:id="@+id/tabContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:paddingHorizontal="4dp">
+
+            <TextView
+                android:id="@+id/tabApps"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="APPS"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:paddingHorizontal="16dp"
+                android:background="#0A1A0A"
+                android:layout_marginHorizontal="2dp" />
+
+            <TextView
+                android:id="@+id/tabContacts"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="CONTACTS"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:paddingHorizontal="16dp"
+                android:layout_marginHorizontal="2dp" />
+
+            <TextView
+                android:id="@+id/tabFiles"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="FILES"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:paddingHorizontal="16dp"
+                android:layout_marginHorizontal="2dp" />
+
+            <TextView
+                android:id="@+id/tabWeb"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="WEB"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:paddingHorizontal="16dp"
+                android:layout_marginHorizontal="2dp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Recent Searches Section -->
+    <LinearLayout
+        android:id="@+id/recentSearchesContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/recentSearchesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">> RECENT"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recentSearchesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+
+        <TextView
+            android:id="@+id/clearRecentSearchesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[CLEAR_ALL]"
+            android:textColor="#FF3333"
+            android:fontFamily="monospace"
+            android:textSize="11sp"
+            android:paddingTop="8dp" />
+    </LinearLayout>
+
+    <!-- Search Results RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchResultsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:clipToPadding="false" />
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/emptyStateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/emptyStateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NO_RESULTS_FOUND"
+            android:textColor="#003300"
+            android:fontFamily="monospace"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/emptyStateSubtext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Try a different query"
+            android:textColor="#002200"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp" />
+    </LinearLayout>
+
+</LinearLayout>

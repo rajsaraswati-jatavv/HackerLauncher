@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Home Screen Category -->
+    <PreferenceCategory
+        android:title="@string/settings_home_screen"
+        android:icon="@drawable/ic_pin"
+        app:iconSpaceReserved="true">
+
+        <ListPreference
+            android:key="grid_size"
+            android:title="@string/pref_grid_size"
+            android:summary="@string/pref_grid_size_summary"
+            android:entries="@array/grid_size_entries"
+            android:entryValues="@array/grid_size_values"
+            android:defaultValue="4x4"
+            app:iconSpaceReserved="true" />
+
+        <ListPreference
+            android:key="icon_size"
+            android:title="@string/pref_icon_size"
+            android:summary="@string/pref_icon_size_summary"
+            android:entries="@array/icon_size_entries"
+            android:entryValues="@array/icon_size_values"
+            android:defaultValue="medium"
+            app:iconSpaceReserved="true" />
+
+        <SwitchPreference
+            android:key="show_labels"
+            android:title="@string/pref_show_labels"
+            android:summary="@string/pref_show_labels_summary"
+            android:defaultValue="true"
+            app:iconSpaceReserved="true" />
+
+        <ListPreference
+            android:key="dock_apps_count"
+            android:title="@string/pref_dock_apps_count"
+            android:summary="@string/pref_dock_apps_count_summary"
+            android:entries="@array/dock_apps_entries"
+            android:entryValues="@array/dock_apps_values"
+            android:defaultValue="5"
+            app:iconSpaceReserved="true" />
+    </PreferenceCategory>
+
+    <!-- App Drawer Category -->
+    <PreferenceCategory
+        android:title="@string/settings_app_drawer"
+        android:icon="@drawable/ic_search"
+        app:iconSpaceReserved="true">
+
+        <ListPreference
+            android:key="sort_order"
+            android:title="@string/pref_sort_order"
+            android:summary="@string/pref_sort_order_summary"
+            android:entries="@array/sort_order_entries"
+            android:entryValues="@array/sort_order_values"
+            android:defaultValue="az"
+            app:iconSpaceReserved="true" />
+
+        <Preference
+            android:key="hidden_apps"
+            android:title="@string/pref_hidden_apps"
+            android:summary="@string/pref_hidden_apps_summary"
+            app:iconSpaceReserved="true" />
+
+        <ListPreference
+            android:key="drawer_icon_size"
+            android:title="@string/pref_drawer_icon_size"
+            android:summary="@string/pref_drawer_icon_size_summary"
+            android:entries="@array/icon_size_entries"
+            android:entryValues="@array/icon_size_values"
+            android:defaultValue="medium"
+            app:iconSpaceReserved="true" />
+    </PreferenceCategory>
+
+    <!-- Gestures Category -->
+    <PreferenceCategory
+        android:title="@string/settings_gestures"
+        android:icon="@drawable/ic_drag"
+        app:iconSpaceReserved="true">
+
+        <ListPreference
+            android:key="gesture_swipe_up"
+            android:title="@string/gesture_swipe_up"
+            android:entries="@array/gesture_action_entries"
+            android:entryValues="@array/gesture_action_values"
+            android:defaultValue="open_drawer"
+            app:iconSpaceReserved="true" />
+
+        <ListPreference
+            android:key="gesture_swipe_down"
+            android:title="@string/gesture_swipe_down"
+            android:entries="@array/gesture_action_entries"
+            android:entryValues="@array/gesture_action_values"
+            android:defaultValue="open_notifications"
+            app:iconSpaceReserved="true" />
+
+        <ListPreference
+            android:key="gesture_swipe_left"
+            android:title="@string/gesture_swipe_left"
+            android:entries="@array/gesture_action_entries"
+            android:entryValues="@array/gesture_action_values"
+            android:defaultValue="none"
+            app:iconSpaceReserved="true" />
+
+        <ListPreference
+            android:key="gesture_swipe_right"
+            android:title="@string/gesture_swipe_right"
+            android:entries="@array/gesture_action_entries"
+            android:entryValues="@array/gesture_action_values"
+            android:defaultValue="none"
+            app:iconSpaceReserved="true" />
+
+        <ListPreference
+            android:key="gesture_double_tap"
+            android:title="@string/gesture_double_tap"
+            android:entries="@array/gesture_action_entries"
+            android:entryValues="@array/gesture_action_values"
+            android:defaultValue="lock_screen"
+            app:iconSpaceReserved="true" />
+
+        <ListPreference
+            android:key="gesture_long_press"
+            android:title="@string/gesture_long_press"
+            android:entries="@array/gesture_action_entries"
+            android:entryValues="@array/gesture_action_values"
+            android:defaultValue="open_quick_settings"
+            app:iconSpaceReserved="true" />
+    </PreferenceCategory>
+
+    <!-- Themes Category -->
+    <PreferenceCategory
+        android:title="@string/settings_themes"
+        android:icon="@drawable/ic_settings"
+        app:iconSpaceReserved="true">
+
+        <ListPreference
+            android:key="color_theme"
+            android:title="@string/color_theme"
+            android:entries="@array/color_theme_entries"
+            android:entryValues="@array/color_theme_values"
+            android:defaultValue="classic_green"
+            app:iconSpaceReserved="true" />
+
+        <ListPreference
+            android:key="font"
+            android:title="@string/font_style"
+            android:entries="@array/font_entries"
+            android:entryValues="@array/font_values"
+            android:defaultValue="monospace"
+            app:iconSpaceReserved="true" />
+
+        <Preference
+            android:key="wallpaper"
+            android:title="@string/pref_wallpaper"
+            android:summary="@string/pref_wallpaper_summary"
+            app:iconSpaceReserved="true" />
+
+        <SwitchPreference
+            android:key="animations"
+            android:title="@string/animations"
+            android:summary="@string/animations_summary"
+            android:defaultValue="true"
+            app:iconSpaceReserved="true" />
+    </PreferenceCategory>
+
+    <!-- App Lock Category -->
+    <PreferenceCategory
+        android:title="@string/settings_app_lock"
+        android:icon="@drawable/ic_lock"
+        app:iconSpaceReserved="true">
+
+        <ListPreference
+            android:key="lock_method"
+            android:title="@string/lock_method"
+            android:entries="@array/lock_method_entries"
+            android:entryValues="@array/lock_method_values"
+            android:defaultValue="pin"
+            app:iconSpaceReserved="true" />
+
+        <Preference
+            android:key="locked_apps"
+            android:title="@string/locked_apps"
+            app:iconSpaceReserved="true" />
+
+        <SwitchPreference
+            android:key="intruder_photo"
+            android:title="@string/intruder_photo"
+            android:summary="@string/intruder_photo_summary"
+            android:defaultValue="false"
+            app:iconSpaceReserved="true" />
+
+        <SwitchPreference
+            android:key="fake_crash"
+            android:title="@string/fake_crash"
+            android:summary="@string/fake_crash_summary"
+            android:defaultValue="false"
+            app:iconSpaceReserved="true" />
+    </PreferenceCategory>
+
+    <!-- Notifications Category -->
+    <PreferenceCategory
+        android:title="@string/settings_notifications"
+        android:icon="@drawable/ic_info"
+        app:iconSpaceReserved="true">
+
+        <SwitchPreference
+            android:key="show_badges"
+            android:title="@string/show_badges"
+            android:summary="@string/show_badges_summary"
+            android:defaultValue="true"
+            app:iconSpaceReserved="true" />
+
+        <Preference
+            android:key="notification_history"
+            android:title="@string/notification_history"
+            android:summary="@string/notification_history_summary"
+            app:iconSpaceReserved="true" />
+    </PreferenceCategory>
+
+    <!-- Services Category -->
+    <PreferenceCategory
+        android:title="@string/settings_services"
+        android:icon="@drawable/ic_settings"
+        app:iconSpaceReserved="true">
+
+        <SwitchPreference
+            android:key="foreground_service"
+            android:title="@string/foreground_service"
+            android:summary="@string/foreground_service_summary"
+            android:defaultValue="true"
+            app:iconSpaceReserved="true" />
+
+        <SwitchPreference
+            android:key="overlay"
+            android:title="@string/overlay_permission"
+            android:summary="@string/overlay_permission_summary"
+            android:defaultValue="false"
+            app:iconSpaceReserved="true" />
+
+        <Preference
+            android:key="accessibility"
+            android:title="@string/accessibility_service"
+            android:summary="@string/accessibility_service_summary"
+            app:iconSpaceReserved="true" />
+    </PreferenceCategory>
+
+    <!-- Security Category -->
+    <PreferenceCategory
+        android:title="@string/settings_security"
+        android:icon="@drawable/ic_lock"
+        app:iconSpaceReserved="true">
+
+        <SwitchPreference
+            android:key="biometric_lock"
+            android:title="@string/biometric_lock"
+            android:summary="@string/biometric_lock_summary"
+            android:defaultValue="false"
+            app:iconSpaceReserved="true" />
+
+        <ListPreference
+            android:key="auto_lock_timeout"
+            android:title="@string/auto_lock_timeout"
+            android:summary="@string/auto_lock_timeout_summary"
+            android:entries="@array/auto_lock_timeout_entries"
+            android:entryValues="@array/auto_lock_timeout_values"
+            android:defaultValue="immediate"
+            app:iconSpaceReserved="true" />
+    </PreferenceCategory>
+
+    <!-- Advanced Category -->
+    <PreferenceCategory
+        android:title="@string/settings_advanced"
+        android:icon="@drawable/ic_info"
+        app:iconSpaceReserved="true">
+
+        <SwitchPreference
+            android:key="debug_mode"
+            android:title="@string/debug_mode"
+            android:summary="@string/debug_mode_summary"
+            android:defaultValue="false"
+            app:iconSpaceReserved="true" />
+
+        <Preference
+            android:key="export_settings"
+            android:title="@string/export_settings"
+            android:summary="@string/export_settings_summary"
+            app:iconSpaceReserved="true" />
+
+        <Preference
+            android:key="reset"
+            android:title="@string/reset_settings"
+            android:summary="@string/reset_settings_summary"
+            app:iconSpaceReserved="true" />
+    </PreferenceCategory>
+
+    <!-- About Category -->
+    <PreferenceCategory
+        android:title="@string/settings_about"
+        android:icon="@drawable/ic_info"
+        app:iconSpaceReserved="true">
+
+        <Preference
+            android:key="version"
+            android:title="@string/app_version"
+            android:summary="1.0.0"
+            app:iconSpaceReserved="true" />
+
+        <Preference
+            android:key="credits"
+            android:title="@string/credits"
+            android:summary="@string/credits_summary"
+            app:iconSpaceReserved="true" />
+
+        <Preference
+            android:key="update_check"
+            android:title="@string/update_check"
+            android:summary="@string/update_check_summary"
+            app:iconSpaceReserved="true" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

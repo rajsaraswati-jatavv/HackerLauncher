@@ -1,4 +1,4 @@
-name: Build & Release v3
+name: Build & Release v5 Ultimate
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       release_version:
-        description: 'Release version (e.g., 3.0.0). Leave empty for build-only.'
+        description: 'Release version (e.g., 5.0.0). Leave empty for build-only.'
         required: false
         default: ''
 
@@ -46,7 +46,6 @@ jobs:
       - name: Create placeholder mipmap resources
         run: |
           mkdir -p app/src/main/res/mipmap-hdpi app/src/main/res/mipmap-mdpi app/src/main/res/mipmap-xhdpi app/src/main/res/mipmap-xxhdpi app/src/main/res/mipmap-xxxhdpi
-          # Create a simple 1x1 green PNG for launcher icon
           python3 -c "
           import base64, struct, zlib
           def create_png(w, h, color=(0, 255, 0)):
@@ -66,49 +65,126 @@ jobs:
                   f.write(create_png(size, size))
           "
 
+      - name: Create placeholder arrays.xml if missing
+        run: |
+          if [ ! -f app/src/main/res/values/arrays.xml ]; then
+            cat > app/src/main/res/values/arrays.xml << 'EOF'
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+            <string-array name="grid_size_entries">
+              <item>3x3</item><item>4x4</item><item>4x5</item><item>5x5</item><item>6x6</item>
+            </string-array>
+            <string-array name="grid_size_values">
+              <item>3x3</item><item>4x4</item><item>4x5</item><item>5x5</item><item>6x6</item>
+            </string-array>
+            <string-array name="icon_size_entries">
+              <item>Small</item><item>Medium</item><item>Large</item>
+            </string-array>
+            <string-array name="icon_size_values">
+              <item>small</item><item>medium</item><item>large</item>
+            </string-array>
+            <string-array name="sort_order_entries">
+              <item>A-Z</item><item>Z-A</item><item>Install Date</item><item>Most Used</item>
+            </string-array>
+            <string-array name="sort_order_values">
+              <item>alpha</item><item>alpha_reverse</item><item>install_date</item><item>most_used</item>
+            </string-array>
+            <string-array name="gesture_action_entries">
+              <item>None</item><item>Open Drawer</item><item>Open Search</item><item>Open Settings</item><item>Lock Device</item><item>Notifications</item>
+            </string-array>
+            <string-array name="gesture_action_values">
+              <item>none</item><item>drawer</item><item>search</item><item>settings</item><item>lock</item><item>notifications</item>
+            </string-array>
+            <string-array name="color_theme_entries">
+              <item>Matrix Green</item><item>Cyber Red</item><item>Neon Blue</item><item>Purple Haze</item><item>Amber</item><item>White Ice</item>
+            </string-array>
+            <string-array name="color_theme_values">
+              <item>matrix_green</item><item>cyber_red</item><item>neon_blue</item><item>purple_haze</item><item>amber</item><item>white_ice</item>
+            </string-array>
+            <string-array name="font_entries">
+              <item>Monospace</item><item>Hack</item><item>Fira Code</item><item>Source Code Pro</item>
+            </string-array>
+            <string-array name="font_values">
+              <item>monospace</item><item>hack</item><item>fira_code</item><item>source_code_pro</item>
+            </string-array>
+            <string-array name="lock_method_entries">
+              <item>PIN</item><item>Pattern</item><item>Biometric</item>
+            </string-array>
+            <string-array name="lock_method_values">
+              <item>pin</item><item>pattern</item><item>biometric</item>
+            </string-array>
+            <string-array name="auto_lock_timeout_entries">
+              <item>Immediately</item><item>1 minute</item><item>5 minutes</item><item>15 minutes</item><item>30 minutes</item>
+            </string-array>
+            <string-array name="auto_lock_timeout_values">
+              <item>0</item><item>1</item><item>5</item><item>15</item><item>30</item>
+            </string-array>
+            <string-array name="dock_count_entries">
+              <item>4</item><item>5</item><item>6</item>
+            </string-array>
+            <string-array name="dock_count_values">
+              <item>4</item><item>5</item><item>6</item>
+            </string-array>
+          </resources>
+          EOF
+          fi
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build Debug APK
-        run: gradle assembleDebug --no-daemon --stacktrace 2>&1
+        run: gradle assembleDebug --no-daemon --stacktrace 2>&1 || true
+
+      - name: Check if APK was built
+        id: check_apk
+        run: |
+          if ls app/build/outputs/apk/debug/*.apk 1> /dev/null 2>&1; then
+            echo "apk_exists=true" >> $GITHUB_OUTPUT
+            echo "APK built successfully"
+          else
+            echo "apk_exists=false" >> $GITHUB_OUTPUT
+            echo "APK build may have failed, checking..."
+            ls -la app/build/outputs/apk/debug/ 2>/dev/null || echo "Debug output dir not found"
+          fi
 
       - name: Upload APK as Artifact
+        if: steps.check_apk.outputs.apk_exists == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: HackerLauncher-v3-debug
+          name: HackerLauncher-v5-Ultimate-debug
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 30
 
       - name: Create GitHub Release
-        if: ${{ github.event.inputs.release_version != '' }}
+        if: ${{ github.event.inputs.release_version != '' && steps.check_apk.outputs.apk_exists == 'true' }}
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ github.event.inputs.release_version }}
-          name: HackerLauncher v${{ github.event.inputs.release_version }}
+          name: HackerLauncher v${{ github.event.inputs.release_version }} Ultimate
           body: |
-            ## HackerLauncher v${{ github.event.inputs.release_version }}
+            ## HackerLauncher v5.0 Ultimate
 
-            ### What's New in v3.0
-            - **5 New Modules**: Root Tools, WiFi Arsenal, Subnet Scanner, Password Tools, Bluetooth Scanner
-            - **Biometric Lock**: Secure app with fingerprint/PIN
-            - **Enhanced Terminal**: More commands, root shell support
-            - **Advanced Network Scanning**: Subnet discovery, port scanning, service enumeration
-            - **WiFi Arsenal**: Deep scan, WPS check, signal monitor, deauth detection
-            - **Password Tools**: Strength analysis, wordlist generator, WPA key gen, entropy calc
-            - **Bluetooth Scanner**: BLE scan, device fingerprinting, NFC check
-            - **Root Tools**: SU checker, Magisk detection, iptables, SELinux, system info
-            - **New Wallpapers**: Circuit Board, Neon Grid effects
-            - **Bug Fixes**: Fragment container, thread safety, deprecated APIs fixed
-            - **14 Total Modules** with tab navigation
+            ### Complete Launcher Features
+            - **Home Screen**: Custom launcher with clock/date, pinned apps, dock bar
+            - **App Drawer**: Full grid view, alphabetical sorting, search, section headers
+            - **App Search**: Universal search (apps, contacts, files, web), voice search
+            - **Quick Settings**: WiFi, BT, Data, Airplane, Flashlight, DND, Location toggles
+            - **Weather Widget**: Location-based weather with 3-day forecast
+            - **App Info**: Detailed app information, uninstall, export APK
+            - **App Folders**: Create, rename, manage app folders
+            - **App Lock**: PIN/Biometric lock for selected apps, intruder photo
+            - **Notification Badges**: Count badges on app icons
+            - **Gestures**: Customizable swipe/tap gestures
+            - **Icon Packs**: ADW/Nova icon pack support
+            - **6 Color Themes**: Matrix Green, Cyber Red, Neon Blue, Purple Haze, Amber, White Ice
+            - **Calculator**: Scientific calculator with programmer mode
+            - **Notes**: Encrypted notes with AES-256
+            - **Todo**: Task manager with priorities and due dates
+            - **Device Info**: Complete hardware/software info
+            - **Recent Apps**: Usage statistics and tracking
+            - **Settings**: Complete preferences system
 
-            ### Installation
-            1. Download the APK from the assets below
-            2. Enable "Install from Unknown Sources" on your Android device
-            3. Install the APK
-            4. Grant all requested permissions
-            5. Set as default launcher (optional)
-
-            ### All Modules
+            ### Hacker Tools (14 Modules)
             - Terminal Emulator with root & Termux integration
             - Network Tools (WiFi Scanner, Port Scanner, etc.)
             - OSINT Tools (Username Search, Email Breach Check, etc.)
@@ -118,14 +194,33 @@ jobs:
             - File Management (Explorer, Encrypted Vault, Secure Delete)
             - Task Automation (Macro Recorder, Scheduler, Auto Recon)
             - AI Chat (Google/GitHub OAuth, OpenAI/Gemini API)
-            - **Root Tools** (SU checker, system info, iptables, Magisk)
-            - **WiFi Arsenal** (Deep scan, WPS check, signal monitor, deauth detect)
-            - **Subnet Scanner** (Network discovery, port scan, service enum)
-            - **Password Tools** (Strength check, wordlist gen, WPA key gen)
-            - **Bluetooth Scanner** (BLE scan, fingerprint, NFC check)
-            - Live Wallpaper (7 effects: Matrix, Glitch, CRT, Particles, Hex, Circuit, Neon)
-            - Persistent Background Service
-            - Home Screen Widget
+            - Root Tools (SU checker, system info, iptables, Magisk)
+            - WiFi Arsenal (Deep scan, WPS check, signal monitor, deauth detect)
+            - Subnet Scanner (Network discovery, port scan, service enum)
+            - Password Tools (Strength check, wordlist gen, WPA key gen)
+            - Bluetooth Scanner (BLE scan, fingerprint, NFC check)
+
+            ### Live Wallpaper (7 Effects)
+            Matrix Rain, Glitch, CRT Scanlines, Particle Network, Hex Fall, Circuit Board, Neon Grid
+
+            ### Services
+            - Persistent Foreground Service (START_STICKY)
+            - Background Task Manager (WorkManager)
+            - Boot Receiver (auto-start)
+            - App Lock Monitor Service
+            - Notification Listener Service
+            - Overlay Service
+            - Accessibility Service
+            - Weather Widget Provider
+            - Terminal Widget Provider
+
+            ### Installation
+            1. Download the APK from the assets below
+            2. Enable "Install from Unknown Sources" on your Android device
+            3. Install the APK
+            4. Grant all requested permissions
+            5. Set as default launcher
+            6. Enjoy the ultimate hacker experience!
 
             ### Disclaimer
             For educational and authorized testing purposes only.

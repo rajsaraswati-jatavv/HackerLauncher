@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/noteItemContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#1A1A1A"
+    android:padding="12dp"
+    android:layout_marginBottom="6dp">
+
+    <!-- Title row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/noteTitleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Note Title"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <!-- Lock icon if encrypted -->
+        <ImageView
+            android:id="@+id/lockIconView"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_lock"
+            android:contentDescription="Encrypted"
+            android:tint="#FFAA00"
+            android:layout_marginStart="6dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- Preview text -->
+    <TextView
+        android:id="@+id/notePreviewTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Preview text content of the note..."
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="12sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:layout_marginTop="4dp" />
+
+    <!-- Bottom row: date + tags -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="6dp">
+
+        <TextView
+            android:id="@+id/noteDateTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="2024-01-01"
+            android:textColor="#006600"
+            android:fontFamily="monospace"
+            android:textSize="10sp" />
+
+        <!-- Tag chips -->
+        <LinearLayout
+            android:id="@+id/noteTagsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Tags added dynamically -->
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Filter Tabs -->
+        <LinearLayout
+            android:id="@+id/filterTabsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:background="#0A0A0A"
+            android:paddingHorizontal="8dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tabAll"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="ALL"
+                android:textColor="#000000"
+                android:background="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/tabActive"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="ACTIVE"
+                android:textColor="#00FF00"
+                android:background="#0A1A0A"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/tabCompleted"
+                android:layout_width="0dp"
+                android:layout_height="28dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="DONE"
+                android:textColor="#00FF00"
+                android:background="#0A1A0A"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- Sort Options Row -->
+        <LinearLayout
+            android:id="@+id/sortOptionsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:background="#0A0A0A">
+
+            <TextView
+                android:id="@+id/todoCountText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=">> 0 TASKS"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="11sp" />
+
+            <ImageView
+                android:id="@+id/sortByDateButton"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_sort_date"
+                android:contentDescription="Sort by date"
+                android:tint="#00FF00"
+                android:padding="4dp"
+                android:layout_marginStart="4dp" />
+
+            <ImageView
+                android:id="@+id/sortByPriorityButton"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_sort_priority"
+                android:contentDescription="Sort by priority"
+                android:tint="#009900"
+                android:padding="4dp"
+                android:layout_marginStart="4dp" />
+
+            <ImageView
+                android:id="@+id/sortByCategoryButton"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_sort_category"
+                android:contentDescription="Sort by category"
+                android:tint="#009900"
+                android:padding="4dp"
+                android:layout_marginStart="4dp" />
+        </LinearLayout>
+
+        <!-- Tasks RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/todoRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="8dp"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false" />
+
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/emptyTodoContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NO_TASKS"
+                android:textColor="#003300"
+                android:fontFamily="monospace"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap + to add a task"
+                android:textColor="#002200"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- FAB for New Task -->
+    <TextView
+        android:id="@+id/fabNewTodo"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:text="+"
+        android:textColor="#000000"
+        android:background="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:elevation="6dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+</FrameLayout>

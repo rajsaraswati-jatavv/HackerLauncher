@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical">
+
+    <!-- Toolbar -->
+    <LinearLayout
+        android:id="@+id/noteEditToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:background="#0A0A0A">
+
+        <ImageView
+            android:id="@+id/backButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_back"
+            android:contentDescription="Back"
+            android:tint="#00FF00"
+            android:padding="6dp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/exportButton"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:text="EXPORT"
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="11sp"
+            android:paddingHorizontal="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginEnd="6dp" />
+
+        <TextView
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:text="SAVE"
+            android:textColor="#000000"
+            android:background="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="12dp"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+    <!-- ScrollView for content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Title EditText -->
+            <EditText
+                android:id="@+id/noteTitleEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="Note title..."
+                android:textColorHint="#006600"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:inputType="text"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Tags Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_tag"
+                    android:contentDescription="Tags"
+                    android:tint="#009900"
+                    android:layout_marginEnd="6dp" />
+
+                <!-- Tags container (chips added dynamically) -->
+                <HorizontalScrollView
+                    android:id="@+id/tagsScrollView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/tagsContainer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <!-- Tags added dynamically -->
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <ImageView
+                    android:id="@+id/addTagButton"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_add"
+                    android:contentDescription="Add tag"
+                    android:tint="#00FF00"
+                    android:padding="2dp"
+                    android:layout_marginStart="4dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Content EditText (multiline) -->
+            <EditText
+                android:id="@+id/noteContentEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="200dp"
+                android:background="@android:color/transparent"
+                android:hint="Start typing..."
+                android:textColorHint="#006600"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="top|start"
+                android:inputType="textMultiLine"
+                android:lineSpacingExtra="4dp"
+                android:scrollbars="vertical" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Options Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp"
+        android:background="#0A0A0A">
+
+        <!-- Encrypt Toggle -->
+        <LinearLayout
+            android:id="@+id/encryptToggleContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:id="@+id/encryptIcon"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_lock_open"
+                android:contentDescription="Encrypt"
+                android:tint="#009900"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/encryptLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ENCRYPT"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Character count -->
+        <TextView
+            android:id="@+id/charCountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 chars"
+            android:textColor="#006600"
+            android:fontFamily="monospace"
+            android:textSize="10sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Word count -->
+        <TextView
+            android:id="@+id/wordCountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 words"
+            android:textColor="#006600"
+            android:fontFamily="monospace"
+            android:textSize="10sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Last saved -->
+        <TextView
+            android:id="@+id/lastSavedText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Not saved"
+            android:textColor="#006600"
+            android:fontFamily="monospace"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+</LinearLayout>

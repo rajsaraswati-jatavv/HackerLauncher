@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/newTodoDialogContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#0A0A0A"
+    android:padding="16dp">
+
+    <!-- Dialog Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=">> NEW_TASK"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Task Title EditText -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TASK_TITLE"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/taskTitleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#0A1A0A"
+        android:hint="What needs to be done?"
+        android:textColorHint="#006600"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="14sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="8dp"
+        android:singleLine="true"
+        android:inputType="text"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Due Date -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DUE_DATE"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:layout_marginBottom="4dp" />
+
+    <TextView
+        android:id="@+id/dueDateButton"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#0A1A0A"
+        android:text="Select date..."
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="13sp"
+        android:gravity="center_vertical"
+        android:paddingStart="10dp"
+        android:paddingEnd="8dp"
+        android:drawableEnd="@drawable/ic_calendar"
+        android:drawablePadding="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Priority Radio Buttons -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PRIORITY"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:layout_marginBottom="6dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <RadioButton
+            android:id="@+id/priorityHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:text="HIGH"
+            android:textColor="#FF3333"
+            android:buttonTint="#FF3333"
+            android:fontFamily="monospace"
+            android:textSize="11sp"
+            android:checked="false" />
+
+        <RadioButton
+            android:id="@+id/priorityMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:text="MED"
+            android:textColor="#FFAA00"
+            android:buttonTint="#FFAA00"
+            android:fontFamily="monospace"
+            android:textSize="11sp"
+            android:layout_marginStart="12dp"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/priorityLow"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:text="LOW"
+            android:textColor="#00FF00"
+            android:buttonTint="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="11sp"
+            android:layout_marginStart="12dp"
+            android:checked="false" />
+    </LinearLayout>
+
+    <!-- Category -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CATEGORY"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/categoryEditText"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#0A1A0A"
+        android:hint="e.g. WORK, PERSONAL"
+        android:textColorHint="#006600"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="13sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="8dp"
+        android:singleLine="true"
+        android:inputType="text"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <TextView
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="CANCEL"
+            android:textColor="#009900"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:paddingHorizontal="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/createButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="CREATE"
+            android:textColor="#000000"
+            android:background="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="16dp"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <TextView
+            android:id="@+id/quickSettingsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">> QUICK_SETTINGS"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Toggle Buttons Grid -->
+        <GridLayout
+            android:id="@+id/togglesGridLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="4"
+            android:rowCount="3"
+            android:useDefaultMargins="true"
+            android:layout_marginBottom="20dp">
+
+            <!-- Row 1 -->
+            <include layout="@layout/item_quick_toggle"
+                android:id="@+id/toggleWifi" />
+
+            <include layout="@layout/item_quick_toggle"
+                android:id="@+id/toggleBluetooth" />
+
+            <include layout="@layout/item_quick_toggle"
+                android:id="@+id/toggleData" />
+
+            <include layout="@layout/item_quick_toggle"
+                android:id="@+id/toggleAirplane" />
+
+            <!-- Row 2 -->
+            <include layout="@layout/item_quick_toggle"
+                android:id="@+id/toggleFlashlight" />
+
+            <include layout="@layout/item_quick_toggle"
+                android:id="@+id/toggleDoNotDisturb" />
+
+            <include layout="@layout/item_quick_toggle"
+                android:id="@+id/toggleAutoRotate" />
+
+            <include layout="@layout/item_quick_toggle"
+                android:id="@+id/toggleLocation" />
+
+            <!-- Row 3 -->
+            <include layout="@layout/item_quick_toggle"
+                android:id="@+id/toggleHotspot" />
+
+            <include layout="@layout/item_quick_toggle"
+                android:id="@+id/toggleNfc" />
+
+            <include layout="@layout/item_quick_toggle"
+                android:id="@+id/toggleDarkMode" />
+
+            <include layout="@layout/item_quick_toggle"
+                android:id="@+id/toggleBatterySaver" />
+        </GridLayout>
+
+        <!-- Brightness Seekbar -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BRIGHTNESS"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_brightness_low"
+                android:contentDescription="Low brightness"
+                android:tint="#009900"
+                android:layout_marginEnd="8dp" />
+
+            <SeekBar
+                android:id="@+id/brightnessSeekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="255"
+                android:progressTint="#00FF00"
+                android:progressBackgroundTint="#003300"
+                android:thumbTint="#00FF00" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_brightness_high"
+                android:contentDescription="High brightness"
+                android:tint="#00FF00"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Volume Seekbar -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VOLUME"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_volume_low"
+                android:contentDescription="Low volume"
+                android:tint="#009900"
+                android:layout_marginEnd="8dp" />
+
+            <SeekBar
+                android:id="@+id/volumeSeekBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:max="15"
+                android:progressTint="#00FF00"
+                android:progressBackgroundTint="#003300"
+                android:thumbTint="#00FF00" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_volume_high"
+                android:contentDescription="High volume"
+                android:tint="#00FF00"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Screen Timeout Spinner -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SCREEN_TIMEOUT"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <Spinner
+            android:id="@+id/screenTimeoutSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#0A1A0A"
+            android:popupBackground="#1A1A1A"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="13sp"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Additional Info -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/batteryInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Battery: --%"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/networkInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Network: --"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:id="@+id/storageInfoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Storage: --"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

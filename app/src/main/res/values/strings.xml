@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Existing strings -->
     <string name="app_name">HackerLauncher</string>
     <string name="wallpaper_settings_title">Hacker Wallpaper Settings</string>
     <string name="disclaimer_title">DISCLAIMER</string>
@@ -20,4 +21,434 @@
     <string name="settings">Settings</string>
     <string name="about">About</string>
     <string name="exit">Exit</string>
+
+    <!-- ==================== App Drawer ==================== -->
+    <string name="app_drawer_title">App Drawer</string>
+    <string name="search_hint">Search apps…</string>
+    <string name="no_apps_found">No apps found</string>
+    <string name="no_apps_installed">No apps installed</string>
+    <string name="sort_az">A–Z</string>
+    <string name="sort_za">Z–A</string>
+    <string name="sort_install_date">Install Date</string>
+    <string name="sort_most_used">Most Used</string>
+    <string name="sort_by">Sort by</string>
+    <string name="app_count">%d apps</string>
+    <string name="hidden_apps">Hidden Apps</string>
+    <string name="hide_app">Hide App</string>
+    <string name="unhide_app">Unhide App</string>
+    <string name="drawer_icon_size">Drawer Icon Size</string>
+
+    <!-- ==================== Home Screen ==================== -->
+    <string name="home_screen">Home Screen</string>
+    <string name="dock">Dock</string>
+    <string name="dock_apps_count">Dock Apps Count</string>
+    <string name="grid_size">Grid Size</string>
+    <string name="grid_3x3">3×3</string>
+    <string name="grid_4x4">4×4</string>
+    <string name="grid_5x5">5×5</string>
+    <string name="grid_6x6">6×6</string>
+    <string name="icon_size">Icon Size</string>
+    <string name="icon_size_small">Small</string>
+    <string name="icon_size_medium">Medium</string>
+    <string name="icon_size_large">Large</string>
+    <string name="show_labels">Show Labels</string>
+    <string name="wallpaper">Wallpaper</string>
+    <string name="set_wallpaper">Set Wallpaper</string>
+    <string name="wallpaper_matrix">Matrix Rain</string>
+    <string name="wallpaper_particles">Particle Network</string>
+    <string name="wallpaper_glitch">Glitch Effect</string>
+    <string name="wallpaper_solid">Solid Color</string>
+    <string name="add_to_home">Add to Home Screen</string>
+    <string name="remove_from_home">Remove from Home Screen</string>
+
+    <!-- ==================== App Info ==================== -->
+    <string name="app_info">App Info</string>
+    <string name="app_name_label">App Name</string>
+    <string name="package_name">Package Name</string>
+    <string name="version">Version</string>
+    <string name="install_date">Install Date</string>
+    <string name="update_date">Last Updated</string>
+    <string name="app_size">App Size</string>
+    <string name="data_size">Data Size</string>
+    <string name="cache_size">Cache Size</string>
+    <string name="permissions">Permissions</string>
+    <string name="app_actions">Actions</string>
+    <string name="open_app">Open</string>
+    <string name="uninstall">Uninstall</string>
+    <string name="force_stop">Force Stop</string>
+    <string name="clear_data">Clear Data</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="app_store">View in Store</string>
+
+    <!-- ==================== App Search ==================== -->
+    <string name="app_search">App Search</string>
+    <string name="search_apps">Search Apps</string>
+    <string name="search_web">Search Web</string>
+    <string name="search_contacts">Search Contacts</string>
+    <string name="search_settings_label">Search Settings</string>
+    <string name="search_results">Search Results</string>
+    <string name="no_results">No results found</string>
+    <string name="voice_search">Voice Search</string>
+
+    <!-- ==================== Folders ==================== -->
+    <string name="folder">Folder</string>
+    <string name="create_folder">Create Folder</string>
+    <string name="rename_folder">Rename Folder</string>
+    <string name="delete_folder">Delete Folder</string>
+    <string name="folder_name">Folder Name</string>
+    <string name="folder_name_hint">Enter folder name</string>
+    <string name="add_to_folder">Add to Folder</string>
+    <string name="remove_from_folder">Remove from Folder</string>
+    <string name="folder_empty">Folder is empty</string>
+    <string name="confirm_delete_folder">Delete this folder? Apps inside will be moved back to the drawer.</string>
+
+    <!-- ==================== Quick Settings ==================== -->
+    <string name="quick_settings">Quick Settings</string>
+    <string name="toggle_wifi">Wi-Fi</string>
+    <string name="toggle_bluetooth">Bluetooth</string>
+    <string name="toggle_location">Location</string>
+    <string name="toggle_flashlight">Flashlight</string>
+    <string name="toggle_airplane">Airplane Mode</string>
+    <string name="toggle_auto_rotate">Auto-Rotate</string>
+    <string name="toggle_dnd">Do Not Disturb</string>
+    <string name="toggle_mobile_data">Mobile Data</string>
+    <string name="toggle_hotspot">Hotspot</string>
+    <string name="toggle_nfc">NFC</string>
+    <string name="toggle_dark_mode">Dark Mode</string>
+    <string name="brightness">Brightness</string>
+    <string name="volume">Volume</string>
+    <string name="media_volume">Media Volume</string>
+    <string name="ring_volume">Ring Volume</string>
+    <string name="alarm_volume">Alarm Volume</string>
+
+    <!-- ==================== Calculator ==================== -->
+    <string name="calculator">Calculator</string>
+    <string name="calc_display_hint">0</string>
+    <string name="calc_button_0">0</string>
+    <string name="calc_button_1">1</string>
+    <string name="calc_button_2">2</string>
+    <string name="calc_button_3">3</string>
+    <string name="calc_button_4">4</string>
+    <string name="calc_button_5">5</string>
+    <string name="calc_button_6">6</string>
+    <string name="calc_button_7">7</string>
+    <string name="calc_button_8">8</string>
+    <string name="calc_button_9">9</string>
+    <string name="calc_button_add">+</string>
+    <string name="calc_button_sub">−</string>
+    <string name="calc_button_mul">×</string>
+    <string name="calc_button_div">÷</string>
+    <string name="calc_button_eq">=</string>
+    <string name="calc_button_dot">.</string>
+    <string name="calc_button_clear">C</string>
+    <string name="calc_button_del">DEL</string>
+    <string name="calc_button_pct">%</string>
+    <string name="calc_button_sign">±</string>
+    <string name="calc_error">Error</string>
+    <string name="calc_divide_zero">Cannot divide by zero</string>
+
+    <!-- ==================== Notes ==================== -->
+    <string name="notes">Notes</string>
+    <string name="note_title">Title</string>
+    <string name="note_title_hint">Note title</string>
+    <string name="note_content">Content</string>
+    <string name="note_content_hint">Start writing…</string>
+    <string name="create_note">New Note</string>
+    <string name="edit_note">Edit Note</string>
+    <string name="delete_note">Delete Note</string>
+    <string name="confirm_delete_note">Delete this note? This cannot be undone.</string>
+    <string name="note_saved">Note saved</string>
+    <string name="note_deleted">Note deleted</string>
+    <string name="no_notes">No notes yet. Create one!</string>
+    <string name="notes_count">%d notes</string>
+    <string name="pin_note">Pin Note</string>
+    <string name="unpin_note">Unpin Note</string>
+    <string name="locked_note">Locked Note</string>
+    <string name="unlock_note">Unlock Note</string>
+    <string name="note_timestamp">Created: %1$s\nModified: %2$s</string>
+
+    <!-- ==================== Todo ==================== -->
+    <string name="todo">Todo</string>
+    <string name="todo_title">Task</string>
+    <string name="todo_title_hint">What needs to be done?</string>
+    <string name="todo_description">Description</string>
+    <string name="todo_description_hint">Add details (optional)</string>
+    <string name="create_todo">New Task</string>
+    <string name="edit_todo">Edit Task</string>
+    <string name="delete_todo">Delete Task</string>
+    <string name="confirm_delete_todo">Delete this task?</string>
+    <string name="todo_completed">Completed</string>
+    <string name="todo_pending">Pending</string>
+    <string name="mark_complete">Mark Complete</string>
+    <string name="mark_incomplete">Mark Incomplete</string>
+    <string name="priority">Priority</string>
+    <string name="priority_high">High</string>
+    <string name="priority_medium">Medium</string>
+    <string name="priority_low">Low</string>
+    <string name="no_todos">All tasks completed! 🎉</string>
+    <string name="todos_count">%1$d of %2$d completed</string>
+    <string name="due_date">Due Date</string>
+    <string name="set_due_date">Set Due Date</string>
+    <string name="overdue">Overdue</string>
+    <string name="due_today">Due Today</string>
+    <string name="due_tomorrow">Due Tomorrow</string>
+
+    <!-- ==================== Device Info ==================== -->
+    <string name="device_info">Device Info</string>
+    <string name="device_model">Device Model</string>
+    <string name="manufacturer">Manufacturer</string>
+    <string name="android_version">Android Version</string>
+    <string name="security_patch">Security Patch</string>
+    <string name="build_number">Build Number</string>
+    <string name="screen_resolution">Screen Resolution</string>
+    <string name="screen_density">Screen Density</string>
+    <string name="ram_total">Total RAM</string>
+    <string name="ram_available">Available RAM</string>
+    <string name="storage_total">Total Storage</string>
+    <string name="storage_available">Available Storage</string>
+    <string name="battery_level">Battery Level</string>
+    <string name="battery_status">Battery Status</string>
+    <string name="battery_health">Battery Health</string>
+    <string name="battery_temperature">Battery Temperature</string>
+    <string name="cpu_info">CPU Info</string>
+    <string name="gpu_info">GPU Info</string>
+    <string name="network_info">Network Info</string>
+    <string name="ip_address">IP Address</string>
+    <string name="mac_address">MAC Address</string>
+    <string name="wifi_ssid">Wi-Fi SSID</string>
+    <string name="wifi_signal">Wi-Fi Signal Strength</string>
+
+    <!-- ==================== App Lock ==================== -->
+    <string name="app_lock">App Lock</string>
+    <string name="lock_method">Lock Method</string>
+    <string name="lock_method_pin">PIN</string>
+    <string name="lock_method_pattern">Pattern</string>
+    <string name="lock_method_biometric">Biometric</string>
+    <string name="set_pin">Set PIN</string>
+    <string name="confirm_pin">Confirm PIN</string>
+    <string name="enter_pin">Enter PIN</string>
+    <string name="wrong_pin">Wrong PIN</string>
+    <string name="pin_set">PIN set successfully</string>
+    <string name="pin_mismatch">PINs do not match</string>
+    <string name="draw_pattern">Draw pattern</string>
+    <string name="confirm_pattern">Confirm pattern</string>
+    <string name="wrong_pattern">Wrong pattern</string>
+    <string name="pattern_set">Pattern set successfully</string>
+    <string name="pattern_mismatch">Patterns do not match</string>
+    <string name="biometric_prompt">Authenticate to unlock</string>
+    <string name="biometric_not_available">Biometric authentication not available</string>
+    <string name="biometric_not_enrolled">No biometrics enrolled. Set up fingerprint or face unlock first.</string>
+    <string name="locked_apps">Locked Apps</string>
+    <string name="lock_app">Lock App</string>
+    <string name="unlock_app">Unlock App</string>
+    <string name="app_locked">App is locked</string>
+    <string name="intruder_photo">Intruder Photo</string>
+    <string name="intruder_photo_summary">Take a photo after failed unlock attempts</string>
+    <string name="fake_crash">Fake Crash Screen</string>
+    <string name="fake_crash_summary">Show a fake crash dialog on locked apps</string>
+    <string name="intruder_alert">Intruder Alert</string>
+    <string name="intruder_detected">Intruder detected! Photo saved.</string>
+
+    <!-- ==================== Settings ==================== -->
+    <string name="settings_home_screen">Home Screen</string>
+    <string name="settings_app_drawer">App Drawer</string>
+    <string name="settings_gestures">Gestures</string>
+    <string name="settings_themes">Themes</string>
+    <string name="settings_app_lock">App Lock</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_services">Services</string>
+    <string name="settings_security">Security</string>
+    <string name="settings_advanced">Advanced</string>
+    <string name="settings_about">About</string>
+
+    <string name="pref_grid_size">Grid Size</string>
+    <string name="pref_grid_size_summary">Number of columns and rows on home screen</string>
+    <string name="pref_icon_size">Icon Size</string>
+    <string name="pref_icon_size_summary">Change the size of app icons</string>
+    <string name="pref_show_labels">Show Labels</string>
+    <string name="pref_show_labels_summary">Display app names below icons</string>
+    <string name="pref_dock_apps_count">Dock Apps Count</string>
+    <string name="pref_dock_apps_count_summary">Number of apps in the dock bar</string>
+    <string name="pref_sort_order">Sort Order</string>
+    <string name="pref_sort_order_summary">How apps are sorted in the drawer</string>
+    <string name="pref_hidden_apps">Hidden Apps</string>
+    <string name="pref_hidden_apps_summary">Manage hidden applications</string>
+    <string name="pref_drawer_icon_size">Drawer Icon Size</string>
+    <string name="pref_drawer_icon_size_summary">Icon size in the app drawer</string>
+
+    <!-- ==================== Weather ==================== -->
+    <string name="weather">Weather</string>
+    <string name="weather_widget">Weather Widget</string>
+    <string name="temperature">Temperature</string>
+    <string name="temp_celsius">%d°C</string>
+    <string name="temp_fahrenheit">%d°F</string>
+    <string name="condition_sunny">Sunny</string>
+    <string name="condition_cloudy">Cloudy</string>
+    <string name="condition_rainy">Rainy</string>
+    <string name="condition_stormy">Stormy</string>
+    <string name="condition_snowy">Snowy</string>
+    <string name="condition_windy">Windy</string>
+    <string name="condition_foggy">Foggy</string>
+    <string name="condition_hazy">Hazy</string>
+    <string name="condition_clear">Clear</string>
+    <string name="condition_partly_cloudy">Partly Cloudy</string>
+    <string name="humidity">Humidity</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="uv_index">UV Index</string>
+    <string name="feels_like">Feels Like</string>
+    <string name="forecast">Forecast</string>
+    <string name="weather_location">Location</string>
+    <string name="weather_unavailable">Weather data unavailable</string>
+    <string name="weather_loading">Loading weather…</string>
+    <string name="weather_update_interval">Update Interval</string>
+
+    <!-- ==================== Gestures ==================== -->
+    <string name="gestures">Gestures</string>
+    <string name="gesture_swipe_up">Swipe Up</string>
+    <string name="gesture_swipe_down">Swipe Down</string>
+    <string name="gesture_swipe_left">Swipe Left</string>
+    <string name="gesture_swipe_right">Swipe Right</string>
+    <string name="gesture_double_tap">Double Tap</string>
+    <string name="gesture_long_press">Long Press</string>
+    <string name="action_none">None</string>
+    <string name="action_open_drawer">Open App Drawer</string>
+    <string name="action_open_search">Open Search</string>
+    <string name="action_open_notifications">Open Notifications</string>
+    <string name="action_open_quick_settings">Open Quick Settings</string>
+    <string name="action_lock_screen">Lock Screen</string>
+    <string name="action_open_app">Open App</string>
+    <string name="action_open_calculator">Open Calculator</string>
+    <string name="action_open_weather">Open Weather</string>
+    <string name="action_toggle_flashlight">Toggle Flashlight</string>
+    <string name="action_screenshot">Screenshot</string>
+    <string name="action_open_notes">Open Notes</string>
+    <string name="action_open_todo">Open Todo</string>
+
+    <!-- ==================== Themes ==================== -->
+    <string name="themes">Themes</string>
+    <string name="color_theme">Color Theme</string>
+    <string name="theme_classic_green">Classic Green</string>
+    <string name="theme_cyan">Cyan</string>
+    <string name="theme_amber">Amber</string>
+    <string name="theme_pink">Pink</string>
+    <string name="theme_blue">Blue</string>
+    <string name="theme_purple">Purple</string>
+    <string name="theme_orange">Orange</string>
+    <string name="theme_teal">Teal</string>
+    <string name="font_style">Font Style</string>
+    <string name="font_monospace">Monospace</string>
+    <string name="font_serif">Serif</string>
+    <string name="font_sans">Sans Serif</string>
+    <string name="font_system">System Default</string>
+    <string name="animations">Animations</string>
+    <string name="animations_summary">Enable UI animations and transitions</string>
+    <string name="pref_wallpaper">Wallpaper</string>
+    <string name="pref_wallpaper_summary">Choose a hacker-themed wallpaper</string>
+
+    <!-- ==================== General ==================== -->
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="share">Share</string>
+    <string name="export">Export</string>
+    <string name="import_label">Import</string>
+    <string name="done">Done</string>
+    <string name="confirm">Confirm</string>
+    <string name="discard">Discard</string>
+    <string name="undo">Undo</string>
+    <string name="redo">Redo</string>
+    <string name="select_all">Select All</string>
+    <string name="deselect_all">Deselect All</string>
+    <string name="apply">Apply</string>
+    <string name="reset">Reset</string>
+    <string name="retry">Retry</string>
+    <string name="loading">Loading…</string>
+    <string name="error">Error</string>
+    <string name="success">Success</string>
+    <string name="warning">Warning</string>
+    <string name="info">Info</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="default_value">Default</string>
+    <string name="close">Close</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
+    <string name="skip">Skip</string>
+    <string name="search">Search</string>
+    <string name="refresh">Refresh</string>
+    <string name="update">Update</string>
+    <string name="install">Install</string>
+    <string name="uninstall_label">Uninstall</string>
+    <string name="more">More</string>
+    <string name="less">Less</string>
+    <string name="add">Add</string>
+    <string name="remove">Remove</string>
+    <string name="move">Move</string>
+    <string name="rename">Rename</string>
+    <string name="details">Details</string>
+    <string name="view_all">View All</string>
+    <string name="no_items">No items</string>
+    <string name="empty_state">Nothing here yet</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="unsaved_changes">Unsaved changes will be lost. Continue?</string>
+
+    <!-- ==================== Notification Settings ==================== -->
+    <string name="show_badges">Show Notification Badges</string>
+    <string name="show_badges_summary">Display notification count on app icons</string>
+    <string name="notification_history">Notification History</string>
+    <string name="notification_history_summary">View past notifications</string>
+
+    <!-- ==================== Service Settings ==================== -->
+    <string name="foreground_service">Foreground Service</string>
+    <string name="foreground_service_summary">Keep the launcher running in background</string>
+    <string name="overlay_permission">Overlay Permission</string>
+    <string name="overlay_permission_summary">Allow drawing over other apps</string>
+    <string name="accessibility_service">Accessibility Service</string>
+    <string name="accessibility_service_summary">Enable for gesture and automation features</string>
+
+    <!-- ==================== Security Settings ==================== -->
+    <string name="biometric_lock">Biometric Lock</string>
+    <string name="biometric_lock_summary">Require biometric to open launcher</string>
+    <string name="auto_lock_timeout">Auto-Lock Timeout</string>
+    <string name="auto_lock_timeout_summary">Time before launcher locks after leaving</string>
+    <string name="timeout_immediate">Immediate</string>
+    <string name="timeout_30s">30 seconds</string>
+    <string name="timeout_1m">1 minute</string>
+    <string name="timeout_5m">5 minutes</string>
+    <string name="timeout_10m">10 minutes</string>
+
+    <!-- ==================== Advanced Settings ==================== -->
+    <string name="debug_mode">Debug Mode</string>
+    <string name="debug_mode_summary">Show debug information and logs</string>
+    <string name="export_settings">Export Settings</string>
+    <string name="export_settings_summary">Save current settings to a file</string>
+    <string name="reset_settings">Reset to Defaults</string>
+    <string name="reset_settings_summary">All settings will be reset to default values</string>
+    <string name="confirm_reset">Are you sure you want to reset all settings?</string>
+    <string name="settings_exported">Settings exported successfully</string>
+    <string name="settings_imported">Settings imported successfully</string>
+    <string name="settings_reset">Settings reset to defaults</string>
+
+    <!-- ==================== About ==================== -->
+    <string name="app_version">Version</string>
+    <string name="credits">Credits</string>
+    <string name="credits_summary">Open source licenses and contributors</string>
+    <string name="update_check">Check for Updates</string>
+    <string name="update_check_summary">Check for the latest version</string>
+    <string name="up_to_date">You are up to date</string>
+    <string name="update_available">Update available</string>
+
+    <!-- ==================== Lock Screen ==================== -->
+    <string name="lock_screen">Lock Screen</string>
+    <string name="unlock">Unlock</string>
+    <string name="locked">Locked</string>
+    <string name="enter_password">Enter password</string>
+    <string name="wrong_password">Wrong password</string>
+    <string name="max_attempts">Maximum attempts reached. Try again later.</string>
+    <string name="attempts_remaining">%d attempts remaining</string>
 </resources>

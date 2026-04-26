@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/todoItemContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="#1A1A1A"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="10dp"
+    android:layout_marginBottom="4dp">
+
+    <!-- Priority indicator (colored dot) -->
+    <View
+        android:id="@+id/priorityIndicatorDot"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:background="#FF3333"
+        android:layout_marginEnd="8dp" />
+
+    <!-- CheckBox -->
+    <CheckBox
+        android:id="@+id/todoCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="#00FF00"
+        android:checked="false" />
+
+    <!-- Task content -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="8dp">
+
+        <TextView
+            android:id="@+id/todoTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task title"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="13sp"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <!-- Due date -->
+            <TextView
+                android:id="@+id/todoDueDateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2024-01-01"
+                android:textColor="#006600"
+                android:fontFamily="monospace"
+                android:textSize="10sp"
+                android:drawableStart="@drawable/ic_calendar"
+                android:drawablePadding="3dp" />
+
+            <!-- Category tag -->
+            <TextView
+                android:id="@+id/todoCategoryTag"
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:gravity="center"
+                android:text="WORK"
+                android:textColor="#000000"
+                android:background="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="9sp"
+                android:paddingHorizontal="6dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

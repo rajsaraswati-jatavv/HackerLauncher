@@ -13,8 +13,8 @@ android {
         applicationId "com.hackerlauncher"
         minSdk 26
         targetSdk 34
-        versionCode 3
-        versionName "3.0.0"
+        versionCode 5
+        versionName "5.0.0-Ultimate"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -50,13 +50,11 @@ android {
         }
     }
 
-    // FIX: Add lint options to prevent build failures from warnings
     lint {
         abortOnError false
         checkReleaseBuilds false
     }
 
-    // FIX: Add packaging options for duplicate files
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
         exclude 'META-INF/LICENSE'
@@ -65,6 +63,8 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/notice.txt'
+        exclude 'META-INF/INDEX.LIST'
+        exclude 'META-INF/*.kotlin_module'
     }
 }
 
@@ -80,6 +80,9 @@ dependencies {
     implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'androidx.activity:activity-ktx:1.8.2'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'androidx.annotation:annotation:1.7.1'
+    implementation 'androidx.palette:palette-ktx:1.0.0'
 
     // Material Design
     implementation 'com.google.android.material:material:1.11.0'
@@ -101,6 +104,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.7.2')
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
 
     // Firebase UI Auth
     implementation 'com.firebaseui:firebase-ui-auth:8.0.2'
@@ -129,12 +133,16 @@ dependencies {
 
     // Glide for image loading
     implementation 'com.github.bumptech.glide:glide:4.16.0'
+    kapt 'com.github.bumptech.glide:compiler:4.16.0'
 
     // Gson
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    // FIX: Add annotation library for @NonNull etc
-    implementation 'androidx.annotation:annotation:1.7.1'
+    // Lottie for animations
+    implementation 'com.airbnb.android:lottie:6.3.0'
+
+    // SharedPreferences with Kotlin delegation
+    implementation 'com.github.android-password-store:shared-preferences-fake:2.0.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

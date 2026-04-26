@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/newNoteDialogContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#0A0A0A"
+    android:padding="16dp">
+
+    <!-- Dialog Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=">> NEW_NOTE"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Title EditText -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TITLE"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/noteTitleEditText"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#0A1A0A"
+        android:hint="Enter title..."
+        android:textColorHint="#006600"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="14sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="8dp"
+        android:singleLine="true"
+        android:inputType="text"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Content EditText -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CONTENT"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/noteContentEditText"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="#0A1A0A"
+        android:hint="Enter content..."
+        android:textColorHint="#006600"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="13sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="8dp"
+        android:gravity="top|start"
+        android:inputType="textMultiLine"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Tags EditText -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TAGS (comma-separated)"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:layout_marginBottom="4dp" />
+
+    <EditText
+        android:id="@+id/noteTagsEditText"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#0A1A0A"
+        android:hint="tag1, tag2, tag3"
+        android:textColorHint="#006600"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="13sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="8dp"
+        android:singleLine="true"
+        android:inputType="text"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Encrypt Checkbox -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <CheckBox
+            android:id="@+id/encryptCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="#00FF00"
+            android:checked="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ENCRYPT_NOTE"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:layout_marginStart="4dp" />
+
+        <ImageView
+            android:id="@+id/encryptInfoIcon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_info"
+            android:contentDescription="Info"
+            android:tint="#009900"
+            android:layout_marginStart="6dp" />
+    </LinearLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <TextView
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="CANCEL"
+            android:textColor="#009900"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:paddingHorizontal="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/createButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="CREATE"
+            android:textColor="#000000"
+            android:background="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="16dp"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+</LinearLayout>

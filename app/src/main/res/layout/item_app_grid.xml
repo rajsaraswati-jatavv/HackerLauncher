@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/appGridItemContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="4dp"
+    android:background="#000000">
+
+    <!-- Icon container with notification badge -->
+    <FrameLayout
+        android:layout_width="48dp"
+        android:layout_height="48dp">
+
+        <ImageView
+            android:id="@+id/appIconImageView"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="App icon"
+            android:src="@drawable/ic_app_default" />
+
+        <!-- Notification badge -->
+        <TextView
+            android:id="@+id/notificationBadgeText"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_gravity="top|end"
+            android:gravity="center"
+            android:minWidth="16dp"
+            android:textColor="#000000"
+            android:background="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="4dp"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- App label -->
+    <TextView
+        android:id="@+id/appLabelTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="App Name"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="4dp"
+        android:lineSpacingExtra="1dp" />
+
+</LinearLayout>

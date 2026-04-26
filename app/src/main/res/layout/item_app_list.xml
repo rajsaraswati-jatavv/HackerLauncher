@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/appListItemContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="8dp"
+    android:background="#000000">
+
+    <!-- App icon -->
+    <ImageView
+        android:id="@+id/appIconImageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:contentDescription="App icon"
+        android:src="@drawable/ic_app_default" />
+
+    <!-- App info -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="12dp">
+
+        <TextView
+            android:id="@+id/appNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="App Name"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="14sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/appPackageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="com.example.app"
+            android:textColor="#009900"
+            android:fontFamily="monospace"
+            android:textSize="11sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+    <!-- Notification badge -->
+    <TextView
+        android:id="@+id/notificationBadgeText"
+        android:layout_width="wrap_content"
+        android:layout_height="18dp"
+        android:gravity="center"
+        android:minWidth="18dp"
+        android:textColor="#000000"
+        android:background="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="9sp"
+        android:textStyle="bold"
+        android:paddingHorizontal="4dp"
+        android:layout_marginStart="8dp"
+        android:visibility="gone" />
+
+    <!-- App size -->
+    <TextView
+        android:id="@+id/appSizeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12.3M"
+        android:textColor="#006600"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:layout_marginStart="8dp" />
+
+</LinearLayout>

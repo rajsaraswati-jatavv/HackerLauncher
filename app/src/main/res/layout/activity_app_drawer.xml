@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical">
+
+    <!-- Search Bar -->
+    <LinearLayout
+        android:id="@+id/searchBarContainer"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:background="#0A0A0A"
+        android:layout_margin="8dp">
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_search"
+            android:contentDescription="Search"
+            android:tint="#00FF00" />
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:hint="Search apps..."
+            android:textColorHint="#006600"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="14sp"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
+            android:singleLine="true"
+            android:imeOptions="actionSearch"
+            android:inputType="text" />
+
+        <ImageView
+            android:id="@+id/voiceSearchButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_mic"
+            android:contentDescription="Voice search"
+            android:tint="#00FF00"
+            android:padding="2dp" />
+    </LinearLayout>
+
+    <!-- Fast Scroll + RecyclerView Container -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- App Grid RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/appGridRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:clipToPadding="false"
+            android:scrollbars="none" />
+
+        <!-- Fast Scroll Bar -->
+        <LinearLayout
+            android:id="@+id/fastScrollBar"
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="2dp">
+
+            <!-- Fast scroll thumb -->
+            <View
+                android:id="@+id/fastScrollThumb"
+                android:layout_width="4dp"
+                android:layout_height="40dp"
+                android:background="#00FF00"
+                android:visibility="gone" />
+
+            <!-- Section indicator (shown during scroll) -->
+            <TextView
+                android:id="@+id/sectionIndicator"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:background="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <!-- Alphabet Section Headers (overlaid) -->
+        <TextView
+            android:id="@+id/sectionHeaderOverlay"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:background="#000000"
+            android:alpha="0.8"
+            android:visibility="gone" />
+
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/emptyStateContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/emptyStateIcon"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/ic_terminal"
+                android:contentDescription="No apps"
+                android:tint="#003300"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/emptyStateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NO APPS FOUND"
+                android:textColor="#003300"
+                android:fontFamily="monospace"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/emptyStateSubtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Try a different search term"
+                android:textColor="#002200"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- Bottom padding for nav bar -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="48dp" />
+
+</LinearLayout>

@@ -1,0 +1,638 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical">
+
+    <!-- Display Area -->
+    <LinearLayout
+        android:id="@+id/displayContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:orientation="vertical"
+        android:gravity="end|bottom"
+        android:padding="16dp"
+        android:background="#0A0A0A">
+
+        <!-- Mode Toggle Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/btnHexMode"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:text="HEX"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="10sp"
+                android:paddingHorizontal="8dp"
+                android:background="#0A1A0A"
+                android:layout_marginEnd="4dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnOctMode"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:text="OCT"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="10sp"
+                android:paddingHorizontal="8dp"
+                android:background="#0A1A0A"
+                android:layout_marginEnd="4dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnBinMode"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:text="BIN"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="10sp"
+                android:paddingHorizontal="8dp"
+                android:background="#0A1A0A"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- Expression -->
+        <TextView
+            android:id="@+id/expressionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#009900"
+            android:fontFamily="monospace"
+            android:textSize="16sp"
+            android:gravity="end"
+            android:maxLines="2"
+            android:ellipsize="start" />
+
+        <!-- Result -->
+        <TextView
+            android:id="@+id/resultText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:gravity="end"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:shadowColor="#00FF00"
+            android:shadowRadius="2"
+            android:layout_marginTop="4dp" />
+
+        <!-- Base conversion display -->
+        <TextView
+            android:id="@+id/baseConversionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#006600"
+            android:fontFamily="monospace"
+            android:textSize="10sp"
+            android:gravity="end"
+            android:maxLines="3"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <!-- Scientific Mode Buttons -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none"
+        android:background="#0A0A0A">
+
+        <LinearLayout
+            android:id="@+id/scientificButtonsContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="4dp">
+
+            <TextView
+                android:id="@+id/btnSin"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:text="sin"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:paddingHorizontal="10dp"
+                android:background="#0A1A0A"
+                android:layout_marginHorizontal="2dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnCos"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:text="cos"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:paddingHorizontal="10dp"
+                android:background="#0A1A0A"
+                android:layout_marginHorizontal="2dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnTan"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:text="tan"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:paddingHorizontal="10dp"
+                android:background="#0A1A0A"
+                android:layout_marginHorizontal="2dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnLog"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:text="log"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:paddingHorizontal="10dp"
+                android:background="#0A1A0A"
+                android:layout_marginHorizontal="2dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnLn"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:text="ln"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:paddingHorizontal="10dp"
+                android:background="#0A1A0A"
+                android:layout_marginHorizontal="2dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnSqrt"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:text="√"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:paddingHorizontal="10dp"
+                android:background="#0A1A0A"
+                android:layout_marginHorizontal="2dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnPow"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:text="x^y"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:paddingHorizontal="10dp"
+                android:background="#0A1A0A"
+                android:layout_marginHorizontal="2dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/btnFactorial"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:text="n!"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:paddingHorizontal="10dp"
+                android:background="#0A1A0A"
+                android:layout_marginHorizontal="2dp"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Calculator Button Grid -->
+    <GridLayout
+        android:id="@+id/calculatorGrid"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.55"
+        android:columnCount="4"
+        android:rowCount="5"
+        android:useDefaultMargins="false"
+        android:padding="4dp"
+        android:background="#000000">
+
+        <!-- Row 1 -->
+        <TextView
+            android:id="@+id/btnClear"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="C"
+            android:textColor="#FF3333"
+            android:background="#1A0000"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnParenOpen"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="("
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnParenClose"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text=")"
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnDivide"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="/"
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Row 2 -->
+        <TextView
+            android:id="@+id/btn7"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="7"
+            android:textColor="#00FF00"
+            android:background="#1A1A1A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btn8"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="8"
+            android:textColor="#00FF00"
+            android:background="#1A1A1A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btn9"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="9"
+            android:textColor="#00FF00"
+            android:background="#1A1A1A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnMultiply"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="×"
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Row 3 -->
+        <TextView
+            android:id="@+id/btn4"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="4"
+            android:textColor="#00FF00"
+            android:background="#1A1A1A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btn5"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="5"
+            android:textColor="#00FF00"
+            android:background="#1A1A1A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btn6"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="6"
+            android:textColor="#00FF00"
+            android:background="#1A1A1A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnSubtract"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="-"
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Row 4 -->
+        <TextView
+            android:id="@+id/btn1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="#00FF00"
+            android:background="#1A1A1A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btn2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="2"
+            android:textColor="#00FF00"
+            android:background="#1A1A1A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btn3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="3"
+            android:textColor="#00FF00"
+            android:background="#1A1A1A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnAdd"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="+"
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- Row 5 -->
+        <TextView
+            android:id="@+id/btn0"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="#00FF00"
+            android:background="#1A1A1A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnDot"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="."
+            android:textColor="#00FF00"
+            android:background="#1A1A1A"
+            android:fontFamily="monospace"
+            android:textSize="20sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnBackspace"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="⌫"
+            android:textColor="#FFAA00"
+            android:background="#1A1500"
+            android:fontFamily="monospace"
+            android:textSize="18sp"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/btnEquals"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:gravity="center"
+            android:text="="
+            android:textColor="#000000"
+            android:background="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_margin="2dp"
+            android:clickable="true"
+            android:focusable="true" />
+    </GridLayout>
+
+    <!-- History Section -->
+    <LinearLayout
+        android:id="@+id/historyContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.15"
+        android:orientation="vertical"
+        android:background="#0A0A0A"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=">> HISTORY"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/clearHistoryButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[CLR]"
+                android:textColor="#FF3333"
+                android:fontFamily="monospace"
+                android:textSize="10sp"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/historyRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+    </LinearLayout>
+
+</LinearLayout>

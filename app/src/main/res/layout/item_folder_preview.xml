@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/folderPreviewContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="4dp"
+    android:background="#000000">
+
+    <!-- 2x2 mini grid of app icons -->
+    <GridLayout
+        android:id="@+id/miniIconGrid"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:background="#1A1A1A"
+        android:padding="2dp"
+        android:useDefaultMargins="false">
+
+        <ImageView
+            android:id="@+id/miniIcon1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="1dp"
+            android:src="@drawable/ic_app_default"
+            android:contentDescription="App 1"
+            android:scaleType="fitCenter" />
+
+        <ImageView
+            android:id="@+id/miniIcon2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="1dp"
+            android:src="@drawable/ic_app_default"
+            android:contentDescription="App 2"
+            android:scaleType="fitCenter" />
+
+        <ImageView
+            android:id="@+id/miniIcon3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="1dp"
+            android:src="@drawable/ic_app_default"
+            android:contentDescription="App 3"
+            android:scaleType="fitCenter" />
+
+        <ImageView
+            android:id="@+id/miniIcon4"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_margin="1dp"
+            android:src="@drawable/ic_app_default"
+            android:contentDescription="App 4"
+            android:scaleType="fitCenter" />
+    </GridLayout>
+
+    <!-- Folder name -->
+    <TextView
+        android:id="@+id/folderNameTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Folder"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="4dp" />
+
+</LinearLayout>

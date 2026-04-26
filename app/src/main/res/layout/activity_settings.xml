@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Settings Header -->
+        <TextView
+            android:id="@+id/settingsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">> SETTINGS"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Home Screen Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[HOME_SCREEN]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/settingHomeGridSize"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Grid Size"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingHomeWallpaper"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Wallpaper"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingHomeDockStyle"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Dock Style"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingHomeClockFormat"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Clock Format"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingHomeWeatherDisplay"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Weather Display"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+        </LinearLayout>
+
+        <!-- App Drawer Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[APP_DRAWER]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/settingDrawerColumns"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Grid Columns"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingDrawerSortOrder"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Sort Order"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingDrawerHiddenApps"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Hidden Apps"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingDrawerFastScroll"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Fast Scroll"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+        </LinearLayout>
+
+        <!-- Gestures Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[GESTURES]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/settingGestureSwipeUp"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Swipe Up"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingGestureSwipeDown"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Swipe Down"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingGestureSwipeLeft"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Swipe Left"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingGestureSwipeRight"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Swipe Right"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingGestureDoubleTap"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Double Tap"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingGesturePinch"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Pinch"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+        </LinearLayout>
+
+        <!-- Themes Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[THEMES]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/settingThemeColorScheme"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Color Scheme"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingThemeIconPack"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Icon Pack"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingThemeFont"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Font"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+        </LinearLayout>
+
+        <!-- App Lock Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[APP_LOCK]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/settingAppLockEnabled"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Enable App Lock"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingAppLockPIN"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Change PIN"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingAppLockBiometric"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Biometric Unlock"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingAppLockLockedApps"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Locked Apps"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+        </LinearLayout>
+
+        <!-- Notifications Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[NOTIFICATIONS]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/settingNotifBadges"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Notification Badges"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingNotifPreview"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Notification Preview"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+        </LinearLayout>
+
+        <!-- Search Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[SEARCH]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/settingSearchEngine"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Search Engine"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingSearchVoice"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Voice Search"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+        </LinearLayout>
+
+        <!-- Services Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[SERVICES]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/settingServicesWeather"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Weather Service"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingServicesCalculator"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Calculator"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingServicesNotes"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Notes"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+        </LinearLayout>
+
+        <!-- Security Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[SECURITY]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/settingSecurityPermissions"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Permissions"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingSecurityDefaultLauncher"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Default Launcher"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+        </LinearLayout>
+
+        <!-- Advanced Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[ADVANCED]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/settingAdvancedBackup"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Backup &amp; Restore"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingAdvancedReset"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Reset to Default"
+                android:textColor="#FF3333"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingAdvancedDebug"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Debug Mode"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+        </LinearLayout>
+
+        <!-- About Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[ABOUT]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/settingAboutVersion"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Version"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingAboutLicenses"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="Open Source Licenses"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/settingAboutGitHub"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="GitHub"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:drawableEnd="@drawable/ic_chevron_right"
+                android:drawablePadding="8dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

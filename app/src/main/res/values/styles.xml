@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Existing styles -->
     <style name="Theme.HackerLauncher" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimary">#FF00FF00</item>
         <item name="colorPrimaryDark">#FF005500</item>
@@ -38,5 +39,140 @@
         <item name="android:paddingStart">8dp</item>
         <item name="android:paddingEnd">8dp</item>
         <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <!-- ==================== New Styles ==================== -->
+
+    <!-- App Drawer Activity Theme -->
+    <style name="Theme.HackerLauncher.AppDrawer" parent="Theme.HackerLauncher">
+        <item name="android:windowBackground">@drawable/bg_app_drawer</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+    </style>
+
+    <!-- Settings Activity Theme -->
+    <style name="Theme.HackerLauncher.Settings" parent="Theme.HackerLauncher">
+        <item name="android:windowBackground">#FF000000</item>
+        <item name="android:textColorPrimary">#FF00FF00</item>
+        <item name="android:textColorSecondary">#FF00AA00</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+    </style>
+
+    <!-- Hacker Card View -->
+    <style name="HackerCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">#FF111111</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">0dp</item>
+        <item name="strokeColor">#FF005500</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="contentPadding">12dp</item>
+    </style>
+
+    <!-- Hacker EditText -->
+    <style name="HackerEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">#FF00FF00</item>
+        <item name="android:textColorHint">#FF005500</item>
+        <item name="android:backgroundTint">#FF0A1A0A</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">12dp</item>
+    </style>
+
+    <!-- Hacker CheckBox -->
+    <style name="HackerCheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textColor">#FF00FF00</item>
+        <item name="android:buttonTint">#FF00FF00</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Hacker Switch -->
+    <style name="HackerSwitch" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:textColor">#FF00FF00</item>
+        <item name="android:thumbTint">#FF00FF00</item>
+        <item name="android:trackTint">#FF005500</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Hacker SeekBar -->
+    <style name="HackerSeekBar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:progressTint">#FF00FF00</item>
+        <item name="android:progressBackgroundTint">#FF005500</item>
+        <item name="android:thumbTint">#FF00FF00</item>
+    </style>
+
+    <!-- Hacker Spinner -->
+    <style name="HackerSpinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:textColor">#FF00FF00</item>
+        <item name="android:backgroundTint">#FF0A1A0A</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:popupBackground">#FF1A1A1A</item>
+    </style>
+
+    <!-- Hacker Dialog Title -->
+    <style name="HackerDialogTitle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">#FF00FF00</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Calculator Number Button -->
+    <style name="CalculatorButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_calc_button</item>
+        <item name="android:textColor">#FF00FF00</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <!-- Calculator Operator Button -->
+    <style name="CalculatorOpButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_calc_button_op</item>
+        <item name="android:textColor">#FF00FF00</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <!-- Calculator Equals Button -->
+    <style name="CalculatorEqButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_calc_button_eq</item>
+        <item name="android:textColor">#FF000000</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <!-- Quick Toggle ON -->
+    <style name="QuickToggleOn" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_quick_toggle_on</item>
+        <item name="android:textColor">#FF000000</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
+    </style>
+
+    <!-- Quick Toggle OFF -->
+    <style name="QuickToggleOff" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_quick_toggle_off</item>
+        <item name="android:textColor">#FF00FF00</item>
+        <item name="android:fontFamily">monospace</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:paddingStart">8dp</item>
+        <item name="android:paddingEnd">8dp</item>
     </style>
 </resources>

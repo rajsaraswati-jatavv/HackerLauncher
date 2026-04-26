@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Search Bar -->
+        <LinearLayout
+            android:id="@+id/notesSearchBar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
+            android:background="#0A0A0A">
+
+            <ImageView
+                android:id="@+id/searchIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_search"
+                android:contentDescription="Search"
+                android:tint="#00FF00" />
+
+            <EditText
+                android:id="@+id/notesSearchEditText"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:background="#0A1A0A"
+                android:hint="Search notes..."
+                android:textColorHint="#006600"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="13sp"
+                android:paddingStart="10dp"
+                android:paddingEnd="6dp"
+                android:singleLine="true"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:layout_marginStart="8dp" />
+
+            <!-- Filter/Sort Options -->
+            <ImageView
+                android:id="@+id/filterButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_filter"
+                android:contentDescription="Filter"
+                android:tint="#00FF00"
+                android:padding="4dp"
+                android:layout_marginStart="4dp" />
+
+            <ImageView
+                android:id="@+id/sortButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_sort"
+                android:contentDescription="Sort"
+                android:tint="#00FF00"
+                android:padding="4dp"
+                android:layout_marginStart="4dp" />
+        </LinearLayout>
+
+        <!-- Filter/Sort Options Row (hidden by default) -->
+        <LinearLayout
+            android:id="@+id/filterSortContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#0A0A0A"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/filterAll"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:text="ALL"
+                android:textColor="#000000"
+                android:background="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="10sp"
+                android:paddingHorizontal="10dp"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/filterEncrypted"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:text="ENCRYPTED"
+                android:textColor="#00FF00"
+                android:background="#0A1A0A"
+                android:fontFamily="monospace"
+                android:textSize="10sp"
+                android:paddingHorizontal="10dp"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/filterTagged"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:text="TAGGED"
+                android:textColor="#00FF00"
+                android:background="#0A1A0A"
+                android:fontFamily="monospace"
+                android:textSize="10sp"
+                android:paddingHorizontal="10dp"
+                android:layout_marginEnd="6dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/sortDateDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:text="NEW↓"
+                android:textColor="#00FF00"
+                android:background="#0A1A0A"
+                android:fontFamily="monospace"
+                android:textSize="10sp"
+                android:paddingHorizontal="8dp"
+                android:layout_marginEnd="4dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/sortDateAsc"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:text="OLD↑"
+                android:textColor="#009900"
+                android:background="#0A1A0A"
+                android:fontFamily="monospace"
+                android:textSize="10sp"
+                android:paddingHorizontal="8dp"
+                android:layout_marginEnd="4dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/sortAlpha"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:text="A-Z"
+                android:textColor="#009900"
+                android:background="#0A1A0A"
+                android:fontFamily="monospace"
+                android:textSize="10sp"
+                android:paddingHorizontal="8dp"
+                android:clickable="true"
+                android:focusable="true" />
+        </LinearLayout>
+
+        <!-- Notes Count -->
+        <TextView
+            android:id="@+id/notesCountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">> 0 NOTES"
+            android:textColor="#009900"
+            android:fontFamily="monospace"
+            android:textSize="11sp"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp" />
+
+        <!-- Notes RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/notesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="8dp"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false" />
+
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/emptyNotesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NO_NOTES"
+                android:textColor="#003300"
+                android:fontFamily="monospace"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap + to create a note"
+                android:textColor="#002200"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- FAB for New Note -->
+    <TextView
+        android:id="@+id/fabNewNote"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:text="+"
+        android:textColor="#000000"
+        android:background="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:elevation="6dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+</FrameLayout>

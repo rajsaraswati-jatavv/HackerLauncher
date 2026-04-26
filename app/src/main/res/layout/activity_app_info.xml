@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical">
+
+    <!-- App Header: Icon + Name + Package -->
+    <LinearLayout
+        android:id="@+id/appHeaderContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:background="#0A0A0A">
+
+        <ImageView
+            android:id="@+id/appIconImageView"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:contentDescription="App icon"
+            android:src="@drawable/ic_app_default" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp">
+
+            <TextView
+                android:id="@+id/appNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="App Name"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/appPackageText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="com.example.app"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ScrollView for Details -->
+    <ScrollView
+        android:id="@+id/detailsScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Version, Size, Dates Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=">> APP_INFO"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#1A1A1A"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp">
+
+                <include layout="@layout/item_info_row"
+                    android:id="@+id/versionRow" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#0A1A0A"
+                    android:layout_marginVertical="6dp" />
+
+                <include layout="@layout/item_info_row"
+                    android:id="@+id/sizeRow" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#0A1A0A"
+                    android:layout_marginVertical="6dp" />
+
+                <include layout="@layout/item_info_row"
+                    android:id="@+id/installDateRow" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#0A1A0A"
+                    android:layout_marginVertical="6dp" />
+
+                <include layout="@layout/item_info_row"
+                    android:id="@+id/updateDateRow" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#0A1A0A"
+                    android:layout_marginVertical="6dp" />
+
+                <include layout="@layout/item_info_row"
+                    android:id="@+id/targetSdkRow" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#0A1A0A"
+                    android:layout_marginVertical="6dp" />
+
+                <include layout="@layout/item_info_row"
+                    android:id="@+id/minSdkRow" />
+            </LinearLayout>
+
+            <!-- Permissions Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=">> PERMISSIONS"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:id="@+id/permissionsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#1A1A1A"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/permissionsCountText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 permissions"
+                    android:textColor="#009900"
+                    android:fontFamily="monospace"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="8dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/permissionsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+                <TextView
+                    android:id="@+id/noPermissionsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No permissions required"
+                    android:textColor="#006600"
+                    android:fontFamily="monospace"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <!-- Data / Cache Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=">> STORAGE"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#1A1A1A"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp">
+
+                <include layout="@layout/item_info_row"
+                    android:id="@+id/appSizeRow" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#0A1A0A"
+                    android:layout_marginVertical="6dp" />
+
+                <include layout="@layout/item_info_row"
+                    android:id="@+id/dataSizeRow" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#0A1A0A"
+                    android:layout_marginVertical="6dp" />
+
+                <include layout="@layout/item_info_row"
+                    android:id="@+id/cacheSizeRow" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Action Buttons -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0A0A0A"
+        android:paddingVertical="8dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp">
+
+            <Button
+                android:id="@+id/buttonLaunch"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="LAUNCH"
+                android:textColor="#000000"
+                android:backgroundTint="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:minWidth="72dp"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/buttonUninstall"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="UNINSTALL"
+                android:textColor="#FF3333"
+                android:backgroundTint="#1A0000"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:minWidth="72dp"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/buttonForceStop"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="FORCE_STOP"
+                android:textColor="#FFAA00"
+                android:backgroundTint="#1A1500"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:minWidth="72dp"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/buttonClearCache"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="CLR_CACHE"
+                android:textColor="#00FF00"
+                android:backgroundTint="#0A1A0A"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:minWidth="72dp"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/buttonClearData"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="CLR_DATA"
+                android:textColor="#FF3333"
+                android:backgroundTint="#1A0000"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:minWidth="72dp"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/buttonExportApk"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="EXPORT_APK"
+                android:textColor="#00FF00"
+                android:backgroundTint="#0A1A0A"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:minWidth="72dp"
+                android:layout_marginEnd="6dp" />
+
+            <Button
+                android:id="@+id/buttonShare"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="SHARE"
+                android:textColor="#00FF00"
+                android:backgroundTint="#0A1A0A"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:minWidth="72dp" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</LinearLayout>

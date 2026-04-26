@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Sun -->
+    <path
+        android:fillColor="#FF00FF00"
+        android:pathData="M6.76,4.84l-1.8,-1.79l-1.41,1.41l1.79,1.79L6.76,4.84zM4,10.5H1v2h3V10.5zM13,0.55h-2V3.5h2V0.55zM20.45,4.46l-1.41,-1.41l-1.79,1.79l1.41,1.41L20.45,4.46zM17.24,18.16l1.79,1.8l1.41,-1.41l-1.8,-1.79L17.24,18.16zM20,10.5v2h3v-2H20zM12,5.5c-3.31,0 -6,2.69 -6,6s2.69,6 6,6s6,-2.69 6,-6S15.31,5.5 12,5.5zM11,22.45h2V19.5h-2V22.45zM3.55,18.54l1.41,1.41l1.79,-1.8l-1.41,-1.41L3.55,18.54z" />
+    <!-- Cloud overlay -->
+    <path
+        android:fillColor="#FF00FF00"
+        android:pathData="M19.35,10.04C18.67,6.59 15.64,4 12,4C9.11,4 6.6,5.64 5.35,8.04C2.34,8.36 0,10.91 0,14c0,3.31 2.69,6 6,6h13c2.76,0 5,-2.24 5,-5C24,12.36 21.95,10.22 19.35,10.04z" />
+</vector>

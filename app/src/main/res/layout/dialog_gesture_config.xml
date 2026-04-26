@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/gestureConfigDialogContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#0A0A0A"
+    android:padding="16dp">
+
+    <!-- Dialog Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=">> GESTURE_CONFIG"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Gesture Type Spinner -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GESTURE_TYPE"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:layout_marginBottom="4dp" />
+
+    <Spinner
+        android:id="@+id/gestureTypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#0A1A0A"
+        android:popupBackground="#1A1A1A"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="13sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="8dp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Action Type Spinner -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ACTION_TYPE"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:layout_marginBottom="4dp" />
+
+    <Spinner
+        android:id="@+id/actionTypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#0A1A0A"
+        android:popupBackground="#1A1A1A"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="13sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="8dp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- App Selector Button -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TARGET_APP"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:layout_marginBottom="4dp" />
+
+    <LinearLayout
+        android:id="@+id/appSelectorButton"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#0A1A0A"
+        android:paddingStart="10dp"
+        android:paddingEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginBottom="12dp">
+
+        <ImageView
+            android:id="@+id/selectedAppIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_app_default"
+            android:contentDescription="Selected app"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/selectedAppName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Select app..."
+            android:textColor="#009900"
+            android:fontFamily="monospace"
+            android:textSize="13sp"
+            android:layout_marginStart="6dp" />
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_chevron_right"
+            android:contentDescription="Select"
+            android:tint="#009900" />
+    </LinearLayout>
+
+    <!-- Sensitivity Seekbar -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SENSITIVITY"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="11sp"
+        android:layout_marginBottom="4dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOW"
+            android:textColor="#006600"
+            android:fontFamily="monospace"
+            android:textSize="9sp"
+            android:layout_marginEnd="8dp" />
+
+        <SeekBar
+            android:id="@+id/sensitivitySeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="10"
+            android:progress="5"
+            android:progressTint="#00FF00"
+            android:progressBackgroundTint="#003300"
+            android:thumbTint="#00FF00" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HIGH"
+            android:textColor="#006600"
+            android:fontFamily="monospace"
+            android:textSize="9sp"
+            android:layout_marginStart="8dp" />
+    </LinearLayout>
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <TextView
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="CANCEL"
+            android:textColor="#009900"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:paddingHorizontal="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="SAVE"
+            android:textColor="#000000"
+            android:background="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="16dp"
+            android:clickable="true"
+            android:focusable="true" />
+    </LinearLayout>
+
+</LinearLayout>

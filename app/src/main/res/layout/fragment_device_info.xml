@@ -1,0 +1,493 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <!-- Header -->
+        <TextView
+            android:id="@+id/deviceInfoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">> DEVICE_INFO"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Battery Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[BATTERY]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:id="@+id/batterySection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp">
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/batteryLevelRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/batteryStatusRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/batteryHealthRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/batteryTempRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/batteryVoltageRow" />
+        </LinearLayout>
+
+        <!-- CPU Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[CPU]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:id="@+id/cpuSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp">
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/cpuNameRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/cpuCoresRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/cpuFreqRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/cpuUsageRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/cpuArchRow" />
+        </LinearLayout>
+
+        <!-- RAM Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[RAM]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:id="@+id/ramSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp">
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/ramTotalRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/ramUsedRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/ramAvailableRow" />
+
+            <!-- RAM usage bar -->
+            <ProgressBar
+                android:id="@+id/ramUsageBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="6dp"
+                android:progressTint="#00FF00"
+                android:progressBackgroundTint="#003300"
+                android:max="100" />
+        </LinearLayout>
+
+        <!-- Storage Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[STORAGE]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:id="@+id/storageSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp">
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/storageTotalRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/storageUsedRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/storageAvailableRow" />
+
+            <ProgressBar
+                android:id="@+id/storageUsageBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_marginTop="6dp"
+                android:progressTint="#00FF00"
+                android:progressBackgroundTint="#003300"
+                android:max="100" />
+        </LinearLayout>
+
+        <!-- Screen Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[SCREEN]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:id="@+id/screenSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp">
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/screenResolutionRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/screenDensityRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/screenSizeRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/screenRefreshRateRow" />
+        </LinearLayout>
+
+        <!-- Network Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[NETWORK]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:id="@+id/networkSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp">
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/networkTypeRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/networkWifiRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/networkIpRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/networkMacRow" />
+        </LinearLayout>
+
+        <!-- OS Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[OS]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:id="@+id/osSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp">
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/osVersionRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/osApiLevelRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/osSecurityPatchRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/osBuildNumberRow" />
+        </LinearLayout>
+
+        <!-- Device Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[DEVICE]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:id="@+id/deviceSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp">
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/deviceManufacturerRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/deviceModelRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/deviceBrandRow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#0A1A0A"
+                android:layout_marginVertical="4dp" />
+
+            <include layout="@layout/item_info_row"
+                android:id="@+id/deviceSerialRow" />
+        </LinearLayout>
+
+        <!-- Sensors Section -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[SENSORS]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <LinearLayout
+            android:id="@+id/sensorsSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="10dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:id="@+id/sensorCountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 sensors found"
+                android:textColor="#009900"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:layout_marginBottom="6dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/sensorsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

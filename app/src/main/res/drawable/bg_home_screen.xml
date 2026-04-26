@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Solid black background -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FF000000" />
+        </shape>
+    </item>
+    <!-- Subtle grid pattern overlay -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#00000000" />
+            <stroke
+                android:width="0.5dp"
+                android:color="#0A00FF00"
+                android:dashWidth="1dp"
+                android:dashGap="47dp" />
+        </shape>
+    </item>
+</layer-list>

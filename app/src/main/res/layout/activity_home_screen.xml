@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- Main content container -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Weather + Clock Area (FrameLayout overlay) -->
+        <FrameLayout
+            android:id="@+id/weatherClockArea"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.35"
+            android:background="#000000">
+
+            <!-- Clock -->
+            <LinearLayout
+                android:id="@+id/clockContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/clockText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00:00"
+                    android:textColor="#00FF00"
+                    android:fontFamily="monospace"
+                    android:textSize="48sp"
+                    android:textStyle="bold"
+                    android:shadowColor="#00FF00"
+                    android:shadowRadius="4"
+                    android:shadowDx="0"
+                    android:shadowDy="0" />
+
+                <TextView
+                    android:id="@+id/dateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mon, Jan 01"
+                    android:textColor="#009900"
+                    android:fontFamily="monospace"
+                    android:textSize="14sp"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <!-- Weather overlay -->
+            <LinearLayout
+                android:id="@+id/weatherContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/weatherIcon"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_weather"
+                    android:contentDescription="Weather"
+                    android:tint="#00FF00" />
+
+                <TextView
+                    android:id="@+id/weatherTempText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--°C"
+                    android:textColor="#00FF00"
+                    android:fontFamily="monospace"
+                    android:textSize="18sp"
+                    android:layout_marginStart="6dp" />
+
+                <TextView
+                    android:id="@+id/weatherConditionText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--"
+                    android:textColor="#009900"
+                    android:fontFamily="monospace"
+                    android:textSize="12sp"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Swipe gesture area indicators -->
+            <View
+                android:id="@+id/swipeUpArea"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent" />
+        </FrameLayout>
+
+        <!-- Main App Grid Area -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.55">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/homeAppGrid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="8dp"
+                android:clipToPadding="false" />
+
+            <!-- Page Indicator Dots -->
+            <LinearLayout
+                android:id="@+id/pageIndicatorDots"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <!-- Dots are added dynamically -->
+            </LinearLayout>
+        </FrameLayout>
+
+        <!-- Dock Bar -->
+        <LinearLayout
+            android:id="@+id/dockBarContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#0A0A0A"
+            android:paddingTop="4dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/dockRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal" />
+
+            <!-- Bottom padding for nav bar -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Swipe gesture areas (invisible overlays) -->
+    <View
+        android:id="@+id/swipeLeftArea"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start" />
+
+    <View
+        android:id="@+id/swipeRightArea"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end" />
+
+    <View
+        android:id="@+id/swipeDownArea"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_gravity="top" />
+
+</FrameLayout>

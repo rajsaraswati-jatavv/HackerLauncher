@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Grid Size -->
+    <string-array name="grid_size_entries">
+        <item>3×3</item>
+        <item>4×4</item>
+        <item>5×5</item>
+        <item>6×6</item>
+    </string-array>
+    <string-array name="grid_size_values">
+        <item>3x3</item>
+        <item>4x4</item>
+        <item>5x5</item>
+        <item>6x6</item>
+    </string-array>
+
+    <!-- Icon Size -->
+    <string-array name="icon_size_entries">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+    <string-array name="icon_size_values">
+        <item>small</item>
+        <item>medium</item>
+        <item>large</item>
+    </string-array>
+
+    <!-- Dock Apps Count -->
+    <string-array name="dock_apps_entries">
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+    <string-array name="dock_apps_values">
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+
+    <!-- Sort Order -->
+    <string-array name="sort_order_entries">
+        <item>A–Z</item>
+        <item>Z–A</item>
+        <item>Install Date</item>
+        <item>Most Used</item>
+    </string-array>
+    <string-array name="sort_order_values">
+        <item>az</item>
+        <item>za</item>
+        <item>install_date</item>
+        <item>most_used</item>
+    </string-array>
+
+    <!-- Gesture Actions -->
+    <string-array name="gesture_action_entries">
+        <item>None</item>
+        <item>Open App Drawer</item>
+        <item>Open Search</item>
+        <item>Open Notifications</item>
+        <item>Open Quick Settings</item>
+        <item>Lock Screen</item>
+        <item>Open App</item>
+        <item>Open Calculator</item>
+        <item>Open Weather</item>
+        <item>Toggle Flashlight</item>
+        <item>Screenshot</item>
+        <item>Open Notes</item>
+        <item>Open Todo</item>
+    </string-array>
+    <string-array name="gesture_action_values">
+        <item>none</item>
+        <item>open_drawer</item>
+        <item>open_search</item>
+        <item>open_notifications</item>
+        <item>open_quick_settings</item>
+        <item>lock_screen</item>
+        <item>open_app</item>
+        <item>open_calculator</item>
+        <item>open_weather</item>
+        <item>toggle_flashlight</item>
+        <item>screenshot</item>
+        <item>open_notes</item>
+        <item>open_todo</item>
+    </string-array>
+
+    <!-- Color Theme -->
+    <string-array name="color_theme_entries">
+        <item>Classic Green</item>
+        <item>Cyan</item>
+        <item>Amber</item>
+        <item>Pink</item>
+        <item>Blue</item>
+        <item>Purple</item>
+        <item>Orange</item>
+        <item>Teal</item>
+    </string-array>
+    <string-array name="color_theme_values">
+        <item>classic_green</item>
+        <item>cyan</item>
+        <item>amber</item>
+        <item>pink</item>
+        <item>blue</item>
+        <item>purple</item>
+        <item>orange</item>
+        <item>teal</item>
+    </string-array>
+
+    <!-- Font Style -->
+    <string-array name="font_entries">
+        <item>Monospace</item>
+        <item>Serif</item>
+        <item>Sans Serif</item>
+        <item>System Default</item>
+    </string-array>
+    <string-array name="font_values">
+        <item>monospace</item>
+        <item>serif</item>
+        <item>sans</item>
+        <item>system</item>
+    </string-array>
+
+    <!-- Lock Method -->
+    <string-array name="lock_method_entries">
+        <item>PIN</item>
+        <item>Pattern</item>
+        <item>Biometric</item>
+    </string-array>
+    <string-array name="lock_method_values">
+        <item>pin</item>
+        <item>pattern</item>
+        <item>biometric</item>
+    </string-array>
+
+    <!-- Auto Lock Timeout -->
+    <string-array name="auto_lock_timeout_entries">
+        <item>Immediate</item>
+        <item>30 seconds</item>
+        <item>1 minute</item>
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+    </string-array>
+    <string-array name="auto_lock_timeout_values">
+        <item>immediate</item>
+        <item>30s</item>
+        <item>1m</item>
+        <item>5m</item>
+        <item>10m</item>
+    </string-array>
+</resources>

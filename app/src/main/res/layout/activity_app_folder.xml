@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Folder Name (editable) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <ImageView
+            android:id="@+id/folderIconView"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_folder"
+            android:contentDescription="Folder"
+            android:tint="#00FF00" />
+
+        <EditText
+            android:id="@+id/folderNameEditText"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="#0A1A0A"
+            android:hint="Folder name"
+            android:textColorHint="#006600"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp"
+            android:singleLine="true"
+            android:inputType="text"
+            android:layout_marginStart="8dp" />
+
+        <ImageView
+            android:id="@+id/editFolderNameButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_edit"
+            android:contentDescription="Edit name"
+            android:tint="#009900"
+            android:padding="4dp"
+            android:layout_marginStart="4dp" />
+    </LinearLayout>
+
+    <!-- Folder App Count -->
+    <TextView
+        android:id="@+id/folderAppCountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=">> 0 APPS"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="12sp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- RecyclerView Grid for Folder Apps -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/folderAppsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp" />
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/emptyFolderState"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_folder_open"
+            android:contentDescription="Empty folder"
+            android:tint="#003300"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FOLDER_EMPTY"
+            android:textColor="#003300"
+            android:fontFamily="monospace"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Bottom Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="8dp">
+
+        <Button
+            android:id="@+id/addAppButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="+ ADD_APP"
+            android:textColor="#000000"
+            android:backgroundTint="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:minWidth="100dp"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/deleteFolderButton"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="DEL_FOLDER"
+            android:textColor="#FF3333"
+            android:backgroundTint="#1A0000"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:minWidth="100dp" />
+    </LinearLayout>
+
+</LinearLayout>

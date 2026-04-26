@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Battery outline -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF00FF00"
+        android:strokeWidth="2"
+        android:pathData="M2,7h16v10H2z" />
+    <!-- Battery tip -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF00FF00"
+        android:strokeWidth="2"
+        android:pathData="M18,10h2v4h-2z" />
+    <!-- Battery level -->
+    <path
+        android:fillColor="#FF00FF00"
+        android:pathData="M4,9h10v6H4z" />
+</vector>

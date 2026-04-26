@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/quickToggleContainer"
+    android:layout_width="72dp"
+    android:layout_height="72dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#1A1A1A"
+    android:padding="8dp"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Icon -->
+    <ImageView
+        android:id="@+id/toggleIconImageView"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/ic_wifi"
+        android:contentDescription="Toggle"
+        android:tint="#009900" />
+
+    <!-- Label -->
+    <TextView
+        android:id="@+id/toggleLabelTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="WiFi"
+        android:textColor="#009900"
+        android:fontFamily="monospace"
+        android:textSize="9sp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginTop="4dp" />
+
+</LinearLayout>

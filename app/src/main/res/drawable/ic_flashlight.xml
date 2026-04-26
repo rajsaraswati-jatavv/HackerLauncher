@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Flashlight body -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF00FF00"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M9,18h6v-3l3,-3V4H6v8l3,3v3z" />
+    <!-- Flashlight beam lines -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#FF00FF00"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M12,2v2M4.5,4.5l1.5,1.5M19.5,4.5l-1.5,1.5" />
+</vector>

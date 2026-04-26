@@ -27,7 +27,10 @@ class HackerApp : Application() {
         // Initialize WorkManager
         WorkManager.getInstance(this)
 
-        logger.info("HackerApp v3.0 initialized")
+        // Initialize theme
+        applySavedTheme()
+
+        logger.info("HackerApp v5.0 Ultimate initialized")
     }
 
     private fun createNotificationChannels() {
@@ -68,11 +71,45 @@ class HackerApp : Application() {
                     NotificationManager.IMPORTANCE_LOW
                 ).apply {
                     description = "Background scan results"
+                },
+                NotificationChannel(
+                    "app_lock",
+                    "App Lock",
+                    NotificationManager.IMPORTANCE_HIGH
+                ).apply {
+                    description = "App lock notifications"
+                    setShowBadge(false)
+                },
+                NotificationChannel(
+                    "weather_updates",
+                    "Weather Updates",
+                    NotificationManager.IMPORTANCE_LOW
+                ).apply {
+                    description = "Weather update notifications"
+                },
+                NotificationChannel(
+                    "todo_reminders",
+                    "Todo Reminders",
+                    NotificationManager.IMPORTANCE_DEFAULT
+                ).apply {
+                    description = "Task due date reminders"
+                },
+                NotificationChannel(
+                    "intruder_alerts",
+                    "Intruder Alerts",
+                    NotificationManager.IMPORTANCE_HIGH
+                ).apply {
+                    description = "Wrong PIN attempt alerts with photo"
                 }
             )
 
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannels(channels)
         }
+    }
+
+    private fun applySavedTheme() {
+        // Theme will be applied per-activity via ThemeManager
+        logger.info("Theme system initialized")
     }
 }
