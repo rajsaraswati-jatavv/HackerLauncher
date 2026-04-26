@@ -197,9 +197,8 @@
             android:layout_height="100dp"
             android:layout_marginBottom="8dp">
 
-            <view
-                class="com.hackerlauncher.modules.RamCleanerFragment$RamGraphView"
-                android:id="@+id/ramGraphView"
+            <FrameLayout
+                android:id="@+id/ramGraphContainer"
                 android:layout_width="match_parent"
                 android:layout_height="100dp" />
         </FrameLayout>

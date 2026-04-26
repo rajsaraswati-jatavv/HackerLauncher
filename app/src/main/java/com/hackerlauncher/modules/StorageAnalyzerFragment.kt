@@ -77,7 +77,9 @@ class StorageAnalyzerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        storagePieChart = view.findViewById(R.id.storagePieView)
+        val storagePieContainer: android.widget.FrameLayout = view.findViewById(R.id.storagePieContainer)
+        storagePieChart = StoragePieView(requireContext())
+        storagePieContainer.addView(storagePieChart, android.widget.FrameLayout.LayoutParams(android.widget.FrameLayout.LayoutParams.MATCH_PARENT, android.widget.FrameLayout.LayoutParams.MATCH_PARENT))
         recyclerViewCategories = view.findViewById(R.id.recyclerViewCategories)
         recyclerViewLargeFiles = view.findViewById(R.id.recyclerViewLargeFiles)
         textViewTotalStorage = view.findViewById(R.id.textViewTotalStorage)

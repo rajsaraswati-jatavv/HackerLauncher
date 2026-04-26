@@ -60,9 +60,8 @@
             android:layout_height="150dp"
             android:layout_marginBottom="8dp">
 
-            <view
-                class="com.hackerlauncher.modules.NetworkSpeedMonitorFragment$SpeedGraphView"
-                android:id="@+id/speedGraphView"
+            <FrameLayout
+                android:id="@+id/speedGraphContainer"
                 android:layout_width="match_parent"
                 android:layout_height="150dp" />
         </FrameLayout>

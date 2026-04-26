@@ -86,16 +86,10 @@
 
         <!-- CPU Graph View -->
         <FrameLayout
+            android:id="@+id/cpuGraphContainer"
             android:layout_width="match_parent"
             android:layout_height="150dp"
-            android:layout_marginBottom="8dp">
-
-            <view
-                class="com.hackerlauncher.modules.CpuMonitorFragment$CpuGraphView"
-                android:id="@+id/cpuGraphView"
-                android:layout_width="match_parent"
-                android:layout_height="150dp" />
-        </FrameLayout>
+            android:layout_marginBottom="8dp" />
 
         <!-- CPU Progress Bar -->
         <ProgressBar
