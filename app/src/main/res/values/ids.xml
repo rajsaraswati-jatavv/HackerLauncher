@@ -279,7 +279,6 @@
     <item type="id" name="phones" />
     <item type="id" name="emails" />
     <item type="id" name="events" />
-</resources>
 
     <!-- WiFi Arsenal -->
     <item type="id" name="tvWifiArsenalOutput" />
@@ -322,3 +321,4 @@
     <item type="id" name="btnCheckRoot" />
     <item type="id" name="btnRootShell" />
     <item type="id" name="btnRootExecute" />
+</resources>
