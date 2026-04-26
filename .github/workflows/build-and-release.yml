@@ -31,16 +31,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.5'
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          validate-wrappers: false
 
       - name: Create google-services.json
         run: |
@@ -49,9 +40,6 @@ jobs:
           else
             echo '{"project_info":{"project_number":"000000000000","project_id":"placeholder-project","storage_bucket":"placeholder-project.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:000000000000:android:0000000000000000","android_client_info":{"package_name":"com.hackerlauncher"}},"oauth_client":[{"client_id":"000000000000-000000000000000000000.apps.googleusercontent.com","client_type":3}],"api_key":[{"current_key":"placeholder-api-key"}],"services":{"appinvite_service":{"other_platform_oauth_client":[]}}}],"configuration_version":"1"}' > app/google-services.json
           fi
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew || true
 
       - name: Build Debug APK
         run: gradle assembleDebug --no-daemon --stacktrace
