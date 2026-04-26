@@ -11,15 +11,14 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- RAM Meter (Circular Placeholder) -->
+        <!-- RAM Circular Meter -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginBottom="12dp">
 
             <ProgressBar
-                android:id="@+id/progressRamCircular"
+                android:id="@+id/progressBarRam"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="180dp"
                 android:layout_height="180dp"
@@ -37,7 +36,7 @@
                 android:gravity="center">
 
                 <TextView
-                    android:id="@+id/txtRamPercent"
+                    android:id="@+id/textViewRamPercent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="65%"
@@ -61,10 +60,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="8dp">
 
             <TextView
-                android:id="@+id/txtRamUsed"
+                android:id="@+id/textViewUsedRam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -75,7 +74,7 @@
                 android:gravity="center" />
 
             <TextView
-                android:id="@+id/txtRamTotal"
+                android:id="@+id/textViewTotalRam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -86,7 +85,7 @@
                 android:gravity="center" />
 
             <TextView
-                android:id="@+id/txtRamFree"
+                android:id="@+id/textViewFreeRam"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -97,47 +96,90 @@
                 android:gravity="center" />
         </LinearLayout>
 
-        <!-- Boost Button -->
-        <Button
-            android:id="@+id/btnBoost"
+        <!-- Visual RAM Meter Bar -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="⚡ BOOST RAM"
-            android:textColor="#000000"
-            android:backgroundTint="#00FF00"
+            android:layout_height="24dp"
+            android:background="#1A1A1A"
+            android:layout_marginBottom="12dp">
+
+            <View
+                android:id="@+id/viewRamMeterFill"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:background="#00FF00" />
+        </LinearLayout>
+
+        <!-- Boost Score -->
+        <TextView
+            android:id="@+id/textViewBoostScore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Boost Score: 35% [FAIR]"
+            android:textColor="#FFFF00"
             android:fontFamily="monospace"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
+            android:gravity="center"
+            android:layout_marginBottom="12dp" />
 
-        <!-- Auto-Clean Toggle -->
+        <!-- Clean Button -->
+        <Button
+            android:id="@+id/buttonClean"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="CLEAN NOW"
+            android:textColor="#000000"
+            android:backgroundTint="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Auto-Clean Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="#1A1A1A"
+            android:orientation="vertical"
+            android:background="#0A0A0A"
             android:padding="12dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="8dp">
 
             <TextView
-                android:layout_width="0dp"
+                android:id="@+id/textViewAutoCleanStatus"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Auto-Clean"
-                android:textColor="#00FF00"
+                android:text="Auto-clean: OFF"
+                android:textColor="#888888"
                 android:fontFamily="monospace"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:layout_marginBottom="8dp" />
 
-            <Switch
-                android:id="@+id/switchAutoClean"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:trackTint="#0A1A0A"
-                android:thumbTint="#00FF00" />
+            <Button
+                android:id="@+id/buttonToggleAutoClean"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="Enable Auto-Clean"
+                android:textColor="#00FF00"
+                android:backgroundTint="#1A1A1A"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:strokeColor="#00FF00" />
         </LinearLayout>
 
-        <!-- Process List -->
+        <!-- Process Count -->
+        <TextView
+            android:id="@+id/textViewProcessCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Processes: 0"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Process List Header -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -149,7 +191,7 @@
             android:layout_marginBottom="8dp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerRamProcesses"
+            android:id="@+id/recyclerViewProcesses"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false" />

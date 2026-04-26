@@ -48,7 +48,7 @@ class SystemMonitorService : Service() {
 
     companion object {
         const val TAG = "SystemMonitorService"
-        const val CHANNEL_ID = "system_monitor_service"
+        const val CHANNEL_ID = "system_monitor"
         const val NOTIFICATION_ID = 1007
         const val ACTION_START = "com.hackerlauncher.ACTION_START_SYSTEM_MONITOR"
         const val ACTION_STOP = "com.hackerlauncher.ACTION_STOP_SYSTEM_MONITOR"

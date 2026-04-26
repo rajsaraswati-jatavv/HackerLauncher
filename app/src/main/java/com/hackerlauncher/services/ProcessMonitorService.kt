@@ -45,7 +45,7 @@ class ProcessMonitorService : Service() {
 
     companion object {
         const val TAG = "ProcessMonitorService"
-        const val CHANNEL_ID = "process_monitor_service"
+        const val CHANNEL_ID = "process_monitor"
         const val NOTIFICATION_ID = 1006
         const val ACTION_START = "com.hackerlauncher.ACTION_START_PROCESS_MONITOR"
         const val ACTION_STOP = "com.hackerlauncher.ACTION_STOP_PROCESS_MONITOR"

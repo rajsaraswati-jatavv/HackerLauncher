@@ -18,20 +18,21 @@
             android:orientation="vertical"
             android:background="#0A0A0A"
             android:padding="16dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="12dp">
 
             <TextView
+                android:id="@+id/tvStorageUsage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="[ STORAGE USAGE ]"
+                android:text="Storage: 72% Used"
                 android:textColor="#00FF00"
                 android:fontFamily="monospace"
-                android:textSize="13sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="8dp" />
 
             <ProgressBar
-                android:id="@+id/progressStorage"
+                android:id="@+id/storageProgressBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="12dp"
@@ -41,36 +42,18 @@
                 android:progressBackgroundTint="#1A1A1A"
                 android:layout_marginBottom="8dp" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvStorageDetail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/txtStorageUsed"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Used: 46.2 GB"
-                    android:textColor="#00FF00"
-                    android:fontFamily="monospace"
-                    android:textSize="11sp" />
-
-                <TextView
-                    android:id="@+id/txtStorageTotal"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Total: 64 GB"
-                    android:textColor="#00FF00"
-                    android:fontFamily="monospace"
-                    android:textSize="11sp"
-                    android:gravity="end" />
-            </LinearLayout>
+                android:text="═══ STORAGE INFO ═══\nTotal: 64 GB\nUsed: 46.2 GB\nFree: 17.8 GB"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp" />
         </LinearLayout>
 
         <!-- Scan Button -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnScan"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -80,11 +63,11 @@
             android:fontFamily="monospace"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="8dp" />
 
         <!-- Scan Progress -->
         <ProgressBar
-            android:id="@+id/progressScan"
+            android:id="@+id/scanProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="6dp"
@@ -93,9 +76,53 @@
             android:progressTint="#00FF00"
             android:progressBackgroundTint="#1A1A1A"
             android:visibility="gone"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="8dp" />
 
-        <!-- Results -->
+        <!-- Total Size -->
+        <TextView
+            android:id="@+id/tvTotalSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Selected: 0 B / Total: 0 B"
+            android:textColor="#FFFF00"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Select All -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <CheckBox
+                android:id="@+id/btnSelectAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select All"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:buttonTint="#00FF41"
+                android:checked="true" />
+        </LinearLayout>
+
+        <!-- Empty State -->
+        <TextView
+            android:id="@+id/emptyState"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="No junk files found. Tap SCAN to search."
+            android:textColor="#444444"
+            android:fontFamily="monospace"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Results Header -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -106,24 +133,44 @@
             android:textStyle="bold"
             android:layout_marginBottom="8dp" />
 
+        <!-- Results Recycler -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerScanResults"
+            android:id="@+id/junkRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:nestedScrollingEnabled="false"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="12dp" />
 
-        <!-- Clean All Button -->
-        <Button
-            android:id="@+id/btnCleanAll"
+        <!-- Clean Buttons -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="CLEAN ALL"
-            android:textColor="#000000"
-            android:backgroundTint="#00FF00"
-            android:fontFamily="monospace"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCleanSelected"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="Clean Selected (0)"
+                android:textColor="#000000"
+                android:backgroundTint="#FFFF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:layout_marginEnd="6dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCleanAll"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="CLEAN ALL"
+                android:textColor="#000000"
+                android:backgroundTint="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

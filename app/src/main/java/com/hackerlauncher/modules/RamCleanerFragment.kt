@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -38,11 +39,16 @@ class RamCleanerFragment : Fragment() {
     private lateinit var recyclerViewProcesses: RecyclerView
     private lateinit var textViewAutoCleanStatus: TextView
     private lateinit var buttonToggleAutoClean: Button
+    private lateinit var buttonDeepClean: Button
+    private lateinit var textViewCleanHistory: TextView
 
     private val processList = mutableListOf<RamProcessInfo>()
+    private val whitelist = mutableSetOf<String>()
     private var autoCleanJob: Job? = null
     private var isAutoCleanEnabled = false
     private var autoCleanInterval = 30 * 60 * 1000L // 30 minutes
+    private var totalCleanedBytes = 0L
+    private var cleanCount = 0
 
     data class RamProcessInfo(
         val processName: String,
@@ -78,6 +84,8 @@ class RamCleanerFragment : Fragment() {
         setupRecyclerView()
         setupButtons()
         loadAutoCleanSettings()
+        loadWhitelist()
+        loadCleanStats()
         updateRamInfo()
     }
 
@@ -96,17 +104,24 @@ class RamCleanerFragment : Fragment() {
         buttonToggleAutoClean.setOnClickListener {
             isAutoCleanEnabled = !isAutoCleanEnabled
             saveAutoCleanSettings()
+            updateAutoCleanUI()
             if (isAutoCleanEnabled) {
                 startAutoClean()
-                textViewAutoCleanStatus.text = "Auto-clean: ACTIVE (30min)"
-                textViewAutoCleanStatus.setTextColor(0xFF00FF00.toInt())
-                buttonToggleAutoClean.text = "Disable Auto-Clean"
             } else {
                 stopAutoClean()
-                textViewAutoCleanStatus.text = "Auto-clean: OFF"
-                textViewAutoCleanStatus.setTextColor(0xFF888888.toInt())
-                buttonToggleAutoClean.text = "Enable Auto-Clean"
             }
+        }
+    }
+
+    private fun updateAutoCleanUI() {
+        if (isAutoCleanEnabled) {
+            textViewAutoCleanStatus.text = "Auto-clean: ACTIVE (30min)"
+            textViewAutoCleanStatus.setTextColor(0xFF00FF00.toInt())
+            buttonToggleAutoClean.text = "Disable Auto-Clean"
+        } else {
+            textViewAutoCleanStatus.text = "Auto-clean: OFF"
+            textViewAutoCleanStatus.setTextColor(0xFF888888.toInt())
+            buttonToggleAutoClean.text = "Enable Auto-Clean"
         }
     }
 
@@ -129,8 +144,8 @@ class RamCleanerFragment : Fragment() {
         progressBarRam.max = 100
         progressBarRam.progress = percentUsed
 
-        // Update visual RAM meter (fill width proportionally)
-        val maxWidth = 800 // approximate dp
+        // Update visual RAM meter bar (fill width proportionally)
+        val maxWidth = 800
         val fillWidth = (percentUsed * maxWidth) / 100
         val params = progressBarRamVisual.layoutParams
         params.width = if (percentUsed > 0) (fillWidth * resources.displayMetrics.density).toInt() else 1
@@ -220,6 +235,9 @@ class RamCleanerFragment : Fragment() {
             withContext(Dispatchers.IO) {
                 val processes = activityManager.runningAppProcesses ?: return@withContext
                 for (processInfo in processes) {
+                    // Skip whitelisted processes
+                    if (whitelist.contains(processInfo.processName)) continue
+
                     if (processInfo.importance > ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND_SERVICE) {
                         try {
                             val memInfo =
@@ -233,6 +251,18 @@ class RamCleanerFragment : Fragment() {
                         }
                     }
                 }
+
+                // Deep clean: clear app caches
+                try {
+                    val cacheDir = requireContext().cacheDir
+                    if (cacheDir != null && cacheDir.exists()) {
+                        deleteDir(cacheDir)
+                    }
+                    val externalCacheDir = requireContext().externalCacheDir
+                    if (externalCacheDir != null && externalCacheDir.exists()) {
+                        deleteDir(externalCacheDir)
+                    }
+                } catch (_: Exception) {}
             }
 
             delay(1000)
@@ -245,6 +275,11 @@ class RamCleanerFragment : Fragment() {
 
                 buttonClean.isEnabled = true
                 buttonClean.text = "CLEAN NOW"
+
+                // Update stats
+                totalCleanedBytes += actuallyFreed
+                cleanCount++
+                saveCleanStats()
 
                 updateRamInfo()
 
@@ -261,6 +296,12 @@ class RamCleanerFragment : Fragment() {
     private fun killProcessAt(position: Int) {
         if (position < 0 || position >= processList.size) return
         val item = processList[position]
+
+        // Don't kill whitelisted processes
+        if (whitelist.contains(item.processName)) {
+            Toast.makeText(requireContext(), "Whitelisted: ${item.processName}", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         val activityManager = requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         try {
@@ -283,6 +324,18 @@ class RamCleanerFragment : Fragment() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+    }
+
+    private fun deleteDir(dir: java.io.File) {
+        if (dir.isDirectory) {
+            val children = dir.listFiles()
+            if (children != null) {
+                for (child in children) {
+                    deleteDir(child)
+                }
+            }
+        }
+        dir.delete()
     }
 
     private fun startAutoClean() {
@@ -322,16 +375,41 @@ class RamCleanerFragment : Fragment() {
         isAutoCleanEnabled = prefs.getBoolean("auto_clean_enabled", false)
         autoCleanInterval = prefs.getLong("auto_clean_interval", 30 * 60 * 1000L)
 
+        updateAutoCleanUI()
+
         if (isAutoCleanEnabled) {
             startAutoClean()
-            textViewAutoCleanStatus.text = "Auto-clean: ACTIVE (30min)"
-            textViewAutoCleanStatus.setTextColor(0xFF00FF00.toInt())
-            buttonToggleAutoClean.text = "Disable Auto-Clean"
-        } else {
-            textViewAutoCleanStatus.text = "Auto-clean: OFF"
-            textViewAutoCleanStatus.setTextColor(0xFF888888.toInt())
-            buttonToggleAutoClean.text = "Enable Auto-Clean"
         }
+    }
+
+    private fun loadWhitelist() {
+        val prefs = requireContext().getSharedPreferences("ram_cleaner_prefs", Context.MODE_PRIVATE)
+        whitelist.clear()
+        whitelist.addAll(prefs.getStringSet("whitelist", setOf(
+            "com.hackerlauncher",  // Don't kill ourselves
+            "com.android.systemui",
+            "com.android.launcher",
+            "com.android.phone"
+        )) ?: emptySet())
+    }
+
+    private fun saveWhitelist() {
+        val prefs = requireContext().getSharedPreferences("ram_cleaner_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putStringSet("whitelist", whitelist).apply()
+    }
+
+    private fun loadCleanStats() {
+        val prefs = requireContext().getSharedPreferences("ram_cleaner_prefs", Context.MODE_PRIVATE)
+        totalCleanedBytes = prefs.getLong("total_cleaned_bytes", 0L)
+        cleanCount = prefs.getInt("clean_count", 0)
+    }
+
+    private fun saveCleanStats() {
+        val prefs = requireContext().getSharedPreferences("ram_cleaner_prefs", Context.MODE_PRIVATE)
+        prefs.edit()
+            .putLong("total_cleaned_bytes", totalCleanedBytes)
+            .putInt("clean_count", cleanCount)
+            .apply()
     }
 
     private fun formatMemory(bytes: Long): String {
@@ -377,8 +455,11 @@ class RamCleanerFragment : Fragment() {
                 else -> "BG"
             }
 
+            val isWhitelisted = whitelist.contains(item.processName)
+            val whitelistTag = if (isWhitelisted) " [WL]" else ""
+
             holder.textProcessDetails.text =
-                "PID:${item.pid} | ${formatMemory(item.memoryUsage)} | $importanceStr"
+                "PID:${item.pid} | ${formatMemory(item.memoryUsage)} | $importanceStr$whitelistTag"
 
             val importanceColor = when {
                 item.importance <= ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND -> 0xFF00FF00.toInt()
@@ -389,9 +470,9 @@ class RamCleanerFragment : Fragment() {
 
             holder.buttonKill.setOnClickListener { onKillClick(holder.adapterPosition) }
 
-            // Don't allow killing foreground processes
+            // Don't allow killing foreground or whitelisted processes
             holder.buttonKill.isEnabled =
-                item.importance > ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND
+                item.importance > ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && !isWhitelisted
             holder.buttonKill.alpha = if (holder.buttonKill.isEnabled) 1.0f else 0.3f
         }
 

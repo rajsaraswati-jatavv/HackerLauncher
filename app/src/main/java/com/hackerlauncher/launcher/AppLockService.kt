@@ -450,7 +450,6 @@ class LockScreenActivity : AppCompatActivity() {
         if (storedHash != null && AppLockService.hashPin(pin) == storedHash) {
             // Correct PIN
             wrongAttempts = 0
-            val appLockService = AppLockService()
             // Mark as unlocked
             prefs.edit().putLong("last_unlock_${lockedPackage}", System.currentTimeMillis()).apply()
             finish()
@@ -461,7 +460,6 @@ class LockScreenActivity : AppCompatActivity() {
 
             if (wrongAttempts >= 3) {
                 // Take intruder photo
-                val svc = AppLockService()
                 // Trigger intruder photo through the running service
                 val photoIntent = Intent(this, AppLockService::class.java).apply {
                     action = "TAKE_INTRUDER_PHOTO"

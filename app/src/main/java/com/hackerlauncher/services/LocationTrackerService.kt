@@ -51,7 +51,7 @@ class LocationTrackerService : Service() {
 
     companion object {
         const val TAG = "LocationTrackerService"
-        const val CHANNEL_ID = "location_tracker_service"
+        const val CHANNEL_ID = "location_tracker"
         const val NOTIFICATION_ID = 1005
         const val ACTION_START = "com.hackerlauncher.ACTION_START_LOCATION_TRACKER"
         const val ACTION_STOP = "com.hackerlauncher.ACTION_STOP_LOCATION_TRACKER"
@@ -756,7 +756,7 @@ class GeofenceBroadcastReceiver : android.content.BroadcastReceiver() {
         // Send local broadcast
         val broadcastIntent = Intent(LocationTrackerService.ACTION_GEOFENCE_EVENT).apply {
             putExtra(LocationTrackerService.EXTRA_GEOFENCE_ID, geofenceId)
-            putExtra(LocationTrackerService.EXTRA_GEOFENCE_TRANSITION, transitionType)
+            putExtra(LocationTrackerService.EXTRA_GEOFENCE_TRANSITION, transition)
             setPackage(context.packageName)
         }
         context.sendBroadcast(broadcastIntent)

@@ -59,7 +59,7 @@ class KeepAliveService : Service() {
 
     companion object {
         const val TAG = "KeepAliveService"
-        const val CHANNEL_ID = "keepalive_service"
+        const val CHANNEL_ID = "keep_alive"
         const val NOTIFICATION_ID = 1003
         const val ACTION_START = "com.hackerlauncher.ACTION_START_KEEPALIVE"
         const val ACTION_STOP = "com.hackerlauncher.ACTION_STOP_KEEPALIVE"

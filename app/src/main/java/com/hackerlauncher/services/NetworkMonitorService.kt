@@ -52,7 +52,7 @@ class NetworkMonitorService : Service() {
 
     companion object {
         const val TAG = "NetworkMonitorService"
-        const val CHANNEL_ID = "network_monitor_service"
+        const val CHANNEL_ID = "network_monitor"
         const val NOTIFICATION_ID = 1004
         const val ACTION_START = "com.hackerlauncher.ACTION_START_NETWORK_MONITOR"
         const val ACTION_STOP = "com.hackerlauncher.ACTION_STOP_NETWORK_MONITOR"
@@ -354,15 +354,6 @@ class NetworkMonitorService : Service() {
 
     private fun getTotalRxBytes(): Long {
         return try {
-            var total = 0L
-            val networkInterfaces = NetworkInterface.getNetworkInterfaces()
-            while (networkInterfaces.hasMoreElements()) {
-                val iface = networkInterfaces.nextElement()
-                val stats = iface.interfaceAddresses
-                // Use TrafficStats approach via /proc/net/dev
-                total
-            }
-            // Fallback to reading from /proc/net/dev
             readNetworkBytesFromProc("rx")
         } catch (e: Exception) {
             0L

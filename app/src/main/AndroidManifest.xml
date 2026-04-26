@@ -351,6 +351,12 @@
                 android:value="app_lock_monitor_service" />
         </service>
 
+        <!-- App Lock Activities -->
+        <activity android:name=".launcher.AppLockService$LockScreenActivity" android:exported="false"
+            android:theme="@style/Theme.HackerLauncher" android:excludeFromRecents="true" />
+        <activity android:name=".launcher.AppLockService$FakeCrashActivity" android:exported="false"
+            android:theme="@style/Theme.HackerLauncher" android:excludeFromRecents="true" />
+
         <!-- Notification Listener Service -->
         <service
             android:name=".launcher.NotificationListener"

@@ -288,7 +288,11 @@ class PreferencesManager(context: Context) {
         val searches = getRecentSearches().toMutableList()
         searches.remove(query)
         searches.add(0, query)
-        if (searches.size > 20) searches.takeLast(20)
+        if (searches.size > 20) {
+            val trimmed = searches.takeLast(20)
+            searches.clear()
+            searches.addAll(trimmed)
+        }
         prefs.edit().putString("recent_searches", gson.toJson(searches)).apply()
     }
     fun clearRecentSearches() = prefs.edit().remove("recent_searches").apply()
