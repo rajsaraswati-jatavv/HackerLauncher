@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:gravity="center_vertical"
+    android:background="#1A1A2E"
+    android:layout_margin="2dp">
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+        <TextView android:id="@+id/tvSmsAddress" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#00FF41" android:textSize="14sp" android:fontFamily="monospace"/>
+        <TextView android:id="@+id/tvSmsBody" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#888888" android:textSize="12sp" android:fontFamily="monospace" android:maxLines="2" android:ellipsize="end"/>
+        <TextView android:id="@+id/tvSmsDate" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#666666" android:textSize="11sp" android:fontFamily="monospace"/>
+    </LinearLayout>
+</LinearLayout>

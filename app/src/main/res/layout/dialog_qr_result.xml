@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#0A0A1A">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="QR Code Result" android:textColor="#00FF41" android:textSize="18sp" android:fontFamily="monospace" android:textStyle="bold"/>
+    <TextView android:id="@+id/tvQrContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="#FFFFFF" android:textSize="14sp" android:fontFamily="monospace" android:layout_marginTop="12dp" android:padding="8dp" android:background="#1A1A2E"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="12dp">
+        <Button android:id="@+id/btnCopyQr" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Copy" style="@style/HackerButton"/>
+        <Button android:id="@+id/btnOpenQr" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Open" style="@style/HackerButton" android:layout_marginStart="8dp"/>
+    </LinearLayout>
+</LinearLayout>
