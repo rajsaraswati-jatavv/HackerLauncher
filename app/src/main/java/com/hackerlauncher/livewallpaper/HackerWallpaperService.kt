@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.preference.PreferenceManager
@@ -64,7 +65,12 @@ class HackerWallpaperService : WallpaperService() {
                 addAction(Intent.ACTION_SCREEN_OFF)
                 addAction(Intent.ACTION_SCREEN_ON)
             }
-            registerReceiver(screenReceiver, filter)
+            // FIX: Use RECEIVER_NOT_EXPORTED for screen on/off (system broadcasts)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(screenReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            } else {
+                registerReceiver(screenReceiver, filter)
+            }
             Log.d(TAG, "HackerEngine created")
         }
 

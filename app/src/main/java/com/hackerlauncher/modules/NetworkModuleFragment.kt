@@ -3,8 +3,8 @@ package com.hackerlauncher.modules
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiInfo
+import android.os.Build
 import android.os.Bundle
-import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +14,7 @@ import com.hackerlauncher.R
 import com.hackerlauncher.utils.ShellExecutor
 import com.hackerlauncher.utils.Logger
 import kotlinx.coroutines.*
+import java.net.InetAddress
 
 class NetworkModuleFragment : Fragment() {
 
@@ -80,12 +81,29 @@ class NetworkModuleFragment : Fragment() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun getWifiInfo() {
         try {
             val wifiManager = requireContext().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
             val info: WifiInfo = wifiManager.connectionInfo
-            val ip = Formatter.formatIpAddress(info.ipAddress)
-            val ssid = info.ssid?.removeSurrounding("\"") ?: "Unknown"
+
+            // FIX: Format IP address without deprecated Formatter.formatIpAddress
+            val ipInt = info.ipAddress
+            val ip = if (ipInt != 0) {
+                String.format("%d.%d.%d.%d",
+                    ipInt and 0xff,
+                    ipInt shr 8 and 0xff,
+                    ipInt shr 16 and 0xff,
+                    ipInt shr 24 and 0xff)
+            } else "N/A"
+
+            // FIX: SSID access requires location permission on Android 8.1+
+            val ssid = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                info.ssid?.removeSurrounding("\"") ?: "Unknown"
+            } else {
+                @Suppress("DEPRECATION")
+                info.ssid?.removeSurrounding("\"") ?: "Unknown"
+            }
             val bssid = info.bssid ?: "Unknown"
             val rssi = info.rssi
             val speed = info.linkSpeed
@@ -110,6 +128,12 @@ class NetworkModuleFragment : Fragment() {
     private fun scanWifi() {
         try {
             val wifiManager = requireContext().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            // FIX: Trigger an actual scan first, then show results
+            @Suppress("DEPRECATION")
+            val scanStarted = wifiManager.startScan()
+            if (!scanStarted) {
+                appendOutput("[!] WiFi scan request was throttled or denied. Showing cached results.\n")
+            }
             @Suppress("DEPRECATION")
             val results = wifiManager.scanResults
             appendOutput("═══ WiFi Scan Results (${results.size} found) ═══\n")
@@ -122,7 +146,9 @@ class NetworkModuleFragment : Fragment() {
                     result.capabilities.contains("WEP") -> "WEP"
                     else -> "Open"
                 }
-                appendOutput("  ${idx + 1}. ${result.SSID}\n")
+                @Suppress("DEPRECATION")
+                val ssid = result.SSID ?: "Hidden"
+                appendOutput("  ${idx + 1}. $ssid\n")
                 appendOutput("     BSSID: ${result.BSSID} | Signal: ${result.level}dBm ($level/4)\n")
                 appendOutput("     Security: $security | Freq: ${result.frequency}MHz\n\n")
             }

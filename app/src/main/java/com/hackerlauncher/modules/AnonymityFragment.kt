@@ -142,21 +142,26 @@ class AnonymityFragment : Fragment() {
                     val response = conn.inputStream.bufferedReader().readText()
                     conn.disconnect()
 
-                    val extract = { key: String ->
-                        response.substringAfter("\"$key\":\"").substringBefore("\"")
-                    }
-                    sb.append("  IP:       ${extract("query")}\n")
-                    sb.append("  Country:  ${extract("country")}\n")
-                    sb.append("  City:     ${extract("city")}\n")
-                    sb.append("  ISP:      ${extract("isp")}\n")
-                    sb.append("  Org:      ${extract("org")}\n")
-                    sb.append("  Timezone: ${extract("timezone")}\n")
+                    // FIX: Parse JSON properly using Gson
+                    val json = com.google.gson.JsonParser.parseString(response).asJsonObject
+                    val queryIp = json.get("query")?.asString ?: "N/A"
+                    val country = json.get("country")?.asString ?: "N/A"
+                    val city = json.get("city")?.asString ?: "N/A"
+                    val isp = json.get("isp")?.asString ?: "N/A"
+                    val org = json.get("org")?.asString ?: "N/A"
+                    val timezone = json.get("timezone")?.asString ?: "N/A"
+                    sb.append("  IP:       $queryIp\n")
+                    sb.append("  Country:  $country\n")
+                    sb.append("  City:     $city\n")
+                    sb.append("  ISP:      $isp\n")
+                    sb.append("  Org:      $org\n")
+                    sb.append("  Timezone: $timezone\n")
 
                     // Check if likely VPN/Proxy
-                    val isp = extract("isp").lowercase()
-                    val org = extract("org").lowercase()
+                    val ispLower = isp.lowercase()
+                    val orgLower = org.lowercase()
                     val vpnKeywords = listOf("vpn", "proxy", "tunnel", "hide", "anonymous", "private", "mullvad", "nordvpn", "express")
-                    val isLikelyVpn = vpnKeywords.any { isp.contains(it) || org.contains(it) }
+                    val isLikelyVpn = vpnKeywords.any { ispLower.contains(it) || orgLower.contains(it) }
                     sb.append("\n  VPN/Proxy Detected: ${if (isLikelyVpn) "POSSIBLE" else "UNLIKELY"}\n")
                 } catch (e: Exception) {
                     sb.append("[E] IP check failed: ${e.message}\n")

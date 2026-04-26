@@ -71,7 +71,7 @@ class OsintFragment : Fragment() {
     }
 
     private fun searchUsername(username: String): String {
-        val sb = StringBuilder("═══ Username Search: $username ═══\n")
+        val sb = StringBuilder("\u2550\u2550\u2550 Username Search: $username \u2550\u2550\u2550\n")
         val platforms = listOf(
             "github.com", "twitter.com", "instagram.com", "reddit.com",
             "youtube.com", "tiktok.com", "pinterest.com", "medium.com",
@@ -100,35 +100,47 @@ class OsintFragment : Fragment() {
                 sb.append("  [ERROR] $platform - ${e.message}\n")
             }
         }
-        sb.append("═══════════════════════════════\n")
+        sb.append("\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n")
         return sb.toString()
     }
 
     private fun checkEmailBreach(email: String): String {
-        val sb = StringBuilder("═══ Email Breach Check: $email ═══\n")
+        val sb = StringBuilder("\u2550\u2550\u2550 Email Breach Check: $email \u2550\u2550\u2550\n")
         if (!email.contains("@") || !email.contains(".")) {
             sb.append("[!] Invalid email format\n")
             return sb.toString()
         }
         try {
-            // Using HaveIBeenPwned API (breachedaccount endpoint)
             val url = java.net.URL("https://haveibeenpwned.com/api/v3/breachedaccount/$email")
             val conn = url.openConnection() as java.net.HttpURLConnection
             conn.requestMethod = "GET"
-            conn.setRequestProperty("hibp-api-key", "") // User must provide their own key
+            conn.setRequestProperty("hibp-api-key", "")
             conn.connectTimeout = 10000
             val code = conn.responseCode
             when (code) {
                 200 -> {
                     val response = conn.inputStream.bufferedReader().readText()
                     sb.append("[!] BREACHES FOUND!\n")
-                    // Parse JSON array manually
-                    val breaches = response.split("},{")
-                    for (breach in breaches) {
-                        val name = breach.substringAfter("\"Name\":\"").substringBefore("\"")
-                        val domain = breach.substringAfter("\"Domain\":\"").substringBefore("\"")
-                        if (name.isNotEmpty()) {
-                            sb.append("  - $name ($domain)\n")
+                    // Parse JSON using Gson
+                    try {
+                        val breaches = com.google.gson.JsonParser.parseString(response).asJsonArray
+                        for (breach in breaches) {
+                            val obj = breach.asJsonObject
+                            val name = obj.get("Name")?.asString ?: ""
+                            val domain = obj.get("Domain")?.asString ?: ""
+                            if (name.isNotEmpty()) {
+                                sb.append("  - $name ($domain)\n")
+                            }
+                        }
+                    } catch (parseEx: Exception) {
+                        // Fallback manual parse
+                        val breaches = response.split("},{")
+                        for (breach in breaches) {
+                            val name = breach.substringAfter("\"Name\":\"").substringBefore("\"")
+                            val domain = breach.substringAfter("\"Domain\":\"").substringBefore("\"")
+                            if (name.isNotEmpty()) {
+                                sb.append("  - $name ($domain)\n")
+                            }
                         }
                     }
                 }
@@ -142,15 +154,14 @@ class OsintFragment : Fragment() {
             sb.append("[E] Check failed: ${e.message}\n")
             sb.append("[*] Visit https://haveibeenpwned.com manually\n")
         }
-        sb.append("═══════════════════════════════\n")
+        sb.append("\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n")
         return sb.toString()
     }
 
     private fun phoneLookup(phone: String): String {
-        val sb = StringBuilder("═══ Phone Lookup: $phone ═══\n")
+        val sb = StringBuilder("\u2550\u2550\u2550 Phone Lookup: $phone \u2550\u2550\u2550\n")
         try {
             val cleanPhone = phone.replace(Regex("[^+0-9]"), "")
-            val url = java.net.URL("https://ip-api.com/json/?fields=status,message") // Placeholder API
             sb.append("[*] Number format: $cleanPhone\n")
             sb.append("[*] Country code: ${cleanPhone.take(2)}\n")
             sb.append("[*] For full lookup, use NumVerify or Truecaller API\n")
@@ -158,23 +169,20 @@ class OsintFragment : Fragment() {
         } catch (e: Exception) {
             sb.append("[E] Lookup failed: ${e.message}\n")
         }
-        sb.append("═══════════════════════════════\n")
+        sb.append("\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n")
         return sb.toString()
     }
 
     private fun domainRecon(domain: String): String {
-        val sb = StringBuilder("═══ Domain Recon: $domain ═══\n")
+        val sb = StringBuilder("\u2550\u2550\u2550 Domain Recon: $domain \u2550\u2550\u2550\n")
         try {
-            // DNS lookup
             val cmd = "nslookup $domain"
             val proc = Runtime.getRuntime().exec(cmd)
             val output = proc.inputStream.bufferedReader().readText()
             sb.append("[DNS Records]\n$output\n")
 
-            // WHOIS
             sb.append("[WHOIS] Check: https://who.is/whois/$domain\n")
 
-            // HTTP headers
             try {
                 val url = java.net.URL("https://$domain")
                 val conn = url.openConnection() as java.net.HttpURLConnection
@@ -192,12 +200,12 @@ class OsintFragment : Fragment() {
         } catch (e: Exception) {
             sb.append("[E] Domain recon failed: ${e.message}\n")
         }
-        sb.append("═══════════════════════════════\n")
+        sb.append("\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n")
         return sb.toString()
     }
 
     private fun ipGeolocation(ip: String): String {
-        val sb = StringBuilder("═══ IP Geolocation: $ip ═══\n")
+        val sb = StringBuilder("\u2550\u2550\u2550 IP Geolocation: $ip \u2550\u2550\u2550\n")
         try {
             val url = java.net.URL("http://ip-api.com/json/$ip")
             val conn = url.openConnection() as java.net.HttpURLConnection
@@ -206,32 +214,52 @@ class OsintFragment : Fragment() {
             val response = conn.inputStream.bufferedReader().readText()
             conn.disconnect()
 
-            // Parse JSON manually
-            val extract = { key: String -> 
-                response.substringAfter("\"$key\":\"").substringBefore("\"").ifEmpty { "N/A" }
+            // FIX: Parse JSON properly using Gson for mixed string/numeric fields
+            try {
+                val json = com.google.gson.JsonParser.parseString(response).asJsonObject
+                sb.append("  IP:       ${json.get("query")?.asString ?: "N/A"}\n")
+                sb.append("  Country:  ${json.get("country")?.asString ?: "N/A"}\n")
+                sb.append("  Region:   ${json.get("regionName")?.asString ?: "N/A"}\n")
+                sb.append("  City:     ${json.get("city")?.asString ?: "N/A"}\n")
+                sb.append("  ISP:      ${json.get("isp")?.asString ?: "N/A"}\n")
+                sb.append("  Org:      ${json.get("org")?.asString ?: "N/A"}\n")
+                sb.append("  Timezone: ${json.get("timezone")?.asString ?: "N/A"}\n")
+                // FIX: lat/lon are numeric fields, not strings
+                val lat = json.get("lat")?.asDouble ?: 0.0
+                val lon = json.get("lon")?.asDouble ?: 0.0
+                sb.append("  Lat/Lon:  $lat, $lon\n")
+            } catch (parseEx: Exception) {
+                // Fallback: manual extraction for string fields
+                val extract = { key: String ->
+                    response.substringAfter("\"$key\":\"").substringBefore("\"").ifEmpty { "N/A" }
+                }
+                val extractNum = { key: String ->
+                    val after = response.substringAfter("\"$key\":")
+                    after.trim().takeWhile { it.isDigit() || it == '.' || it == '-' }.ifEmpty { "N/A" }
+                }
+                sb.append("  IP:       ${extract("query")}\n")
+                sb.append("  Country:  ${extract("country")}\n")
+                sb.append("  Region:   ${extract("regionName")}\n")
+                sb.append("  City:     ${extract("city")}\n")
+                sb.append("  ISP:      ${extract("isp")}\n")
+                sb.append("  Org:      ${extract("org")}\n")
+                sb.append("  Timezone: ${extract("timezone")}\n")
+                sb.append("  Lat/Lon:  ${extractNum("lat")}, ${extractNum("lon")}\n")
             }
-            sb.append("  IP:       ${extract("query")}\n")
-            sb.append("  Country:  ${extract("country")}\n")
-            sb.append("  Region:   ${extract("regionName")}\n")
-            sb.append("  City:     ${extract("city")}\n")
-            sb.append("  ISP:      ${extract("isp")}\n")
-            sb.append("  Org:      ${extract("org")}\n")
-            sb.append("  Timezone: ${extract("timezone")}\n")
-            sb.append("  Lat/Lon:  ${extract("lat")}, ${extract("lon")}\n")
         } catch (e: Exception) {
             sb.append("[E] Geolocation failed: ${e.message}\n")
         }
-        sb.append("═══════════════════════════════\n")
+        sb.append("\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n")
         return sb.toString()
     }
 
     private fun reverseImage(query: String): String {
-        val sb = StringBuilder("═══ Reverse Image Search ═══\n")
+        val sb = StringBuilder("\u2550\u2550\u2550 Reverse Image Search \u2550\u2550\u2550\n")
         sb.append("[*] Query: $query\n")
         sb.append("[*] Google: https://images.google.com/searchbyimage?image_url=$query\n")
         sb.append("[*] TinEye: https://tineye.com/search/?url=$query\n")
         sb.append("[*] Yandex: https://yandex.com/images/search?rpt=imageview&url=$query\n")
-        sb.append("═══════════════════════════════\n")
+        sb.append("\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n")
         return sb.toString()
     }
 

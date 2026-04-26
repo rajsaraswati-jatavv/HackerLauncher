@@ -1,0 +1,37 @@
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Kotlin
+*.class
+
+# Android Studio
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+/.idea/misc.xml
+
+# Build
+/app/build
+/build
+
+# Google Services (keep placeholder in repo)
+# Uncomment next line if you add real credentials:
+# app/google-services.json
+
+# Gradle
+.gradle/

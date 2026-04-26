@@ -34,16 +34,11 @@ class MainActivity : AppCompatActivity() {
     private val logger = Logger()
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
-    // Fragments
-    private val terminalFragment = TerminalFragment()
-    private val networkFragment = NetworkModuleFragment()
-    private val osintFragment = OsintFragment()
-    private val cryptoFragment = CryptoFragment()
-    private val webTestFragment = WebTestFragment()
-    private val anonymityFragment = AnonymityFragment()
-    private val fileFragment = FileFragment()
-    private val automationFragment = AutomationFragment()
-    private val chatFragment = ChatFragment()
+    // Fragment tags for reuse (avoid recreation on config change)
+    private val fragmentTags = arrayOf(
+        "terminal", "network", "osint", "crypto", "web",
+        "anonymity", "files", "automation", "chat"
+    )
 
     private lateinit var gestureDetector: GestureDetector
 
@@ -88,6 +83,14 @@ class MainActivity : AppCompatActivity() {
 
         // Setup terminal widget log
         startLogUpdater()
+
+        // FIX: Use OnBackPressedDispatcher instead of deprecated onBackPressed()
+        onBackPressedDispatcher.addCallback(this, object : androidx.activity.OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Stay as launcher - move task to background instead of exiting
+                moveTaskToBack(true)
+            }
+        })
     }
 
     private fun showDisclaimer() {
@@ -118,33 +121,39 @@ class MainActivity : AppCompatActivity() {
             tabLayout.addTab(tabLayout.newTab().setText(tab))
         }
 
-        // Show terminal by default
-        showFragment(terminalFragment)
+        // Show terminal by default (only if not restoring from saved state)
+        if (supportFragmentManager.findFragmentById(R.id.fragmentContainer) == null) {
+            showFragment(TerminalFragment(), fragmentTags[0])
+        }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val fragment = when (tab.position) {
-                    0 -> terminalFragment
-                    1 -> networkFragment
-                    2 -> osintFragment
-                    3 -> cryptoFragment
-                    4 -> webTestFragment
-                    5 -> anonymityFragment
-                    6 -> fileFragment
-                    7 -> automationFragment
-                    8 -> chatFragment
-                    else -> terminalFragment
+                    0 -> TerminalFragment()
+                    1 -> NetworkModuleFragment()
+                    2 -> OsintFragment()
+                    3 -> CryptoFragment()
+                    4 -> WebTestFragment()
+                    5 -> AnonymityFragment()
+                    6 -> FileFragment()
+                    7 -> AutomationFragment()
+                    8 -> ChatFragment()
+                    else -> TerminalFragment()
                 }
-                showFragment(fragment)
+                val tag = if (tab.position < fragmentTags.size) fragmentTags[tab.position] else "terminal"
+                showFragment(fragment, tag)
             }
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
     }
 
-    private fun showFragment(fragment: Fragment) {
+    private fun showFragment(fragment: Fragment, tag: String) {
+        // FIX: Check if fragment already exists in FragmentManager to avoid recreation
+        val existingFragment = supportFragmentManager.findFragmentByTag(tag)
+        val fragmentToShow = existingFragment ?: fragment
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
+            .replace(R.id.fragmentContainer, fragmentToShow, tag)
             .commit()
     }
 
@@ -187,15 +196,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleSwipe(action: String) {
         val fragment = when (action) {
-            "terminal" -> terminalFragment
-            "network" -> networkFragment
-            "osint" -> osintFragment
-            "crypto" -> cryptoFragment
-            "web" -> webTestFragment
-            "anonymity" -> anonymityFragment
-            "files" -> fileFragment
-            "automation" -> automationFragment
-            "chat" -> chatFragment
+            "terminal" -> TerminalFragment()
+            "network" -> NetworkModuleFragment()
+            "osint" -> OsintFragment()
+            "crypto" -> CryptoFragment()
+            "web" -> WebTestFragment()
+            "anonymity" -> AnonymityFragment()
+            "files" -> FileFragment()
+            "automation" -> AutomationFragment()
+            "chat" -> ChatFragment()
             "notifications" -> {
                 // Open notification settings
                 val intent = Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
@@ -206,9 +215,9 @@ class MainActivity : AppCompatActivity() {
             }
             else -> return
         }
-        showFragment(fragment)
-        // Update tab selection
         val index = listOf("terminal", "network", "osint", "crypto", "web", "anonymity", "files", "automation", "chat").indexOf(action)
+        val tag = if (index >= 0 && index < fragmentTags.size) fragmentTags[index] else "terminal"
+        showFragment(fragment, tag)
         if (index >= 0) {
             tabLayout.getTabAt(index)?.select()
         }
@@ -261,11 +270,5 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         scope.cancel()
-    }
-
-    override fun onBackPressed() {
-        // Override to stay as launcher - don't exit on back press
-        // Move task to background instead
-        moveTaskToBack(true)
     }
 }

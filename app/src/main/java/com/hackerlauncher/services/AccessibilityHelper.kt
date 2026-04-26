@@ -4,17 +4,23 @@ import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.view.accessibility.AccessibilityEvent
 import com.hackerlauncher.utils.Logger
+import java.util.Collections
 
 class AccessibilityHelper : AccessibilityService() {
 
     private val logger = Logger()
 
     companion object {
+        @Volatile
         var isRunning = false
             private set
+
+        @Volatile
         var lastEvent: String = ""
             private set
-        var eventLog: MutableList<String> = mutableListOf()
+
+        // FIX: Use synchronized list for thread safety
+        val eventLog: MutableList<String> = Collections.synchronizedList(mutableListOf())
             private set
     }
 
@@ -35,8 +41,10 @@ class AccessibilityHelper : AccessibilityService() {
         event ?: return
         val eventStr = "${event.eventType}:${event.packageName}:${event.className}:${event.text}"
         lastEvent = eventStr
-        if (eventLog.size > 500) eventLog.removeAt(0)
-        eventLog.add(eventStr)
+        synchronized(eventLog) {
+            if (eventLog.size > 500) eventLog.removeAt(0)
+            eventLog.add(eventStr)
+        }
     }
 
     override fun onInterrupt() {

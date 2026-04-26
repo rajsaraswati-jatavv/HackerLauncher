@@ -1,6 +1,5 @@
 package com.hackerlauncher.auth
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -16,6 +15,23 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var btnGoogle: Button
     private lateinit var btnGithub: Button
     private lateinit var btnSkip: Button
+
+    // FIX: Use Activity Result API instead of deprecated onActivityResult
+    private val signInLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val authResult = FirebaseAuthManager.handleSignInResult(
+            FirebaseAuthManager.RC_SIGN_IN,
+            result.resultCode,
+            result.data
+        )
+        if (authResult.success) {
+            Toast.makeText(this, "Welcome, ${authResult.userName}!", Toast.LENGTH_SHORT).show()
+            navigateToMain()
+        } else {
+            tvStatus.text = authResult.error ?: "Sign in failed"
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,18 +65,7 @@ class LoginActivity : AppCompatActivity() {
     private fun startFirebaseAuth() {
         tvStatus.text = "Opening sign-in..."
         val signInIntent = FirebaseAuthManager.createSignInIntent()
-        startActivityForResult(signInIntent, FirebaseAuthManager.RC_SIGN_IN)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        val result = FirebaseAuthManager.handleSignInResult(requestCode, resultCode, data)
-        if (result.success) {
-            Toast.makeText(this, "Welcome, ${result.userName}!", Toast.LENGTH_SHORT).show()
-            navigateToMain()
-        } else {
-            tvStatus.text = result.error ?: "Sign in failed"
-        }
+        signInLauncher.launch(signInIntent)
     }
 
     private fun navigateToMain() {

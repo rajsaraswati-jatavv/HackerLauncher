@@ -1,5 +1,9 @@
 package com.hackerlauncher.utils
 
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.util.concurrent.TimeUnit
+
 data class ShellResult(val output: String, val error: String, val exitCode: Int)
 
 class ShellExecutor {
@@ -8,10 +12,66 @@ class ShellExecutor {
         fun execute(command: String): ShellResult {
             return try {
                 val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", command))
-                val output = process.inputStream.bufferedReader().readText()
-                val error = process.errorStream.bufferedReader().readText()
+
+                // FIX: Read output and error streams concurrently to prevent deadlock
+                // When process output buffer fills up, it can block if we don't read both streams
+                val outputThread = Thread {
+                    // Drain output stream
+                    try {
+                        val reader = BufferedReader(InputStreamReader(process.inputStream))
+                        val buffer = CharArray(8192)
+                        while (reader.read(buffer) != -1) { /* drain */ }
+                        reader.close()
+                    } catch (_: Exception) {}
+                }
+
+                val errorThread = Thread {
+                    // Drain error stream
+                    try {
+                        val reader = BufferedReader(InputStreamReader(process.errorStream))
+                        val buffer = CharArray(8192)
+                        while (reader.read(buffer) != -1) { /* drain */ }
+                        reader.close()
+                    } catch (_: Exception) {}
+                }
+
+                // Actually, we need to capture the output. Let's do it properly:
+                val outputBuilder = StringBuilder()
+                val errorBuilder = StringBuilder()
+
+                val outputCaptureThread = Thread {
+                    try {
+                        BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+                            var line: String?
+                            while (reader.readLine().also { line = it } != null) {
+                                outputBuilder.append(line).append("\n")
+                            }
+                        }
+                    } catch (_: Exception) {}
+                }
+
+                val errorCaptureThread = Thread {
+                    try {
+                        BufferedReader(InputStreamReader(process.errorStream)).use { reader ->
+                            var line: String?
+                            while (reader.readLine().also { line = it } != null) {
+                                errorBuilder.append(line).append("\n")
+                            }
+                        }
+                    } catch (_: Exception) {}
+                }
+
+                outputCaptureThread.start()
+                errorCaptureThread.start()
+
                 val exitCode = process.waitFor()
-                ShellResult(output.trim(), error.trim(), exitCode)
+
+                outputCaptureThread.join(5000)
+                errorCaptureThread.join(5000)
+
+                process.destroy()
+
+                ShellResult(outputBuilder.toString().trim(), errorBuilder.toString().trim(), exitCode)
             } catch (e: Exception) {
                 ShellResult("", e.message ?: "Execution failed", -1)
             }
@@ -20,15 +80,46 @@ class ShellExecutor {
         fun executeWithTimeout(command: String, timeoutMs: Long = 30000): ShellResult {
             return try {
                 val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", command))
-                val completed = process.waitFor(timeoutMs, java.util.concurrent.TimeUnit.MILLISECONDS)
+
+                val outputBuilder = StringBuilder()
+                val errorBuilder = StringBuilder()
+
+                val outputCaptureThread = Thread {
+                    try {
+                        BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+                            var line: String?
+                            while (reader.readLine().also { line = it } != null) {
+                                outputBuilder.append(line).append("\n")
+                            }
+                        }
+                    } catch (_: Exception) {}
+                }
+
+                val errorCaptureThread = Thread {
+                    try {
+                        BufferedReader(InputStreamReader(process.errorStream)).use { reader ->
+                            var line: String?
+                            while (reader.readLine().also { line = it } != null) {
+                                errorBuilder.append(line).append("\n")
+                            }
+                        }
+                    } catch (_: Exception) {}
+                }
+
+                outputCaptureThread.start()
+                errorCaptureThread.start()
+
+                val completed = process.waitFor(timeoutMs, TimeUnit.MILLISECONDS)
                 if (!completed) {
                     process.destroyForcibly()
+                    outputCaptureThread.interrupt()
+                    errorCaptureThread.interrupt()
                     ShellResult("", "Command timed out after ${timeoutMs}ms", -1)
                 } else {
-                    val output = process.inputStream.bufferedReader().readText()
-                    val error = process.errorStream.bufferedReader().readText()
+                    outputCaptureThread.join(5000)
+                    errorCaptureThread.join(5000)
                     val exitCode = process.exitValue()
-                    ShellResult(output.trim(), error.trim(), exitCode)
+                    ShellResult(outputBuilder.toString().trim(), errorBuilder.toString().trim(), exitCode)
                 }
             } catch (e: Exception) {
                 ShellResult("", e.message ?: "Execution failed", -1)
@@ -38,10 +129,43 @@ class ShellExecutor {
         fun executeRoot(command: String): ShellResult {
             return try {
                 val process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
-                val output = process.inputStream.bufferedReader().readText()
-                val error = process.errorStream.bufferedReader().readText()
+
+                val outputBuilder = StringBuilder()
+                val errorBuilder = StringBuilder()
+
+                val outputCaptureThread = Thread {
+                    try {
+                        BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+                            var line: String?
+                            while (reader.readLine().also { line = it } != null) {
+                                outputBuilder.append(line).append("\n")
+                            }
+                        }
+                    } catch (_: Exception) {}
+                }
+
+                val errorCaptureThread = Thread {
+                    try {
+                        BufferedReader(InputStreamReader(process.errorStream)).use { reader ->
+                            var line: String?
+                            while (reader.readLine().also { line = it } != null) {
+                                errorBuilder.append(line).append("\n")
+                            }
+                        }
+                    } catch (_: Exception) {}
+                }
+
+                outputCaptureThread.start()
+                errorCaptureThread.start()
+
                 val exitCode = process.waitFor()
-                ShellResult(output.trim(), error.trim(), exitCode)
+
+                outputCaptureThread.join(5000)
+                errorCaptureThread.join(5000)
+
+                process.destroy()
+
+                ShellResult(outputBuilder.toString().trim(), errorBuilder.toString().trim(), exitCode)
             } catch (e: Exception) {
                 ShellResult("", "Root not available: ${e.message}", -1)
             }

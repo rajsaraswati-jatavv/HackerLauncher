@@ -7,6 +7,8 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Entity(tableName = "chat_messages")
 data class Message(
@@ -41,4 +43,13 @@ interface MessageDao {
 @Database(entities = [Message::class], version = 1, exportSchema = false)
 abstract class ChatDatabase : RoomDatabase() {
     abstract fun messageDao(): MessageDao
+
+    companion object {
+        // FIX: Add destructive migration fallback to prevent crashes on schema changes
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Future migration placeholder
+            }
+        }
+    }
 }

@@ -17,9 +17,15 @@ class OverlayService : Service() {
     private val logger = Logger()
 
     companion object {
+        @Volatile
         var isRunning = false
             private set
+
+        // FIX: Make overlayText and isVisible @Volatile for thread safety
+        @Volatile
         var overlayText: String = "HackerLauncher Active"
+
+        @Volatile
         var isVisible = false
 
         fun show(text: String = "HackerLauncher Active") {
@@ -99,6 +105,10 @@ class OverlayService : Service() {
                     if (isVisible && overlayView != null) {
                         overlayView?.post {
                             overlayView?.text = overlayText
+                        }
+                    } else if (!isVisible && overlayView != null) {
+                        overlayView?.post {
+                            overlayView?.visibility = if (isVisible) View.VISIBLE else View.GONE
                         }
                     }
                 } catch (_: InterruptedException) {
