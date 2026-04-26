@@ -3,7 +3,7 @@ package com.hackerlauncher.modules
 import android.content.Context
 import android.net.wifi.WifiManager
 import android.net.wifi.WifiInfo
-import android.net.wifi.ScanResult
+import android.net.wifi.WifiConfiguration
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -115,18 +115,23 @@ class WifiArsenalFragment : Fragment() {
         }
     }
 
+    @Suppress("DEPRECATION")
     private fun getSecurityType(wifiManager: WifiManager): String {
         return try {
-            @Suppress("DEPRECATION")
             val configs = wifiManager.configuredNetworks
-            val current = configs?.find { it.Status == 0 }
+            val current = configs?.find { it.status == 0 }
             when {
                 current == null -> "Unknown"
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && current.allowedKeyManagement?.contains(WifiManager.KeyMgmt.SAE) == true -> "WPA3"
-                current.allowedKeyManagement?.contains(WifiManager.KeyMgmt.WPA2_PSK) == true -> "WPA2-PSK"
-                current.allowedKeyManagement?.contains(WifiManager.KeyMgmt.WPA_PSK) == true -> "WPA-PSK"
-                current.wepKeys?.any { it != null } == true -> "WEP"
-                else -> "Open"
+                else -> {
+                    val caps = current.allowedKeyManagement
+                    when {
+                        caps?.contains(4) == true -> "WPA3"  // KeyMgmt.SAE = 4
+                        caps?.contains(4) == true -> "WPA2-PSK"  // KeyMgmt.WPA2_PSK = 4
+                        caps?.contains(1) == true -> "WPA-PSK"   // KeyMgmt.WPA_PSK = 1
+                        current.wepKeys?.any { it != null } == true -> "WEP"
+                        else -> "Open"
+                    }
+                }
             }
         } catch (e: Exception) {
             "Detection failed"
