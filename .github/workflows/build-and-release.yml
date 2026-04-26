@@ -1,4 +1,4 @@
-name: Build & Release
+name: Build & Release v3
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       release_version:
-        description: 'Release version (e.g., 2.0.0). Leave empty for build-only.'
+        description: 'Release version (e.g., 3.0.0). Leave empty for build-only.'
         required: false
         default: ''
 
@@ -43,13 +43,39 @@ jobs:
             echo '{"project_info":{"project_number":"000000000000","project_id":"placeholder-project","storage_bucket":"placeholder-project.appspot.com"},"client":[{"client_info":{"mobilesdk_app_id":"1:000000000000:android:0000000000000000","android_client_info":{"package_name":"com.hackerlauncher"}},"oauth_client":[{"client_id":"000000000000-000000000000000000000.apps.googleusercontent.com","client_type":3}],"api_key":[{"current_key":"placeholder-api-key"}],"services":{"appinvite_service":{"other_platform_oauth_client":[]}}}],"configuration_version":"1"}' > app/google-services.json
           fi
 
+      - name: Create placeholder mipmap resources
+        run: |
+          mkdir -p app/src/main/res/mipmap-hdpi app/src/main/res/mipmap-mdpi app/src/main/res/mipmap-xhdpi app/src/main/res/mipmap-xxhdpi app/src/main/res/mipmap-xxxhdpi
+          # Create a simple 1x1 green PNG for launcher icon
+          python3 -c "
+          import base64, struct, zlib
+          def create_png(w, h, color=(0, 255, 0)):
+              def chunk(ctype, data):
+                  c = ctype + data
+                  return struct.pack('>I', len(data)) + c + struct.pack('>I', zlib.crc32(c) & 0xffffffff)
+              raw = b''
+              for y in range(h):
+                  raw += b'\\x00'
+                  for x in range(w):
+                      raw += bytes(color) + b'\\xff'
+              return b'\\x89PNG\\r\\n\\x1a\\n' + chunk(b'IHDR', struct.pack('>IIBBBBB', w, h, 8, 6, 0, 0, 0)) + chunk(b'IDAT', zlib.compress(raw)) + chunk(b'IEND', b'')
+          for size, name in [(48,'mdpi'),(72,'hdpi'),(96,'xhdpi'),(144,'xxhdpi'),(192,'xxxhdpi')]:
+              with open(f'app/src/main/res/mipmap-{name}/ic_launcher.png', 'wb') as f:
+                  f.write(create_png(size, size))
+              with open(f'app/src/main/res/mipmap-{name}/ic_launcher_round.png', 'wb') as f:
+                  f.write(create_png(size, size))
+          "
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
       - name: Build Debug APK
-        run: gradle assembleDebug --no-daemon --stacktrace
+        run: gradle assembleDebug --no-daemon --stacktrace 2>&1 | tail -100
 
       - name: Upload APK as Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: HackerLauncher-debug
+          name: HackerLauncher-v3-debug
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 30
 
@@ -62,6 +88,19 @@ jobs:
           body: |
             ## HackerLauncher v${{ github.event.inputs.release_version }}
 
+            ### What's New in v3.0
+            - **5 New Modules**: Root Tools, WiFi Arsenal, Subnet Scanner, Password Tools, Bluetooth Scanner
+            - **Biometric Lock**: Secure app with fingerprint/PIN
+            - **Enhanced Terminal**: More commands, root shell support
+            - **Advanced Network Scanning**: Subnet discovery, port scanning, service enumeration
+            - **WiFi Arsenal**: Deep scan, WPS check, signal monitor, deauth detection
+            - **Password Tools**: Strength analysis, wordlist generator, WPA key gen, entropy calc
+            - **Bluetooth Scanner**: BLE scan, device fingerprinting, NFC check
+            - **Root Tools**: SU checker, Magisk detection, iptables, SELinux, system info
+            - **New Wallpapers**: Circuit Board, Neon Grid effects
+            - **Bug Fixes**: Fragment container, thread safety, deprecated APIs fixed
+            - **14 Total Modules** with tab navigation
+
             ### Installation
             1. Download the APK from the assets below
             2. Enable "Install from Unknown Sources" on your Android device
@@ -69,9 +108,8 @@ jobs:
             4. Grant all requested permissions
             5. Set as default launcher (optional)
 
-            ### Features
-            - Live Wallpaper (Matrix Rain, Glitch, Particle Network, etc.)
-            - Terminal Emulator with Termux integration
+            ### All Modules
+            - Terminal Emulator with root & Termux integration
             - Network Tools (WiFi Scanner, Port Scanner, etc.)
             - OSINT Tools (Username Search, Email Breach Check, etc.)
             - Crypto Tools (Hash, Base64, XOR, Caesar, etc.)
@@ -80,6 +118,12 @@ jobs:
             - File Management (Explorer, Encrypted Vault, Secure Delete)
             - Task Automation (Macro Recorder, Scheduler, Auto Recon)
             - AI Chat (Google/GitHub OAuth, OpenAI/Gemini API)
+            - **Root Tools** (SU checker, system info, iptables, Magisk)
+            - **WiFi Arsenal** (Deep scan, WPS check, signal monitor, deauth detect)
+            - **Subnet Scanner** (Network discovery, port scan, service enum)
+            - **Password Tools** (Strength check, wordlist gen, WPA key gen)
+            - **Bluetooth Scanner** (BLE scan, fingerprint, NFC check)
+            - Live Wallpaper (7 effects: Matrix, Glitch, CRT, Particles, Hex, Circuit, Neon)
             - Persistent Background Service
             - Home Screen Widget
 

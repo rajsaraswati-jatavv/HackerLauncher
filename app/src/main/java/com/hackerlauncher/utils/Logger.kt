@@ -1,6 +1,5 @@
 package com.hackerlauncher.utils
 
-import android.content.Context
 import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.*
@@ -14,8 +13,8 @@ class Logger {
         private val logBuffer = mutableListOf<String>()
         private const val MAX_LOG_SIZE = 1000
 
-        fun getLogBuffer(): List<String> = logBuffer.toList()
-        fun clearLogBuffer() { logBuffer.clear() }
+        fun getLogBuffer(): List<String> = synchronized(logBuffer) { logBuffer.toList() }
+        fun clearLogBuffer() = synchronized(logBuffer) { logBuffer.clear() }
     }
 
     fun log(message: String, level: LogLevel = LogLevel.INFO) {

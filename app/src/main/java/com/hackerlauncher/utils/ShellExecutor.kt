@@ -13,32 +13,10 @@ class ShellExecutor {
             return try {
                 val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", command))
 
-                // FIX: Read output and error streams concurrently to prevent deadlock
-                // When process output buffer fills up, it can block if we don't read both streams
-                val outputThread = Thread {
-                    // Drain output stream
-                    try {
-                        val reader = BufferedReader(InputStreamReader(process.inputStream))
-                        val buffer = CharArray(8192)
-                        while (reader.read(buffer) != -1) { /* drain */ }
-                        reader.close()
-                    } catch (_: Exception) {}
-                }
-
-                val errorThread = Thread {
-                    // Drain error stream
-                    try {
-                        val reader = BufferedReader(InputStreamReader(process.errorStream))
-                        val buffer = CharArray(8192)
-                        while (reader.read(buffer) != -1) { /* drain */ }
-                        reader.close()
-                    } catch (_: Exception) {}
-                }
-
-                // Actually, we need to capture the output. Let's do it properly:
                 val outputBuilder = StringBuilder()
                 val errorBuilder = StringBuilder()
 
+                // FIX: Read both streams concurrently to prevent deadlock
                 val outputCaptureThread = Thread {
                     try {
                         BufferedReader(InputStreamReader(process.inputStream)).use { reader ->

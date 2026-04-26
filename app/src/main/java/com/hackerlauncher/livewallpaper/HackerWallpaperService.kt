@@ -10,7 +10,6 @@ import android.graphics.Paint
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
-import android.preference.PreferenceManager
 import android.service.wallpaper.WallpaperService
 import android.util.Log
 import android.view.SurfaceHolder
@@ -30,6 +29,8 @@ class HackerWallpaperService : WallpaperService() {
         const val MODE_CRT_SCANLINES = 2
         const val MODE_PARTICLE_NETWORK = 3
         const val MODE_HEX_FALL = 4
+        const val MODE_CIRCUIT_BOARD = 5
+        const val MODE_NEON_GRID = 6
     }
 
     override fun onCreateEngine(): Engine {
@@ -65,11 +66,11 @@ class HackerWallpaperService : WallpaperService() {
                 addAction(Intent.ACTION_SCREEN_OFF)
                 addAction(Intent.ACTION_SCREEN_ON)
             }
-            // FIX: Use RECEIVER_NOT_EXPORTED for screen on/off (system broadcasts)
+            // FIX: Use RECEIVER_NOT_EXPORTED for system broadcasts on Android 13+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                registerReceiver(screenReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+                this@HackerWallpaperService.registerReceiver(screenReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
             } else {
-                registerReceiver(screenReceiver, filter)
+                this@HackerWallpaperService.registerReceiver(screenReceiver, filter)
             }
             Log.d(TAG, "HackerEngine created")
         }
@@ -77,7 +78,7 @@ class HackerWallpaperService : WallpaperService() {
         override fun onDestroy() {
             super.onDestroy()
             stopDrawing()
-            try { unregisterReceiver(screenReceiver) } catch (_: Exception) {}
+            try { this@HackerWallpaperService.unregisterReceiver(screenReceiver) } catch (_: Exception) {}
         }
 
         override fun onVisibilityChanged(visible: Boolean) {
@@ -163,7 +164,7 @@ class HackerWallpaperService : WallpaperService() {
         }
 
         private fun drawFrame(canvas: Canvas) {
-            canvas.drawColor(0xFF000000.toInt()) // Black background
+            canvas.drawColor(0xFF000000.toInt())
             when (mode) {
                 MODE_MATRIX_RAIN -> matrixRain.draw(canvas)
                 MODE_GLITCH -> glitchEffect.draw(canvas)
@@ -173,6 +174,8 @@ class HackerWallpaperService : WallpaperService() {
                 }
                 MODE_PARTICLE_NETWORK -> particleNetwork.draw(canvas)
                 MODE_HEX_FALL -> drawHexFall(canvas)
+                MODE_CIRCUIT_BOARD -> drawCircuitBoard(canvas)
+                MODE_NEON_GRID -> drawNeonGrid(canvas)
             }
         }
 
@@ -186,7 +189,6 @@ class HackerWallpaperService : WallpaperService() {
                 canvas.drawLine(0f, y, width.toFloat(), y, paint)
                 y += 3f
             }
-            // CRT vignette
             val vignette = Paint().apply {
                 isAntiAlias = true
                 style = Paint.Style.FILL
@@ -237,6 +239,98 @@ class HackerWallpaperService : WallpaperService() {
                     col.y = -col.chars.size * 18f
                 }
             }
+        }
+
+        // New: Circuit Board wallpaper
+        private val circuitPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        private val nodePaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        private val circuitNodes = mutableListOf<CircuitNode>()
+
+        private data class CircuitNode(val x: Float, val y: Float, val connections: List<Int>)
+
+        private fun drawCircuitBoard(canvas: Canvas) {
+            if (circuitNodes.isEmpty()) {
+                val spacing = 80
+                val cols = (width / spacing) + 1
+                val rows = (height / spacing) + 1
+                for (row in 0 until rows) {
+                    for (col in 0 until cols) {
+                        val x = col * spacing + (Math.random() * 20 - 10).toFloat()
+                        val y = row * spacing + (Math.random() * 20 - 10).toFloat()
+                        val connections = mutableListOf<Int>()
+                        if (col > 0 && Math.random() > 0.3) connections.add(circuitNodes.size - 1)
+                        if (row > 0 && Math.random() > 0.3) connections.add(circuitNodes.size - cols)
+                        circuitNodes.add(CircuitNode(x, y, connections))
+                    }
+                }
+            }
+
+            val colorStr = prefs.getString(KEY_COLOR, "#00FF00")
+            circuitPaint.color = android.graphics.Color.parseColor(colorStr)
+            circuitPaint.alpha = 60
+            circuitPaint.strokeWidth = 1f
+
+            nodePaint.color = android.graphics.Color.parseColor(colorStr)
+            nodePaint.style = Paint.Style.FILL
+
+            for ((idx, node) in circuitNodes.withIndex()) {
+                for (connIdx in node.connections) {
+                    if (connIdx >= 0 && connIdx < circuitNodes.size) {
+                        val other = circuitNodes[connIdx]
+                        canvas.drawLine(node.x, node.y, other.x, other.y, circuitPaint)
+                    }
+                }
+                val pulse = (Math.sin(System.currentTimeMillis() / 500.0 + idx * 0.1) * 0.5 + 0.5).toFloat()
+                nodePaint.alpha = (40 + pulse * 80).toInt()
+                canvas.drawCircle(node.x, node.y, 3f, nodePaint)
+            }
+        }
+
+        // New: Neon Grid wallpaper
+        private val neonPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        private var gridOffset = 0f
+
+        private fun drawNeonGrid(canvas: Canvas) {
+            val colorStr = prefs.getString(KEY_COLOR, "#00FF00")
+            val color = android.graphics.Color.parseColor(colorStr)
+
+            gridOffset += 0.5f
+            if (gridOffset > 60f) gridOffset = 0f
+
+            // Vertical lines with perspective
+            neonPaint.strokeWidth = 1f
+            val vanishY = height * 0.3f
+            val vanishX = width / 2f
+            val numLines = 20
+
+            for (i in -numLines..numLines) {
+                val ratio = i.toFloat() / numLines
+                val bottomX = vanishX + ratio * width
+                neonPaint.color = color
+                neonPaint.alpha = (30 + Math.abs(ratio) * 30).toInt()
+                canvas.drawLine(vanishX, vanishY, bottomX, height.toFloat(), neonPaint)
+            }
+
+            // Horizontal lines
+            var y = height.toFloat()
+            var step = 20f
+            neonPaint.alpha = 30
+            while (y > vanishY) {
+                canvas.drawLine(0f, y - gridOffset, width.toFloat(), y - gridOffset, neonPaint)
+                y -= step
+                step *= 1.05f
+            }
+
+            // Vanishing point glow
+            neonPaint.alpha = 100
+            canvas.drawCircle(vanishX, vanishY, 5f, neonPaint)
+            neonPaint.alpha = 30
+            canvas.drawCircle(vanishX, vanishY, 30f, neonPaint)
+
+            // Horizon line
+            neonPaint.alpha = 60
+            neonPaint.strokeWidth = 2f
+            canvas.drawLine(0f, vanishY, width.toFloat(), vanishY, neonPaint)
         }
     }
 }

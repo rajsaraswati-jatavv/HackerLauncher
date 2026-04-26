@@ -1,50 +1,33 @@
-# Proguard rules for HackerLauncher v2.0.0
-
-# Keep annotations
--keepattributes *Annotation*
--keepattributes SourceFile,LineNumberTable
--keep public class * extends java.lang.Exception
-
-# Retrofit
--keepattributes Signature, Exceptions
--keepclassmembers,allowshrinking,allowobfuscation interface * {
-    @retrofit2.http.* <methods>;
-}
--dontwarn retrofit2.**
-
-# Room - comprehensive rules
--keep class * extends androidx.room.RoomDatabase
--keep @androidx.room.Entity class *
--dontwarn androidx.room.paging.**
+# Add project specific ProGuard rules here.
 
 # Gson
 -keepattributes Signature
 -keepattributes *Annotation*
--keep class com.google.gson.** { *; }
--dontwarn com.google.gson.**
-
-# Keep data classes used with Gson/Retrofit
 -keep class com.hackerlauncher.chat.** { *; }
+-keep class com.google.gson.** { *; }
 
-# Firebase
--keep class com.google.firebase.** { *; }
--dontwarn com.google.firebase.**
+# Retrofit
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
 
 # OkHttp
 -dontwarn okhttp3.**
 -dontwarn okio.**
 
-# Firebase UI
--keep class com.firebaseui.** { *; }
--dontwarn com.firebaseui.**
+# Room
+-keep class * extends androidx.room.RoomDatabase
+-keep @androidx.room.Entity class *
 
-# Kotlin coroutines
--keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
--keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
--keepclassmembers class kotlinx.coroutines.** {
-    volatile <fields>;
-}
+# Firebase
+-keep class com.google.firebase.** { *; }
+-dontwarn com.google.firebase.**
 
-# AndroidX
--keep class androidx.work.** { *; }
--dontwarn androidx.work.**
+# Keep data classes
+-keep class com.hackerlauncher.chat.Message { *; }
+-keep class com.hackerlauncher.chat.ChatRequest { *; }
+-keep class com.hackerlauncher.chat.ChatResponse { *; }
+-keep class com.hackerlauncher.chat.ChatMessage { *; }
+-keep class com.hackerlauncher.chat.Choice { *; }
