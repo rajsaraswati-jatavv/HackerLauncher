@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000"
+    android:padding="8dp">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:rowCount="3">
+
+        <Button android:id="@+id/btnScanWifi" android:text="Scan WiFi" style="@style/HackerButton" />
+        <Button android:id="@+id/btnWifiInfo" android:text="WiFi Info" style="@style/HackerButton" />
+        <Button android:id="@+id/btnWifiPrivacy" android:text="MAC Random" style="@style/HackerButton" />
+        <Button android:id="@+id/btnDnsCheck" android:text="DNS Check" style="@style/HackerButton" />
+        <Button android:id="@+id/btnDnsChange" android:text="DNS Change" style="@style/HackerButton" />
+        <Button android:id="@+id/btnProxyInfo" android:text="Proxy Info" style="@style/HackerButton" />
+        <Button android:id="@+id/btnVpnStatus" android:text="VPN Status" style="@style/HackerButton" />
+        <Button android:id="@+id/btnIpCheck" android:text="IP Check" style="@style/HackerButton" />
+    </GridLayout>
+
+    <ScrollView
+        android:id="@+id/scrollViewWifiArsenal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/tvWifiArsenalOutput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="11sp" />
+    </ScrollView>
+</LinearLayout>

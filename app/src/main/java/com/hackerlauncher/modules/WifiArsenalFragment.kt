@@ -24,42 +24,32 @@ class WifiArsenalFragment : Fragment() {
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_network, container, false)
+        return inflater.inflate(R.layout.fragment_wifi_arsenal, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tvOutput = view.findViewById(R.id.tvNetOutput)
-        scrollView = view.findViewById(R.id.scrollViewNetwork)
+        tvOutput = view.findViewById(R.id.tvWifiArsenalOutput)
+        scrollView = view.findViewById(R.id.scrollViewWifiArsenal)
 
-        val btnWifiInfo = view.findViewById<Button>(R.id.btnWifiInfo)
         val btnScanWifi = view.findViewById<Button>(R.id.btnScanWifi)
-        val btnArpTable = view.findViewById<Button>(R.id.btnArpTable)
-        val btnDnsLookup = view.findViewById<Button>(R.id.btnDnsLookup)
-        val btnPing = view.findViewById<Button>(R.id.btnPing)
-        val btnPortScan = view.findViewById<Button>(R.id.btnPortScan)
-        val btnIfconfig = view.findViewById<Button>(R.id.btnIfconfig)
-        val btnNetstat = view.findViewById<Button>(R.id.btnNetstat)
+        val btnWifiInfo = view.findViewById<Button>(R.id.btnWifiInfo)
+        val btnWifiPrivacy = view.findViewById<Button>(R.id.btnWifiPrivacy)
+        val btnDnsCheck = view.findViewById<Button>(R.id.btnDnsCheck)
+        val btnDnsChange = view.findViewById<Button>(R.id.btnDnsChange)
+        val btnProxyInfo = view.findViewById<Button>(R.id.btnProxyInfo)
+        val btnVpnStatus = view.findViewById<Button>(R.id.btnVpnStatus)
+        val btnIpCheck = view.findViewById<Button>(R.id.btnIpCheck)
 
-        // Repurpose buttons for WiFi Arsenal
-        btnWifiInfo.text = "WiFi Info"
-        btnScanWifi.text = "Deep Scan"
-        btnArpTable.text = "Connected Devs"
-        btnDnsLookup.text = "WPS Check"
-        btnPing.text = "Signal Mon"
-        btnPortScan.text = "Deauth Det"
-        btnIfconfig.text = "WiFi Pwr"
-        btnNetstat.text = "Handshake"
-
-        btnWifiInfo.setOnClickListener { getWifiInfo() }
         btnScanWifi.setOnClickListener { deepScanWifi() }
-        btnArpTable.setOnClickListener { findConnectedDevices() }
-        btnDnsLookup.setOnClickListener { checkWps() }
-        btnPing.setOnClickListener { monitorSignal() }
-        btnPortScan.setOnClickListener { detectDeauth() }
-        btnIfconfig.setOnClickListener { checkWifiPower() }
-        btnNetstat.setOnClickListener { checkHandshake() }
+        btnWifiInfo.setOnClickListener { getWifiInfo() }
+        btnWifiPrivacy.setOnClickListener { checkWifiPrivacy() }
+        btnDnsCheck.setOnClickListener { runCommand("nslookup google.com", "DNS Check") }
+        btnDnsChange.setOnClickListener { appendOutput("[*] DNS change requires root. Use: 'su -c setprop net.dns1 8.8.8.8'\n") }
+        btnProxyInfo.setOnClickListener { runCommand("echo 'Proxy: ' && settings get global http_proxy", "Proxy Info") }
+        btnVpnStatus.setOnClickListener { checkVpnStatus() }
+        btnIpCheck.setOnClickListener { runCommand("curl -s ifconfig.me 2>/dev/null || wget -qO- ifconfig.me", "External IP") }
     }
 
     @Suppress("DEPRECATION")
@@ -440,6 +430,64 @@ class WifiArsenalFragment : Fragment() {
         appendOutput("    4. Crack: aircrack-ng -w wordlist.txt capture-01.cap\n\n")
         appendOutput("[!] For educational/authorized testing only!\n")
         appendOutput("╚══════════════════════════════════╝\n")
+    }
+
+    private fun checkWifiPrivacy() {
+        appendOutput("╔══════════════════════════════════╗\n")
+        appendOutput("║   WiFi Privacy Check            ║\n")
+        appendOutput("╠══════════════════════════════════╣\n\n")
+        try {
+            val wifiManager = requireContext().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val info = wifiManager.connectionInfo
+            val mac = info.macAddress ?: "Unavailable"
+            appendOutput("[*] Current MAC: $mac\n")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                appendOutput("[+] Android 6+ uses MAC randomization by default\n")
+                appendOutput("[+] Your MAC is randomized for scanning\n")
+            } else {
+                appendOutput("[!] Pre-Android 6: Real MAC may be exposed\n")
+            }
+            appendOutput("\n[*] Privacy tips:\n")
+            appendOutput("    - Use MAC randomization (Android 10+)\n")
+            appendOutput("    - Disable WiFi when not in use\n")
+            appendOutput("    - Use VPN for traffic encryption\n")
+            appendOutput("    - Avoid auto-connect to open networks\n")
+        } catch (e: Exception) {
+            appendOutput("[E] Privacy check failed: ${e.message}\n")
+        }
+        appendOutput("╚══════════════════════════════════╝\n")
+    }
+
+    private fun checkVpnStatus() {
+        appendOutput("╔══════════════════════════════════╗\n")
+        appendOutput("║   VPN Status Check              ║\n")
+        appendOutput("╠══════════════════════════════════╣\n\n")
+        try {
+            val cm = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as android.net.ConnectivityManager
+            val network = cm.activeNetwork
+            val caps = cm.getNetworkCapabilities(network)
+            val hasVpn = caps?.hasTransport(android.net.NetworkCapabilities.TRANSPORT_VPN) == true
+            if (hasVpn) {
+                appendOutput("[+] VPN is ACTIVE\n")
+                appendOutput("[+] Your traffic is encrypted through VPN tunnel\n")
+            } else {
+                appendOutput("[-] VPN is NOT active\n")
+                appendOutput("[!] Your traffic may be visible on this network\n")
+                appendOutput("[!] Recommend using VPN on public WiFi\n")
+            }
+        } catch (e: Exception) {
+            appendOutput("[E] VPN check failed: ${e.message}\n")
+        }
+        appendOutput("╚══════════════════════════════════╝\n")
+    }
+
+    private fun runCommand(cmd: String, label: String) {
+        scope.launch {
+            appendOutput("[*] $label...\n")
+            val result = withContext(Dispatchers.IO) { ShellExecutor.execute(cmd) }
+            if (result.output.isNotEmpty()) appendOutput(result.output + "\n")
+            if (result.error.isNotEmpty()) appendOutput("[E] ${result.error}\n")
+        }
     }
 
     private fun appendOutput(text: String) {

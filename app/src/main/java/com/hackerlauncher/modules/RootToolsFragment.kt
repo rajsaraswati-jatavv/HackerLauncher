@@ -22,30 +22,30 @@ class RootToolsFragment : Fragment() {
     private var isRooted = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_terminal, container, false)
+        return inflater.inflate(R.layout.fragment_root_tools, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tvOutput = view.findViewById(R.id.tvTerminalOutput)
-        etCommand = view.findViewById(R.id.etCommand)
-        scrollView = view.findViewById(R.id.scrollViewTerminal)
+        tvOutput = view.findViewById(R.id.tvRootOutput)
+        etCommand = view.findViewById(R.id.etRootCommand)
+        scrollView = view.findViewById(R.id.scrollViewRoot)
 
-        val btnSend = view.findViewById<Button>(R.id.btnSend)
-        val btnClear = view.findViewById<Button>(R.id.btnClear)
-        val btnTermux = view.findViewById<Button>(R.id.btnOpenTermux)
-
-        // Hide Termux button, repurpose as Root Check
-        btnTermux.text = "Root Check"
+        val btnCheckRoot = view.findViewById<Button>(R.id.btnCheckRoot)
+        val btnRootShell = view.findViewById<Button>(R.id.btnRootShell)
+        val btnRootExecute = view.findViewById<Button>(R.id.btnRootExecute)
+        val tvRootStatus = view.findViewById<TextView>(R.id.tvRootStatus)
 
         appendOutput("═══ Root Tools Module v3.0 ═══\n")
-        appendOutput("Type 'help' for root commands.\n\n")
+        appendOutput("Type root commands below.\n\n")
 
         // Auto-check root
         checkRootStatus()
 
-        btnSend.setOnClickListener {
+        btnCheckRoot.setOnClickListener { checkRootStatus() }
+        btnRootShell.setOnClickListener { openRootShell() }
+        btnRootExecute.setOnClickListener {
             val cmd = etCommand.text.toString().trim()
             if (cmd.isNotEmpty()) {
                 executeRootCommand(cmd)
@@ -53,20 +53,24 @@ class RootToolsFragment : Fragment() {
             }
         }
 
-        btnClear.setOnClickListener {
-            tvOutput.text = ""
-            appendOutput("Terminal cleared.\n")
-        }
-
-        btnTermux.setOnClickListener {
-            checkRootStatus()
-        }
-
         etCommand.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEND) {
-                btnSend.performClick()
+                btnRootExecute.performClick()
                 true
             } else false
+        }
+    }
+
+    private fun openRootShell() {
+        appendOutput("[*] Opening root shell via Termux...\n")
+        try {
+            val intent = android.content.Intent()
+            intent.setClassName("com.termux", "com.termux.app.TermuxActivity")
+            intent.flags = android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+        } catch (e: Exception) {
+            appendOutput("[E] Termux not available: ${e.message}\n")
+            appendOutput("[*] Install Termux for root shell access\n")
         }
     }
 
@@ -75,6 +79,18 @@ class RootToolsFragment : Fragment() {
             appendOutput("[*] Checking root access...\n")
             val rooted = withContext(Dispatchers.IO) { ShellExecutor.isRootAvailable() }
             isRooted = rooted
+            activity?.runOnUiThread {
+                try {
+                    val tvRootStatus = view?.findViewById<TextView>(R.id.tvRootStatus)
+                    if (rooted) {
+                        tvRootStatus?.text = "[+] ROOT ACCESS GRANTED"
+                        tvRootStatus?.setTextColor(0xFF00FF00.toInt())
+                    } else {
+                        tvRootStatus?.text = "[-] ROOT NOT AVAILABLE"
+                        tvRootStatus?.setTextColor(0xFFFF4444.toInt())
+                    }
+                } catch (_: Exception) {}
+            }
             if (rooted) {
                 appendOutput("[+] ROOT ACCESS GRANTED\n")
                 appendOutput("[*] SU binary found and working\n\n")

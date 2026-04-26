@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/tvRootStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Checking root access..."
+        android:textColor="#FFAA00"
+        android:fontFamily="monospace"
+        android:textSize="13sp"
+        android:padding="8dp"
+        android:background="#1A1A0A"
+        android:layout_marginBottom="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <Button android:id="@+id/btnCheckRoot" android:text="Check Root" style="@style/HackerButton" />
+        <Button android:id="@+id/btnRootShell" android:text="Root Shell" style="@style/HackerButton" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/etRootCommand"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Root command (su -c ...)"
+        android:textColorHint="#005500"
+        android:textColor="#00FF00"
+        android:background="#0A1A0A"
+        android:fontFamily="monospace"
+        android:textSize="12sp"
+        android:padding="8dp"
+        android:singleLine="true"
+        android:layout_marginBottom="8dp" />
+
+    <Button
+        android:id="@+id/btnRootExecute"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="EXECUTE AS ROOT"
+        android:textColor="#000000"
+        android:backgroundTint="#FF4444"
+        android:fontFamily="monospace"
+        android:textSize="12sp"
+        android:layout_marginBottom="8dp" />
+
+    <ScrollView
+        android:id="@+id/scrollViewRoot"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tvRootOutput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="11sp" />
+    </ScrollView>
+</LinearLayout>

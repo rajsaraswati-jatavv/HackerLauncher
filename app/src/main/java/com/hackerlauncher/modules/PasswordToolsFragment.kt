@@ -19,19 +19,18 @@ class PasswordToolsFragment : Fragment() {
     private val logger = Logger
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_crypto, container, false)
+        return inflater.inflate(R.layout.fragment_password_tools, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tvOutput = view.findViewById(R.id.tvCryptoOutput)
-        scrollView = view.findViewById(R.id.scrollViewCrypto)
+        tvOutput = view.findViewById(R.id.tvPasswordOutput)
+        scrollView = view.findViewById(R.id.scrollViewPassword)
 
-        val etInput = view.findViewById<EditText>(R.id.etCryptoInput)
-        val spinnerOp = view.findViewById<Spinner>(R.id.spinnerCryptoOp)
-        val btnGo = view.findViewById<Button>(R.id.btnCryptoGo)
-        val btnCopy = view.findViewById<Button>(R.id.btnCryptoCopy)
+        val etInput = view.findViewById<EditText>(R.id.etPasswordInput)
+        val spinnerOp = view.findViewById<Spinner>(R.id.spinnerPasswordOp)
+        val btnGo = view.findViewById<Button>(R.id.btnPasswordGo)
 
         val ops = listOf(
             "Password Strength", "Random Password", "Passphrase",
@@ -48,12 +47,14 @@ class PasswordToolsFragment : Fragment() {
             processPasswordTool(input, op)
         }
 
-        btnCopy.setOnClickListener {
+        // Copy button: use long-press on output to copy
+        tvOutput.setOnLongClickListener {
             val text = tvOutput.text.toString()
             val clip = android.content.ClipData.newPlainText("password_result", text)
             (requireContext().getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager)
                 .setPrimaryClip(clip)
             Toast.makeText(requireContext(), "Copied to clipboard", Toast.LENGTH_SHORT).show()
+            true
         }
     }
 

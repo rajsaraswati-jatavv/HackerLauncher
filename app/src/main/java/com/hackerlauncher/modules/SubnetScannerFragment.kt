@@ -23,52 +23,32 @@ class SubnetScannerFragment : Fragment() {
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_network, container, false)
+        return inflater.inflate(R.layout.fragment_subnet_scanner, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tvOutput = view.findViewById(R.id.tvNetOutput)
-        scrollView = view.findViewById(R.id.scrollViewNetwork)
-        etHost = view.findViewById(R.id.etHost)
-        etPort = view.findViewById(R.id.etPort)
+        tvOutput = view.findViewById(R.id.tvSubnetOutput)
+        scrollView = view.findViewById(R.id.scrollViewSubnet)
+        etHost = view.findViewById(R.id.etSubnetHost)
+        etPort = view.findViewById(R.id.etSubnetPort)
 
-        val btnWifiInfo = view.findViewById<Button>(R.id.btnWifiInfo)
-        val btnScanWifi = view.findViewById<Button>(R.id.btnScanWifi)
-        val btnArpTable = view.findViewById<Button>(R.id.btnArpTable)
-        val btnDnsLookup = view.findViewById<Button>(R.id.btnDnsLookup)
-        val btnPing = view.findViewById<Button>(R.id.btnPing)
-        val btnPortScan = view.findViewById<Button>(R.id.btnPortScan)
-        val btnIfconfig = view.findViewById<Button>(R.id.btnIfconfig)
-        val btnNetstat = view.findViewById<Button>(R.id.btnNetstat)
+        val btnScan = view.findViewById<Button>(R.id.btnScan)
+        val btnAutoRecon = view.findViewById<Button>(R.id.btnAutoRecon)
 
-        btnWifiInfo.text = "Subnet Scan"
-        btnScanWifi.text = "Host Scan"
-        btnArpTable.text = "Port Scan"
-        btnDnsLookup.text = "Service Enum"
-        btnPing.text = "Ping Sweep"
-        btnPortScan.text = "Traceroute"
-        btnIfconfig.text = "Net Info"
-        btnNetstat.text = "Connections"
-
-        etHost.hint = "Host or subnet"
-        etPort.hint = "Port or range"
-
-        btnWifiInfo.setOnClickListener { scanSubnet() }
-        btnScanWifi.setOnClickListener { scanHost() }
-        btnArpTable.setOnClickListener { portScanHost() }
-        btnDnsLookup.setOnClickListener { enumerateServices() }
-        btnPing.setOnClickListener { pingSweep() }
-        btnPortScan.setOnClickListener { traceroute() }
-        btnIfconfig.setOnClickListener { networkInfo() }
-        btnNetstat.setOnClickListener { showConnections() }
+        btnScan.setOnClickListener { scanSubnet() }
+        btnAutoRecon.setOnClickListener { autoRecon() }
     }
 
     private fun scanSubnet() {
-        scope.launch {
-            appendOutput("[*] Detecting subnet...\n")
-            val result = withContext(Dispatchers.IO) {
+        val host = etHost.text.toString().trim()
+        if (host.isNotEmpty()) {
+            portScanHost()
+        } else {
+            scope.launch {
+                appendOutput("[*] Detecting subnet...\n")
+                val result = withContext(Dispatchers.IO) {
                 try {
                     val wifiManager = requireContext().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
                     val info = wifiManager.connectionInfo
@@ -353,6 +333,26 @@ class SubnetScannerFragment : Fragment() {
         6379 -> "Redis"; 8080 -> "HTTP-Alt"; 8443 -> "HTTPS-Alt"
         8888 -> "HTTP-Proxy"; 9090 -> "WebSocket"; 27017 -> "MongoDB"
         else -> "Unknown"
+    }
+
+    private fun autoRecon() {
+        val host = etHost.text.toString().trim()
+        if (host.isEmpty()) {
+            appendOutput("[!] Enter a target host or IP\n")
+            return
+        }
+        scope.launch {
+            appendOutput("╔══════════════════════════════════╗\n")
+            appendOutput("║   Auto Reconnaissance: $host\n")
+            appendOutput("╠══════════════════════════════════╣\n\n")
+            appendOutput("[*] Running full reconnaissance...\n")
+            scanHost()
+            delay(500)
+            enumerateServices()
+            delay(500)
+            appendOutput("\n[*] Reconnaissance complete.\n")
+            appendOutput("╚══════════════════════════════════╝\n")
+        }
     }
 
     private fun appendOutput(text: String) {

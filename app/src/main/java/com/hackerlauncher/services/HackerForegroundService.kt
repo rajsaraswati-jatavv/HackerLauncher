@@ -18,7 +18,7 @@ class HackerForegroundService : Service() {
 
     companion object {
         const val CHANNEL_ID = "hacker_service"
-        const val NOTIFICATION_ID = 1001
+        const val NOTIFICATION_ID = 1008
         const val ACTION_START = "com.hackerlauncher.START_SERVICE"
         const val ACTION_STOP = "com.hackerlauncher.STOP_SERVICE"
     }
@@ -98,7 +98,6 @@ class HackerForegroundService : Service() {
             .setContentIntent(openPending)
             .addAction(R.drawable.ic_stop, "Stop", stopPending)
             .setOngoing(true)
-            .setSilent(true)
             .build()
     }
 

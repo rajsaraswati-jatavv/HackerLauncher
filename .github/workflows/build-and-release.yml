@@ -1,4 +1,4 @@
-name: Build & Release v6 Ultimate
+name: Build & Release v7 Ultimate
 
 on:
   push:
@@ -119,7 +119,7 @@ jobs:
           tag_name: v${{ github.event.inputs.release_version }}
           name: HackerLauncher v${{ github.event.inputs.release_version }} Ultimate
           body: |
-            ## HackerLauncher v6.0 Ultimate
+            ## HackerLauncher v7.0 Ultimate
 
             🔥 **THE MOST POWERFUL ANDROID LAUNCHER EVER BUILT**
 

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <Button android:id="@+id/btnScan" android:text="Scan Subnet" style="@style/HackerButton" />
+        <Button android:id="@+id/btnAutoRecon" android:text="Auto Recon" style="@style/HackerButton" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp">
+
+        <EditText
+            android:id="@+id/etSubnetHost"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:hint="Subnet (e.g. 192.168.1.0/24)"
+            android:textColorHint="#005500"
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:padding="8dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/etSubnetPort"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:hint="Port"
+            android:textColorHint="#005500"
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:padding="8dp"
+            android:singleLine="true"
+            android:inputType="number" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollViewSubnet"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/tvSubnetOutput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="11sp" />
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/scanProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:indeterminateTint="#00FF00" />
+</LinearLayout>

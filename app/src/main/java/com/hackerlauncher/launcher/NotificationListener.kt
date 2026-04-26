@@ -288,7 +288,7 @@ class NotificationListener : NotificationListenerService() {
         val intent = Intent(ACTION_NOTIFICATION_UPDATE).apply {
             putExtra(EXTRA_PACKAGE_NAME, packageName)
             putExtra(EXTRA_ACTION, action)
-            setPackage("com.hackerlauncher.launcher")
+            setPackage("com.hackerlauncher")
         }
         sendBroadcast(intent)
     }

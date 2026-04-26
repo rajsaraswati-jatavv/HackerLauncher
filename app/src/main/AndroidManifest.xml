@@ -420,6 +420,9 @@
             <intent-filter><action android:name="android.app.action.DEVICE_ADMIN_ENABLED" /></intent-filter>
         </receiver>
 
+        <!-- KeepAlive JobService -->
+        <service android:name=".services.KeepAliveService$KeepAliveJobService" android:exported="false" android:permission="android.permission.BIND_JOB_SERVICE" />
+
         <!-- Location Geofence Receiver -->
         <receiver android:name=".services.LocationTrackerService$GeofenceBroadcastReceiver"
             android:exported="false" />

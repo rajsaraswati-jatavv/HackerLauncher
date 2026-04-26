@@ -280,3 +280,45 @@
     <item type="id" name="emails" />
     <item type="id" name="events" />
 </resources>
+
+    <!-- WiFi Arsenal -->
+    <item type="id" name="tvWifiArsenalOutput" />
+    <item type="id" name="scrollViewWifiArsenal" />
+    <item type="id" name="btnWifiPrivacy" />
+    <item type="id" name="btnDnsCheck" />
+    <item type="id" name="btnDnsChange" />
+    <item type="id" name="btnProxyInfo" />
+    <item type="id" name="btnVpnStatus" />
+    <item type="id" name="btnIpCheck" />
+
+    <!-- Subnet Scanner -->
+    <item type="id" name="tvSubnetOutput" />
+    <item type="id" name="scrollViewSubnet" />
+    <item type="id" name="etSubnetHost" />
+    <item type="id" name="etSubnetPort" />
+    <item type="id" name="scanProgressBar" />
+
+    <!-- Bluetooth Scanner -->
+    <item type="id" name="tvBluetoothOutput" />
+    <item type="id" name="scrollViewBluetooth" />
+    <item type="id" name="btnBtScan" />
+    <item type="id" name="btnBtLeScan" />
+    <item type="id" name="btnBtInfo" />
+
+    <!-- Password Tools -->
+    <item type="id" name="tvPasswordOutput" />
+    <item type="id" name="scrollViewPassword" />
+    <item type="id" name="etPasswordInput" />
+    <item type="id" name="spinnerPasswordOp" />
+    <item type="id" name="btnPasswordGo" />
+    <item type="id" name="seekBarPasswordLength" />
+    <item type="id" name="tvPasswordLength" />
+
+    <!-- Root Tools -->
+    <item type="id" name="tvRootStatus" />
+    <item type="id" name="tvRootOutput" />
+    <item type="id" name="scrollViewRoot" />
+    <item type="id" name="etRootCommand" />
+    <item type="id" name="btnCheckRoot" />
+    <item type="id" name="btnRootShell" />
+    <item type="id" name="btnRootExecute" />

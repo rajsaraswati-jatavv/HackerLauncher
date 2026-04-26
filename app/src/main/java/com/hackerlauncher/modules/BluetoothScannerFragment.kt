@@ -32,42 +32,30 @@ class BluetoothScannerFragment : Fragment() {
     private var isScanning = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.fragment_network, container, false)
+        return inflater.inflate(R.layout.fragment_bluetooth_scanner, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        tvOutput = view.findViewById(R.id.tvNetOutput)
-        scrollView = view.findViewById(R.id.scrollViewNetwork)
+        tvOutput = view.findViewById(R.id.tvBluetoothOutput)
+        scrollView = view.findViewById(R.id.scrollViewBluetooth)
 
-        val btnWifiInfo = view.findViewById<Button>(R.id.btnWifiInfo)
-        val btnScanWifi = view.findViewById<Button>(R.id.btnScanWifi)
-        val btnArpTable = view.findViewById<Button>(R.id.btnArpTable)
-        val btnDnsLookup = view.findViewById<Button>(R.id.btnDnsLookup)
-        val btnPing = view.findViewById<Button>(R.id.btnPing)
-        val btnPortScan = view.findViewById<Button>(R.id.btnPortScan)
-        val btnIfconfig = view.findViewById<Button>(R.id.btnIfconfig)
-        val btnNetstat = view.findViewById<Button>(R.id.btnNetstat)
+        val btnBtScan = view.findViewById<Button>(R.id.btnBtScan)
+        val btnBtLeScan = view.findViewById<Button>(R.id.btnBtLeScan)
+        val btnBtInfo = view.findViewById<Button>(R.id.btnBtInfo)
 
-        btnWifiInfo.text = "BT Status"
-        btnScanWifi.text = "BT Scan"
-        btnArpTable.text = "BLE Scan"
-        btnDnsLookup.text = "BT Paired"
-        btnPing.text = "BT Fingerprint"
-        btnPortScan.text = "BT Logs"
-        btnIfconfig.text = "NFC Check"
-        btnNetstat.text = "BT Config"
+        btnBtScan.setOnClickListener { startBluetoothScan() }
+        btnBtLeScan.setOnClickListener { startBleScan() }
+        btnBtInfo.setOnClickListener { showBluetoothInfo() }
+    }
 
-        btnWifiInfo.setOnClickListener { checkBluetoothStatus() }
-        btnScanWifi.setOnClickListener { scanBluetooth() }
-        btnArpTable.setOnClickListener { scanBLE() }
-        btnDnsLookup.setOnClickListener { listPairedDevices() }
-        btnPing.setOnClickListener { fingerprintDevice() }
-        btnPortScan.setOnClickListener { showBtLogs() }
-        btnIfconfig.setOnClickListener { checkNfc() }
-        btnNetstat.setOnClickListener { openBtSettings() }
+    private fun startBluetoothScan() { scanBluetooth() }
+    private fun startBleScan() { scanBLE() }
+    private fun showBluetoothInfo() { checkBluetoothStatus() }
 
+    override fun onResume() {
+        super.onResume()
         checkBluetoothStatus()
     }
 
