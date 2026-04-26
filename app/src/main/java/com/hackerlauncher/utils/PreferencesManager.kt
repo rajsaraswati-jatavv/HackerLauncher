@@ -70,6 +70,7 @@ class PreferencesManager(context: Context) {
         return try { gson.fromJson(json, object : TypeToken<List<String>>() {}.type) } catch (e: Exception) { emptyList() }
     }
     fun setPinnedApps(apps: List<String>) = prefs.edit().putString("pinned_apps", gson.toJson(apps)).apply()
+    fun savePinnedApps(apps: List<Any>) = setPinnedApps(apps.map { it.toString() })
 
     // Hidden apps (package names as JSON array)
     fun getHiddenApps(): List<String> {
@@ -89,6 +90,7 @@ class PreferencesManager(context: Context) {
         apps.remove(packageName)
         setHiddenApps(apps)
     }
+    fun saveHiddenApps(apps: List<String>) = setHiddenApps(apps)
 
     // Folders (JSON map of folderName -> List<packageName>)
     fun getFolders(): Map<String, List<String>> {
@@ -96,6 +98,7 @@ class PreferencesManager(context: Context) {
         return try { gson.fromJson(json, object : TypeToken<Map<String, List<String>>>() {}.type) } catch (e: Exception) { emptyMap() }
     }
     fun setFolders(folders: Map<String, List<String>>) = prefs.edit().putString("folders", gson.toJson(folders)).apply()
+    fun saveFolders(folders: Map<String, List<Any>>) = setFolders(folders.mapValues { it.value.map { v -> v.toString() } })
 
     // App drawer sort order
     fun getSortOrder(): String = prefs.getString("sort_order", "alpha") ?: "alpha"
@@ -289,6 +292,7 @@ class PreferencesManager(context: Context) {
         prefs.edit().putString("recent_searches", gson.toJson(searches)).apply()
     }
     fun clearRecentSearches() = prefs.edit().remove("recent_searches").apply()
+    fun saveRecentSearches(searches: List<String>) = prefs.edit().putString("recent_searches", gson.toJson(searches)).apply()
 
     // ========================================
     // TODO SETTINGS
@@ -303,6 +307,8 @@ class PreferencesManager(context: Context) {
 
     fun getNotes(): String = prefs.getString("notes", "[]") ?: "[]"
     fun setNotes(json: String) = prefs.edit().putString("notes", json).apply()
+    fun getNotesJson(): String = getNotes()
+    fun saveNotesJson(json: String) = setNotes(json)
 
     // ========================================
     // LOCATION TRACKING
@@ -371,5 +377,5 @@ class PreferencesManager(context: Context) {
         editor.apply()
     }
 
-    fun resetAll() = prefs.edit().clear().apply()
+    fun saveDockApps(apps: List<String>) = setDockApps(apps)
 }

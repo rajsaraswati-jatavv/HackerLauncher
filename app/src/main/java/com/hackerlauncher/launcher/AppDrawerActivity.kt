@@ -1,5 +1,7 @@
 package com.hackerlauncher.launcher
 
+import com.hackerlauncher.R
+
 import com.hackerlauncher.utils.PreferencesManager
 
 import android.animation.ObjectAnimator
@@ -91,7 +93,7 @@ class AppDrawerActivity : AppCompatActivity() {
             textSize = 16f
             setPadding(32, 24, 32, 24)
             imeOptions = EditorInfo.IME_ACTION_SEARCH
-            singleLine = true
+            isSingleLine = true
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -245,9 +247,9 @@ class AppDrawerActivity : AppCompatActivity() {
 
     private fun pinToHome(app: AppItem) {
         val pinned = prefsManager.getPinnedApps().toMutableList()
-        if (pinned.none { it.packageName == app.packageName }) {
-            pinned.add(app)
-            prefsManager.savePinnedApps(pinned)
+        if (pinned.none { it == app.packageName }) {
+            pinned.add(app.packageName)
+            prefsManager.setPinnedApps(pinned)
             Toast.makeText(this, "> pinned: ${app.label}", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(this, "> already_pinned: ${app.label}", Toast.LENGTH_SHORT).show()
@@ -256,7 +258,7 @@ class AppDrawerActivity : AppCompatActivity() {
 
     private fun hideApp(packageName: String) {
         hiddenPackages.add(packageName)
-        prefsManager.saveHiddenApps(hiddenPackages.toList())
+        prefsManager.addHiddenApp(packageName)
         filterApps(searchEditText.text.toString())
         Toast.makeText(this, "> hidden: $packageName", Toast.LENGTH_SHORT).show()
     }
@@ -273,10 +275,11 @@ class AppDrawerActivity : AppCompatActivity() {
             .setItems(folderNames) { _, which ->
                 val folderName = folderNames[which]
                 val folderApps = folders[folderName]?.toMutableList() ?: mutableListOf()
-                if (folderApps.none { it.packageName == app.packageName }) {
-                    folderApps.add(app)
-                    folders[folderName] = folderApps
-                    prefsManager.saveFolders(folders)
+                if (folderApps.none { it == app.packageName }) {
+                    folderApps.add(app.packageName)
+                    val newFolders = folders.toMutableMap()
+                    newFolders[folderName] = folderApps
+                    prefsManager.setFolders(newFolders)
                     Toast.makeText(this, "> added_to: $folderName", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "> already_in: $folderName", Toast.LENGTH_SHORT).show()
@@ -413,7 +416,7 @@ class AppDrawerActivity : AppCompatActivity() {
                     holder.badgeView.visibility = View.GONE
                 }
                 holder.itemView.setOnClickListener { onClick(item) }
-                holder.itemView.setOnLongClickListener { onLongClick(item) }
+                holder.itemView.setOnLongClickListener { onLongClick(item); true }
             }
         }
 

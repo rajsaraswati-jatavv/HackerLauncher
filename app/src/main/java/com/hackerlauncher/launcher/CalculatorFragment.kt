@@ -15,7 +15,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.widget.GridLayout
 import androidx.recyclerview.widget.RecyclerView
 
 /**
@@ -191,7 +191,7 @@ class CalculatorFragment : Fragment() {
         onClick: (String) -> Unit
     ): GridLayout {
         val context = requireContext()
-        return android.widget.GridLayout(context).apply {
+        return GridLayout(context).apply {
             columnCount = columns
             rowCount = (buttons.size + columns - 1) / columns
             layoutParams = LinearLayout.LayoutParams(
@@ -208,10 +208,10 @@ class CalculatorFragment : Fragment() {
                     gravity = Gravity.CENTER
                     setPadding(4, 12, 4, 12)
                     setBackgroundColor(Color.parseColor("#0A1A0A"))
-                    layoutParams = android.widget.GridLayout.LayoutParams().apply {
+                    layoutParams = GridLayout.LayoutParams().apply {
                         width = 0
-                        columnSpec = android.widget.GridLayout.spec(android.widget.GridLayout.UNDEFINED, 1f)
-                        height = android.widget.GridLayout.LayoutParams.WRAP_CONTENT
+                        columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                        height = GridLayout.LayoutParams.WRAP_CONTENT
                         setMargins(2, 2, 2, 2)
                     }
                     setOnClickListener { onClick(btnLabel) }

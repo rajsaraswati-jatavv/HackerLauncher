@@ -147,7 +147,7 @@ class NotesFragment : Fragment() {
             typeface = Typeface.MONOSPACE
             textSize = 14f
             setPadding(16, 12, 16, 12)
-            singleLine = true
+            isSingleLine = true
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT

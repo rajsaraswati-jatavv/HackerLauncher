@@ -1,5 +1,6 @@
 package com.hackerlauncher.launcher
 
+import com.hackerlauncher.R
 import android.view.View
 import android.widget.CheckBox
 import android.widget.ImageView

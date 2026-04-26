@@ -22,7 +22,7 @@ class AutomationFragment : Fragment() {
 
     private lateinit var tvAutoOutput: TextView
     private lateinit var scrollView: ScrollView
-    private val logger = Logger()
+    private val logger = Logger
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private val macroActions = mutableListOf<String>()
     private val scheduledTasks = mutableListOf<ScheduledTask>()
@@ -136,7 +136,7 @@ class AutomationFragment : Fragment() {
                 requireContext().startService(intent)
             }
             action.startsWith("LOG:") -> {
-                logger.log(action.removePrefix("LOG:"))
+                Logger.log(action.removePrefix("LOG:"))
             }
         }
     }

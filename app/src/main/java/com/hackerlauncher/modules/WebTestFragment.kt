@@ -16,7 +16,7 @@ class WebTestFragment : Fragment() {
 
     private lateinit var tvWebOutput: TextView
     private lateinit var scrollView: ScrollView
-    private val logger = Logger()
+    private val logger = Logger
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     override fun onCreateView(

@@ -1,5 +1,7 @@
 package com.hackerlauncher
 
+import com.hackerlauncher.R
+
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvTerminalWidget: TextView
     private lateinit var tvSystemStatus: TextView
     private lateinit var prefs: PreferencesManager
-    private val logger = Logger()
+    private val logger = Logger
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private val fragmentTags = arrayOf(
@@ -246,9 +248,9 @@ class MainActivity : AppCompatActivity() {
             try {
                 val intent = Intent(this, serviceClass).apply { action = "ACTION_START" }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
-                logger.info("Started service: ${serviceClass.simpleName}")
+                Logger.info("Started service: ${serviceClass.simpleName}")
             } catch (e: Exception) {
-                logger.error("Failed to start ${serviceClass.simpleName}: ${e.message}")
+                Logger.error("Failed to start ${serviceClass.simpleName}: ${e.message}")
             }
         }
 

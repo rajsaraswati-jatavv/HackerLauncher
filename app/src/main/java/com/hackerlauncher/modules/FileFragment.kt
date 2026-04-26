@@ -23,7 +23,7 @@ class FileFragment : Fragment() {
     private lateinit var tvFileOutput: TextView
     private lateinit var rvFiles: RecyclerView
     private lateinit var scrollView: ScrollView
-    private val logger = Logger()
+    private val logger = Logger
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var currentPath = "/sdcard"
     private val fileAdapter = FileAdapter { file -> navigateTo(file) }

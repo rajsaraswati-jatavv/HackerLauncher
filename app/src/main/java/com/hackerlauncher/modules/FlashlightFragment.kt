@@ -1,5 +1,7 @@
 package com.hackerlauncher.modules
 
+import com.hackerlauncher.R
+
 import android.content.Context
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager

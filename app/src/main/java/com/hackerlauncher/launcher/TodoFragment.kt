@@ -1,5 +1,6 @@
 package com.hackerlauncher.launcher
 
+import com.hackerlauncher.R
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.graphics.Color
@@ -22,7 +23,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.chip.Chip
@@ -250,7 +250,7 @@ class TodoAdapter(
     override fun getItemCount() = tasks.size
 
     fun updateTasks(newTasks: List<TodoTask>) {
-        val diff = android.support.v7.util.DiffUtil.calculateDiff(object : android.support.v7.util.DiffUtil.Callback() {
+        val diff = androidx.recyclerview.widget.DiffUtil.calculateDiff(object : androidx.recyclerview.widget.DiffUtil.Callback() {
             override fun getOldListSize() = tasks.size
             override fun getNewListSize() = newTasks.size
             override fun areItemsTheSame(oldPos: Int, newPos: Int) =

@@ -1,5 +1,6 @@
 package com.hackerlauncher.modules
 
+import com.hackerlauncher.R
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.text.Editable
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast

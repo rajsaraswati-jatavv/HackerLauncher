@@ -15,7 +15,7 @@ class OverlayService : Service() {
 
     private var overlayView: TextView? = null
     private var windowManager: WindowManager? = null
-    private val logger = Logger()
+    private val logger = Logger
 
     companion object {
         @Volatile
@@ -48,7 +48,7 @@ class OverlayService : Service() {
         isRunning = true
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         createOverlay()
-        logger.log("OverlayService created")
+        Logger.log("OverlayService created")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -95,7 +95,7 @@ class OverlayService : Service() {
         try {
             windowManager?.addView(overlayView, params)
         } catch (e: Exception) {
-            logger.log("Overlay add failed: ${e.message}")
+            Logger.log("Overlay add failed: ${e.message}")
         }
 
         // Update thread
@@ -123,7 +123,7 @@ class OverlayService : Service() {
         try {
             overlayView?.let { windowManager?.removeView(it) }
         } catch (e: Exception) {
-            logger.log("Overlay remove failed: ${e.message}")
+            Logger.log("Overlay remove failed: ${e.message}")
         }
         overlayView = null
     }

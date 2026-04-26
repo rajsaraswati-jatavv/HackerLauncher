@@ -27,7 +27,7 @@ class BluetoothScannerFragment : Fragment() {
 
     private lateinit var tvOutput: TextView
     private lateinit var scrollView: ScrollView
-    private val logger = Logger()
+    private val logger = Logger
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var isScanning = false
 

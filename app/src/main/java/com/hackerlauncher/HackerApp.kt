@@ -15,7 +15,7 @@ class HackerApp : Application() {
             private set
     }
 
-    private val logger = Logger()
+    private val logger = Logger
 
     override fun onCreate() {
         super.onCreate()
@@ -27,7 +27,7 @@ class HackerApp : Application() {
         // Auto-start all always-running services on app create
         startAlwaysRunningServices()
 
-        logger.info("HackerApp v6.0 Ultimate initialized - ALL services running")
+        Logger.info("HackerApp v6.0 Ultimate initialized - ALL services running")
     }
 
     private fun createAllNotificationChannels() {
@@ -122,9 +122,9 @@ class HackerApp : Application() {
                 } else {
                     startService(intent)
                 }
-                logger.info("Auto-started: ${serviceClass.simpleName}")
+                Logger.info("Auto-started: ${serviceClass.simpleName}")
             } catch (e: Exception) {
-                logger.error("Auto-start failed ${serviceClass.simpleName}: ${e.message}")
+                Logger.error("Auto-start failed ${serviceClass.simpleName}: ${e.message}")
             }
         }
     }

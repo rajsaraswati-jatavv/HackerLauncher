@@ -16,7 +16,7 @@ class PasswordToolsFragment : Fragment() {
 
     private lateinit var tvOutput: TextView
     private lateinit var scrollView: ScrollView
-    private val logger = Logger()
+    private val logger = Logger
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_crypto, container, false)

@@ -24,12 +24,12 @@ class HackerForegroundService : Service() {
     }
 
     private var wakeLock: PowerManager.WakeLock? = null
-    private val logger = Logger()
+    private val logger = Logger
 
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
-        logger.log("HackerForegroundService created")
+        Logger.log("HackerForegroundService created")
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -46,7 +46,7 @@ class HackerForegroundService : Service() {
         acquireWakeLock()
         BackgroundTaskManager.init(this)
 
-        logger.log("HackerForegroundService started with START_STICKY")
+        Logger.log("HackerForegroundService started with START_STICKY")
         return START_STICKY
     }
 
@@ -55,7 +55,7 @@ class HackerForegroundService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         releaseWakeLock()
-        logger.log("HackerForegroundService destroyed")
+        Logger.log("HackerForegroundService destroyed")
     }
 
     private fun createNotificationChannel() {
@@ -112,7 +112,7 @@ class HackerForegroundService : Service() {
                 acquire(4 * 60 * 60 * 1000L) // 4 hours max
             }
         } catch (e: Exception) {
-            logger.log("WakeLock acquire failed: ${e.message}")
+            Logger.log("WakeLock acquire failed: ${e.message}")
         }
     }
 
@@ -122,7 +122,7 @@ class HackerForegroundService : Service() {
                 if (it.isHeld) it.release()
             }
         } catch (e: Exception) {
-            logger.log("WakeLock release failed: ${e.message}")
+            Logger.log("WakeLock release failed: ${e.message}")
         }
     }
 }

@@ -9,6 +9,38 @@ import android.util.Log
 object Logger {
 
     private const val APP_TAG = "HackerLauncher"
+    private val logBuffer = mutableListOf<String>()
+    private const val MAX_LOG_BUFFER = 200
+
+    /** Allow Logger to be called as a function: Logger("message") */
+    operator fun invoke(message: String) {
+        log(message)
+    }
+
+    fun log(message: String) {
+        val entry = "[${System.currentTimeMillis()}] $message"
+        synchronized(logBuffer) {
+            logBuffer.add(entry)
+            if (logBuffer.size > MAX_LOG_BUFFER) logBuffer.removeAt(0)
+        }
+        Log.d(APP_TAG, message)
+    }
+
+    fun info(message: String) {
+        log(message)
+        Log.i(APP_TAG, message)
+    }
+
+    fun error(message: String) {
+        log(message)
+        Log.e(APP_TAG, message)
+    }
+
+    fun getLogBuffer(): List<String> {
+        synchronized(logBuffer) {
+            return logBuffer.toList()
+        }
+    }
 
     fun d(tag: String, message: String) {
         Log.d("$APP_TAG:$tag", message)

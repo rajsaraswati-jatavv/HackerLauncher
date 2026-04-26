@@ -25,7 +25,7 @@ class TerminalFragment : Fragment() {
     private lateinit var btnClear: Button
     private lateinit var btnTermux: Button
     private lateinit var scrollView: ScrollView
-    private val logger = Logger()
+    private val logger = Logger
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     override fun onCreateView(

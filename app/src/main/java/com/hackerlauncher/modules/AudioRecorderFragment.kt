@@ -1,5 +1,6 @@
 package com.hackerlauncher.modules
 
+import com.hackerlauncher.R
 import android.Manifest
 import android.content.Context
 import android.content.Intent
@@ -22,7 +23,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.hackerlauncher.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

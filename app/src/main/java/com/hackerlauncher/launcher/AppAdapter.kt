@@ -9,6 +9,7 @@ import android.content.pm.ResolveInfo
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import com.hackerlauncher.R
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

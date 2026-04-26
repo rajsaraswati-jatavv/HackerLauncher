@@ -1,5 +1,6 @@
 package com.hackerlauncher.launcher
 
+import com.hackerlauncher.R
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences

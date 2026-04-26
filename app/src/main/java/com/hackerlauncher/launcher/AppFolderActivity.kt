@@ -1,5 +1,7 @@
 package com.hackerlauncher.launcher
 
+import com.hackerlauncher.R
+
 import com.hackerlauncher.utils.PreferencesManager
 
 import android.content.Intent
@@ -155,13 +157,13 @@ class AppFolderActivity : AppCompatActivity() {
                 val result = mutableListOf<AppDrawerActivity.AppItem>()
                 for (app in apps) {
                     try {
-                        val appInfo = packageManager.getApplicationInfo(app.packageName, 0)
+                        val appInfo = packageManager.getApplicationInfo(app, 0)
                         val label = appInfo.loadLabel(packageManager).toString()
                         val icon = appInfo.loadIcon(packageManager)
                         result.add(
                             AppDrawerActivity.AppItem(
                                 label = label,
-                                packageName = app.packageName,
+                                packageName = app,
                                 icon = icon
                             )
                         )
@@ -217,13 +219,13 @@ class AppFolderActivity : AppCompatActivity() {
     private fun removeAppFromFolder(app: AppDrawerActivity.AppItem) {
         val folders = prefsManager.getFolders().toMutableMap()
         val apps = folders[folderName]?.toMutableList() ?: return
-        apps.removeAll { it.packageName == app.packageName }
+        apps.removeAll { it == app.packageName }
         if (apps.isEmpty()) {
             folders.remove(folderName)
         } else {
             folders[folderName] = apps
         }
-        prefsManager.saveFolders(folders)
+        prefsManager.setFolders(folders)
         loadFolderApps()
         Toast.makeText(this, "> removed: ${app.label}", Toast.LENGTH_SHORT).show()
     }
@@ -277,12 +279,12 @@ class AppFolderActivity : AppCompatActivity() {
         val folders = prefsManager.getFolders().toMutableMap()
         val existing = folders[folderName]?.toMutableList() ?: mutableListOf()
         for (app in apps) {
-            if (existing.none { it.packageName == app.packageName }) {
-                existing.add(app)
+            if (existing.none { it == app.packageName }) {
+                existing.add(app.packageName)
             }
         }
         folders[folderName] = existing
-        prefsManager.saveFolders(folders)
+        prefsManager.setFolders(folders)
         loadFolderApps()
         Toast.makeText(this, "> added ${apps.size} app(s)", Toast.LENGTH_SHORT).show()
     }

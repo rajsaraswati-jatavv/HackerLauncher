@@ -17,7 +17,7 @@ class RootToolsFragment : Fragment() {
     private lateinit var tvOutput: TextView
     private lateinit var scrollView: ScrollView
     private lateinit var etCommand: EditText
-    private val logger = Logger()
+    private val logger = Logger
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var isRooted = false
 

@@ -102,7 +102,7 @@ class AppSearchActivity : AppCompatActivity() {
             typeface = Typeface.MONOSPACE
             textSize = 16f
             setPadding(24, 16, 24, 16)
-            singleLine = true
+            isSingleLine = true
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         searchRow.addView(searchEditText)

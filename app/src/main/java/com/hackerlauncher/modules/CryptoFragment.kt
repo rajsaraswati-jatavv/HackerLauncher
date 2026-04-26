@@ -18,7 +18,7 @@ class CryptoFragment : Fragment() {
 
     private lateinit var tvCryptoOutput: TextView
     private lateinit var scrollView: ScrollView
-    private val logger = Logger()
+    private val logger = Logger
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

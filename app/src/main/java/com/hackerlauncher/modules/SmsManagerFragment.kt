@@ -1,5 +1,7 @@
 package com.hackerlauncher.modules
 
+import com.hackerlauncher.R
+
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager

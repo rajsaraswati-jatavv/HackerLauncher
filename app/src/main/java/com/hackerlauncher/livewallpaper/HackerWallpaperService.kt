@@ -18,6 +18,8 @@ class HackerWallpaperService : WallpaperService() {
 
     companion object {
         private const val TAG = "HackerWallpaper"
+        const val ACTION_START = "com.hackerlauncher.wallpaper.START"
+        const val ACTION_STOP = "com.hackerlauncher.wallpaper.STOP"
         const val PREFS_NAME = "hacker_wallpaper_prefs"
         const val KEY_MODE = "wallpaper_mode"
         const val KEY_COLOR = "wallpaper_color"

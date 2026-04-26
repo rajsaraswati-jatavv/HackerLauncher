@@ -29,7 +29,7 @@ class TermuxBridge {
                 }
                 context.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                Logger().log("Termux activity not found: ${e.message}")
+                Logger.log("Termux activity not found: ${e.message}")
             }
         }
 
@@ -46,7 +46,7 @@ class TermuxBridge {
                 }
                 context.startService(intent)
             } catch (e: Exception) {
-                Logger().log("Termux command failed: ${e.message}")
+                Logger.log("Termux command failed: ${e.message}")
             }
         }
 
@@ -66,7 +66,7 @@ class TermuxBridge {
                     }
                     context.startActivity(intent)
                 } catch (e2: Exception) {
-                    Logger().log("Cannot open store: ${e2.message}")
+                    Logger.log("Cannot open store: ${e2.message}")
                 }
             }
         }

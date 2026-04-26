@@ -1,5 +1,6 @@
 package com.hackerlauncher.modules
 
+import com.hackerlauncher.R
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -15,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.hackerlauncher.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

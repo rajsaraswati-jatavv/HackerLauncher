@@ -8,7 +8,7 @@ import java.util.Collections
 
 class AccessibilityHelper : AccessibilityService() {
 
-    private val logger = Logger()
+    private val logger = Logger
 
     companion object {
         @Volatile
@@ -34,7 +34,7 @@ class AccessibilityHelper : AccessibilityService() {
                     AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
             notificationTimeout = 100
         }
-        logger.log("AccessibilityHelper connected")
+        Logger.log("AccessibilityHelper connected")
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -48,12 +48,12 @@ class AccessibilityHelper : AccessibilityService() {
     }
 
     override fun onInterrupt() {
-        logger.log("AccessibilityHelper interrupted")
+        Logger.log("AccessibilityHelper interrupted")
     }
 
     override fun onDestroy() {
         super.onDestroy()
         isRunning = false
-        logger.log("AccessibilityHelper destroyed")
+        Logger.log("AccessibilityHelper destroyed")
     }
 }

@@ -175,4 +175,17 @@
         <item name="android:paddingStart">8dp</item>
         <item name="android:paddingEnd">8dp</item>
     </style>
+
+    <!-- Dark Dialog Theme -->
+    <style name="DarkDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">#FF1A1A1A</item>
+        <item name="android:textColorPrimary">#FF00FF00</item>
+        <item name="android:textColorSecondary">#FF00AA00</item>
+        <item name="colorAccent">#FF00FF00</item>
+        <item name="buttonBarButtonStyle">@style/DarkDialogButtonStyle</item>
+    </style>
+
+    <style name="DarkDialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">#FF00FF00</item>
+    </style>
 </resources>

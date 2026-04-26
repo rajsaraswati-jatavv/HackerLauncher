@@ -1,5 +1,7 @@
 package com.hackerlauncher.launcher
 
+import com.hackerlauncher.R
+
 import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel

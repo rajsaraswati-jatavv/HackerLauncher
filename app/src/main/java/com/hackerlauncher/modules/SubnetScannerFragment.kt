@@ -19,7 +19,7 @@ class SubnetScannerFragment : Fragment() {
     private lateinit var scrollView: ScrollView
     private lateinit var etHost: EditText
     private lateinit var etPort: EditText
-    private val logger = Logger()
+    private val logger = Logger
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

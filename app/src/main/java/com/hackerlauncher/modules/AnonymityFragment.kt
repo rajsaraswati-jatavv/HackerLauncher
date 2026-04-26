@@ -20,7 +20,7 @@ class AnonymityFragment : Fragment() {
 
     private lateinit var tvAnonOutput: TextView
     private lateinit var scrollView: ScrollView
-    private val logger = Logger()
+    private val logger = Logger
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     override fun onCreateView(

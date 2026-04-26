@@ -1,5 +1,7 @@
 package com.hackerlauncher.launcher
 
+import com.hackerlauncher.R
+
 import com.hackerlauncher.utils.PreferencesManager
 
 import android.animation.ObjectAnimator
@@ -58,7 +60,7 @@ class HomeScreenActivity : AppCompatActivity() {
 
     // Dock
     private lateinit var dockRecyclerView: RecyclerView
-    private lateinit var dockAdapter: DockAdapter
+    private lateinit var homeDockAdapter: HomeDockAdapter
 
     // Page dots
     private lateinit var dotsLayout: LinearLayout
@@ -167,8 +169,8 @@ class HomeScreenActivity : AppCompatActivity() {
         pinnedAdapter = PinnedAppsAdapter(this, pinnedApps, ::onPinnedAppClick, ::onPinnedAppLongClick, ::onFolderClick)
         pinnedRecyclerView.adapter = pinnedAdapter
 
-        dockAdapter = DockAdapter(this, dockApps, ::onDockAppClick, ::onDockAppLongClick)
-        dockRecyclerView.adapter = dockAdapter
+        homeDockAdapter = HomeDockAdapter(this, dockApps, ::onDockAppClick, ::onDockAppLongClick)
+        dockRecyclerView.adapter = homeDockAdapter
 
         // Gesture detector
         gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
@@ -243,7 +245,7 @@ class HomeScreenActivity : AppCompatActivity() {
         val folders = prefsManager.getFolders()
 
         // Add folder items as special items
-        for ((folderName, apps) in folders) {
+        for ((folderName, folderAppPkgs) in folders) {
             pinnedApps.add(
                 AppDrawerActivity.AppItem(
                     label = "[ $folderName ]",
@@ -255,9 +257,22 @@ class HomeScreenActivity : AppCompatActivity() {
 
         // Add pinned apps (excluding those already in folders and dock)
         val dockPkgs = prefsManager.getDockApps()
-        for (app in saved) {
-            if (app.packageName !in dockPkgs) {
-                pinnedApps.add(app)
+        for (pkg in saved) {
+            if (pkg !in dockPkgs) {
+                try {
+                    val appInfo = packageManager.getApplicationInfo(pkg, 0)
+                    val label = appInfo.loadLabel(packageManager).toString()
+                    val icon = appInfo.loadIcon(packageManager)
+                    pinnedApps.add(
+                        AppDrawerActivity.AppItem(
+                            label = label,
+                            packageName = pkg,
+                            icon = icon
+                        )
+                    )
+                } catch (e: Exception) {
+                    // Package not found, skip
+                }
             }
         }
 
@@ -313,7 +328,7 @@ class HomeScreenActivity : AppCompatActivity() {
 
             dockApps.clear()
             dockApps.addAll(loaded.take(5))
-            dockAdapter.notifyDataSetChanged()
+            homeDockAdapter.notifyDataSetChanged()
         }
     }
 
@@ -357,8 +372,8 @@ class HomeScreenActivity : AppCompatActivity() {
                 when (which) {
                     0 -> {
                         val pinned = prefsManager.getPinnedApps().toMutableList()
-                        pinned.removeAll { it.packageName == app.packageName }
-                        prefsManager.savePinnedApps(pinned)
+                        pinned.removeAll { it == app.packageName }
+                        prefsManager.setPinnedApps(pinned)
                         loadPinnedApps()
                         Toast.makeText(this, "> removed_from_home", Toast.LENGTH_SHORT).show()
                     }
@@ -406,7 +421,7 @@ class HomeScreenActivity : AppCompatActivity() {
                     0 -> {
                         val dock = prefsManager.getDockApps().toMutableList()
                         dock.remove(app.packageName)
-                        prefsManager.saveDockApps(dock)
+                        prefsManager.setDockApps(dock)
                         loadDockApps()
                     }
                     1 -> {
@@ -550,7 +565,7 @@ class HomeScreenActivity : AppCompatActivity() {
                 holder.iconView.setColorFilter(Color.parseColor("#00FF00"))
             }
             holder.itemView.setOnClickListener { onClick(item) }
-            holder.itemView.setOnLongClickListener { onLongClick(item) }
+            holder.itemView.setOnLongClickListener { onLongClick(item); true }
         }
 
         override fun getItemCount(): Int = items.size
@@ -560,12 +575,12 @@ class HomeScreenActivity : AppCompatActivity() {
 
     //region Dock Adapter
 
-    class DockAdapter(
+    class HomeDockAdapter(
         private val context: Context,
         private val items: List<AppDrawerActivity.AppItem>,
         private val onClick: (AppDrawerActivity.AppItem) -> Unit,
         private val onLongClick: (AppDrawerActivity.AppItem) -> Boolean
-    ) : RecyclerView.Adapter<DockAdapter.DockViewHolder>() {
+    ) : RecyclerView.Adapter<HomeDockAdapter.DockViewHolder>() {
 
         class DockViewHolder(itemView: View, val iconView: ImageView, val labelView: TextView) :
             RecyclerView.ViewHolder(itemView)
@@ -612,7 +627,7 @@ class HomeScreenActivity : AppCompatActivity() {
                 holder.iconView.setColorFilter(Color.parseColor("#00FF00"))
             }
             holder.itemView.setOnClickListener { onClick(item) }
-            holder.itemView.setOnLongClickListener { onLongClick(item) }
+            holder.itemView.setOnLongClickListener { onLongClick(item); true }
         }
 
         override fun getItemCount(): Int = items.size
