@@ -69,7 +69,6 @@
         android:text="Continue as Guest"
         android:textColor="#00FF00"
         android:backgroundTint="#0A1A0A"
-        android:fontFamily="monospace"
-        android:strokeWidth="1dp" />
+        android:fontFamily="monospace" />
 
 </LinearLayout>
