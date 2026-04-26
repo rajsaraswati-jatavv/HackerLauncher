@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center_horizontal">
+
+        <!-- Big Toggle Button -->
+        <ImageButton
+            android:id="@+id/btnFlashlightToggle"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:src="@android:drawable/ic_lock_power_off"
+            android:background="#1A1A1A"
+            android:scaleType="centerInside"
+            android:contentDescription="Toggle Flashlight"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:id="@+id/txtFlashlightStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OFF"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="24sp"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Strobe Speed SeekBar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="STROBE SPEED"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:layout_marginBottom="8dp" />
+
+            <SeekBar
+                android:id="@+id/seekStrobeSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:max="100"
+                android:progressTint="#00FF00"
+                android:thumbTint="#00FF00"
+                android:progressBackgroundTint="#0A1A0A" />
+
+            <TextView
+                android:id="@+id/txtStrobeSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="50ms"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- Mode Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/btnModeStrobe"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="STROBE"
+                android:textColor="#000000"
+                android:backgroundTint="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnModeSOS"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="SOS"
+                android:textColor="#00FF00"
+                android:backgroundTint="#1A1A1A"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnModeDisco"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                android:text="DISCO"
+                android:textColor="#00FF00"
+                android:backgroundTint="#1A1A1A"
+                android:fontFamily="monospace"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- Auto-off Timer -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AUTO-OFF TIMER"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                android:layout_marginBottom="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <SeekBar
+                    android:id="@+id/seekAutoOff"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:max="60"
+                    android:progressTint="#00FF00"
+                    android:thumbTint="#00FF00"
+                    android:progressBackgroundTint="#0A1A0A" />
+
+                <TextView
+                    android:id="@+id/txtAutoOff"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:text="0 min"
+                    android:textColor="#00FF00"
+                    android:fontFamily="monospace"
+                    android:textSize="11sp"
+                    android:gravity="end" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

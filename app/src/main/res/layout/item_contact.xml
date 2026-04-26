@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#1A1A1A"
+    android:padding="12dp"
+    android:layout_marginBottom="4dp"
+    android:gravity="center_vertical">
+
+    <!-- Icon -->
+    <ImageView
+        android:id="@+id/imgContactIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@android:drawable/ic_menu_myplaces"
+        android:contentDescription="Contact"
+        android:layout_marginEnd="12dp" />
+
+    <!-- Name + Phone -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtContactName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="John Doe"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/txtContactPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+1 (555) 123-4567"
+            android:textColor="#006600"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+    <!-- Call Button -->
+    <ImageButton
+        android:id="@+id/btnCall"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@android:drawable/ic_menu_call"
+        android:background="#0A1A0A"
+        android:contentDescription="Call"
+        android:layout_marginStart="4dp" />
+
+    <!-- SMS Button -->
+    <ImageButton
+        android:id="@+id/btnSms"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@android:drawable/ic_menu_send"
+        android:background="#0A1A0A"
+        android:contentDescription="SMS"
+        android:layout_marginStart="4dp" />
+
+</LinearLayout>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#1A1A1A"
+    android:padding="12dp"
+    android:layout_marginBottom="4dp">
+
+    <!-- Top Row: Name + Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/txtDownloadName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="file_name.apk"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="13sp"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+        <!-- Pause Button -->
+        <ImageButton
+            android:id="@+id/btnPause"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_media_pause"
+            android:background="#0A1A0A"
+            android:contentDescription="Pause"
+            android:layout_marginStart="4dp" />
+
+        <!-- Cancel Button -->
+        <ImageButton
+            android:id="@+id/btnCancel"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="#0A1A0A"
+            android:contentDescription="Cancel"
+            android:layout_marginStart="4dp" />
+    </LinearLayout>
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progressDownload"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:max="100"
+        android:progress="45"
+        android:progressTint="#00FF00"
+        android:progressBackgroundTint="#0A1A0A"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp" />
+
+    <!-- Speed -->
+    <TextView
+        android:id="@+id/txtDownloadSpeed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2.4 MB/s — 45%"
+        android:textColor="#006600"
+        android:fontFamily="monospace"
+        android:textSize="10sp" />
+
+</LinearLayout>

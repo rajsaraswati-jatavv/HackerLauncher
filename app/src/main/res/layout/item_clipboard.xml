@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#1A1A1A"
+    android:padding="12dp"
+    android:layout_marginBottom="4dp"
+    android:gravity="center_vertical">
+
+    <!-- Icon -->
+    <ImageView
+        android:id="@+id/imgClipboardIcon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@android:drawable/ic_menu_agenda"
+        android:contentDescription="Clipboard Item"
+        android:layout_marginEnd="12dp" />
+
+    <!-- Text + Date -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtClipboardText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Clipboard text content..."
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="13sp"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/txtClipboardDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="2026-03-04 12:30"
+            android:textColor="#006600"
+            android:fontFamily="monospace"
+            android:textSize="10sp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+    <!-- Pin Button -->
+    <ImageButton
+        android:id="@+id/btnPin"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@android:drawable/ic_menu_sort_by_size"
+        android:background="#0A1A0A"
+        android:contentDescription="Pin Item"
+        android:layout_marginStart="8dp" />
+
+</LinearLayout>

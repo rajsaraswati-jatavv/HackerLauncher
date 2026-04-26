@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000">
+
+    <!-- Search Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical"
+        android:background="#0A0A0A">
+
+        <EditText
+            android:id="@+id/searchSms"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:hint="Search messages..."
+            android:textColorHint="#006600"
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:fontFamily="monospace"
+            android:singleLine="true"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:drawablePadding="8dp" />
+    </LinearLayout>
+
+    <!-- Conversation List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerConversations"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:clipToPadding="false" />
+
+    <!-- Compose Area -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#0A0A0A"
+        android:padding="12dp">
+
+        <!-- Recipient -->
+        <EditText
+            android:id="@+id/editRecipient"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:hint="Recipient..."
+            android:textColorHint="#006600"
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:fontFamily="monospace"
+            android:singleLine="true"
+            android:inputType="phone"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Message Input + Send -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <EditText
+                android:id="@+id/editMessage"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="Type message..."
+                android:textColorHint="#006600"
+                android:textColor="#00FF00"
+                android:background="#0A1A0A"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:fontFamily="monospace"
+                android:singleLine="true"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnSend"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="SEND"
+                android:textColor="#000000"
+                android:backgroundTint="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

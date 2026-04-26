@@ -2,27 +2,52 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Network Permissions -->
+    <!-- ============================================ -->
+    <!-- ALL PERMISSIONS - 60+ PERMISSIONS             -->
+    <!-- ============================================ -->
+
+    <!-- Network -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_CONDITIONS" />
 
-    <!-- Location Permissions -->
+    <!-- Location -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_ASSISTED_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"
+        tools:ignore="MockLocation,ProtectedPermissions" />
 
-    <!-- Bluetooth Permissions -->
+    <!-- Bluetooth -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED"
+        tools:ignore="ProtectedPermissions" />
 
-    <!-- Phone/Storage Permissions -->
+    <!-- Phone -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
+
+    <!-- SMS -->
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+    <uses-permission android:name="android.permission.RECEIVE_WAP_PUSH" />
+
+    <!-- Storage -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
@@ -31,9 +56,26 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
-    <!-- Service & System Permissions -->
+    <!-- Camera & Audio -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Contacts -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!-- Calendar -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+
+    <!-- Services & System -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -45,32 +87,72 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
-    <!-- Launcher-specific Permissions -->
+    <!-- Advanced System -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.SET_TIME" />
-    <uses-permission android:name="android.permission.SET_TIME_ZONE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-    <uses-permission android:name="android.permission.READ_CALENDAR" />
-    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
-    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
     <uses-permission android:name="android.permission.REQUEST_PASSWORD_COMPLEXITY" />
+    <uses-permission android:name="android.permission.SET_TIME" />
+    <uses-permission android:name="android.permission.SET_TIME_ZONE" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.GET_TASKS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
+    <uses-permission android:name="android.permission.DUMP"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.READ_LOGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
+    <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS"
+        tools:ignore="HighSamplingRate" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.TRANSMIT_IR" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+    <uses-permission android:name="android.permission.SUBSCRIBED_FEEDS_READ" />
+    <uses-permission android:name="android.permission.SUBSCRIBED_FEEDS_WRITE" />
+    <uses-permission android:name="android.permission.FORCE_STOP_PACKAGES"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.SET_ALWAYS_FINISH"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.SET_ANIMATION_SCALE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.SET_DEBUG_APP"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.SET_PROCESS_LIMIT"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.SIGNAL_PERSISTENT_PROCESSES"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.READ_INPUT_STATE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.CLEAR_APP_USER_DATA"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.DELETE_CACHE_FILES"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.SET_ORIENTATION"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.SET_POINTER_SPEED"
+        tools:ignore="ProtectedPermissions" />
 
+    <!-- Hardware Features -->
     <uses-feature android:name="android.hardware.wifi" android:required="false" />
     <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
@@ -78,6 +160,14 @@
     <uses-feature android:name="android.hardware.camera.any" android:required="false" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.compass" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.gyroscope" android:required="false" />
+    <uses-feature android:name="android.hardware.nfc" android:required="false" />
+    <uses-feature android:name="android.hardware.usb.host" android:required="false" />
+    <uses-feature android:name="android.hardware.consumerir" android:required="false" />
+    <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
+    <uses-feature android:name="android.hardware.screen.landscape" android:required="false" />
 
     <application
         android:name=".HackerApp"
@@ -90,13 +180,15 @@
         android:usesCleartextTraffic="true"
         android:largeHeap="true"
         android:hardwareAccelerated="true"
+        android:preserveLegacyExternalStorage="true"
+        android:requestLegacyExternalStorage="true"
         tools:targetApi="34">
 
         <!-- ============================================ -->
-        <!-- MAIN LAUNCHER ACTIVITIES                     -->
+        <!-- MAIN ACTIVITIES                               -->
         <!-- ============================================ -->
 
-        <!-- Main Activity (Tools Dashboard) -->
+        <!-- Tools Dashboard -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -110,7 +202,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Home Screen Launcher Activity -->
+        <!-- Home Screen Launcher -->
         <activity
             android:name=".launcher.HomeScreenActivity"
             android:exported="true"
@@ -127,122 +219,135 @@
         </activity>
 
         <!-- App Drawer -->
-        <activity
-            android:name=".launcher.AppDrawerActivity"
-            android:exported="false"
-            android:theme="@style/Theme.HackerLauncher.AppDrawer"
-            android:launchMode="singleTop" />
-
+        <activity android:name=".launcher.AppDrawerActivity" android:exported="false"
+            android:theme="@style/Theme.HackerLauncher.AppDrawer" android:launchMode="singleTop" />
         <!-- App Info -->
-        <activity
-            android:name=".launcher.AppInfoActivity"
-            android:exported="false"
-            android:theme="@style/Theme.HackerLauncher" />
-
+        <activity android:name=".launcher.AppInfoActivity" android:exported="false" android:theme="@style/Theme.HackerLauncher" />
         <!-- App Search -->
-        <activity
-            android:name=".launcher.AppSearchActivity"
-            android:exported="false"
-            android:theme="@style/Theme.HackerLauncher" />
-
+        <activity android:name=".launcher.AppSearchActivity" android:exported="false" android:theme="@style/Theme.HackerLauncher" />
         <!-- App Folder -->
-        <activity
-            android:name=".launcher.AppFolderActivity"
-            android:exported="false"
-            android:theme="@style/Theme.HackerLauncher" />
-
+        <activity android:name=".launcher.AppFolderActivity" android:exported="false" android:theme="@style/Theme.HackerLauncher" />
         <!-- Quick Settings -->
-        <activity
-            android:name=".launcher.QuickSettingsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.HackerLauncher"
-            android:excludeFromRecents="true" />
-
+        <activity android:name=".launcher.QuickSettingsActivity" android:exported="false"
+            android:theme="@style/Theme.HackerLauncher" android:excludeFromRecents="true" />
         <!-- Settings -->
-        <activity
-            android:name=".launcher.SettingsActivity"
-            android:exported="false"
-            android:theme="@style/Theme.HackerLauncher.Settings"
-            android:label="@string/settings" />
-
-        <!-- ============================================ -->
-        <!-- AUTH ACTIVITIES                               -->
-        <!-- ============================================ -->
-
-        <!-- Login Activity -->
-        <activity
-            android:name=".auth.LoginActivity"
-            android:exported="false"
-            android:theme="@style/Theme.HackerLauncher" />
-
-        <!-- ============================================ -->
-        <!-- WALLPAPER ACTIVITIES                          -->
-        <!-- ============================================ -->
-
+        <activity android:name=".launcher.SettingsActivity" android:exported="false"
+            android:theme="@style/Theme.HackerLauncher.Settings" android:label="@string/settings" />
+        <!-- Login -->
+        <activity android:name=".auth.LoginActivity" android:exported="false" android:theme="@style/Theme.HackerLauncher" />
         <!-- Wallpaper Settings -->
-        <activity
-            android:name=".livewallpaper.WallpaperSettingsActivity"
-            android:exported="true"
-            android:label="@string/wallpaper_settings_title"
-            android:theme="@style/Theme.HackerLauncher">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
+        <activity android:name=".livewallpaper.WallpaperSettingsActivity" android:exported="true"
+            android:label="@string/wallpaper_settings_title" android:theme="@style/Theme.HackerLauncher">
+            <intent-filter><action android:name="android.intent.action.MAIN" /></intent-filter>
         </activity>
 
-        <!-- Live Wallpaper Service -->
+        <!-- ============================================ -->
+        <!-- ALWAYS-RUNNING SERVICES                       -->
+        <!-- ============================================ -->
+
+        <!-- Daemon Service - ALWAYS RUNNING -->
         <service
-            android:name=".livewallpaper.HackerWallpaperService"
-            android:exported="true"
-            android:permission="android.permission.BIND_WALLPAPER"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.service.wallpaper"
-                android:resource="@xml/wallpaper_meta" />
+            android:name=".services.DaemonService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            android:stopWithTask="false">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="always_running_daemon_service" />
+        </service>
+
+        <!-- Watchdog Service - RESTARTS DEAD SERVICES -->
+        <service
+            android:name=".services.WatchdogService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            android:stopWithTask="false">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="watchdog_monitor_service" />
+        </service>
+
+        <!-- Keep Alive Service - MULTI-LAYER KEEP-ALIVE -->
+        <service
+            android:name=".services.KeepAliveService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            android:stopWithTask="false">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="keep_alive_service" />
+        </service>
+
+        <!-- Network Monitor Service - ALWAYS RUNNING -->
+        <service
+            android:name=".services.NetworkMonitorService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            android:stopWithTask="false">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="network_monitor_service" />
+        </service>
+
+        <!-- Location Tracker Service - ALWAYS RUNNING -->
+        <service
+            android:name=".services.LocationTrackerService"
+            android:exported="false"
+            android:foregroundServiceType="location"
+            android:stopWithTask="false">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="location_tracker_service" />
+        </service>
+
+        <!-- Process Monitor Service - ALWAYS RUNNING -->
+        <service
+            android:name=".services.ProcessMonitorService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            android:stopWithTask="false">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="process_monitor_service" />
+        </service>
+
+        <!-- System Monitor Service - ALWAYS RUNNING -->
+        <service
+            android:name=".services.SystemMonitorService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse"
+            android:stopWithTask="false">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="system_monitor_service" />
         </service>
 
         <!-- ============================================ -->
-        <!-- SERVICES                                      -->
+        <!-- CORE SERVICES                                 -->
         <!-- ============================================ -->
 
         <!-- Foreground Service -->
         <service
             android:name=".services.HackerForegroundService"
             android:exported="false"
-            android:foregroundServiceType="specialUse">
-            <property
-                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+            android:foregroundServiceType="specialUse"
+            android:stopWithTask="false">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="hacker_launcher_core_service" />
         </service>
 
         <!-- Overlay Service -->
-        <service
-            android:name=".services.OverlayService"
-            android:exported="false" />
+        <service android:name=".services.OverlayService" android:exported="false" />
 
         <!-- Accessibility Service -->
         <service
             android:name=".services.AccessibilityHelper"
             android:exported="false"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
-            <intent-filter>
-                <action android:name="android.accessibilityservice.AccessibilityService" />
-            </intent-filter>
-            <meta-data
-                android:name="android.accessibilityservice"
-                android:resource="@xml/accessibility_service_config" />
+            <intent-filter><action android:name="android.accessibilityservice.AccessibilityService" /></intent-filter>
+            <meta-data android:name="android.accessibilityservice" android:resource="@xml/accessibility_service_config" />
         </service>
 
         <!-- App Lock Service -->
         <service
             android:name=".launcher.AppLockService"
             android:exported="false"
-            android:foregroundServiceType="specialUse">
-            <property
-                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+            android:foregroundServiceType="specialUse"
+            android:stopWithTask="false">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="app_lock_monitor_service" />
         </service>
 
@@ -251,63 +356,73 @@
             android:name=".launcher.NotificationListener"
             android:exported="true"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
-            <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService" />
-            </intent-filter>
+            <intent-filter><action android:name="android.service.notification.NotificationListenerService" /></intent-filter>
+        </service>
+
+        <!-- Live Wallpaper Service -->
+        <service
+            android:name=".livewallpaper.HackerWallpaperService"
+            android:exported="true"
+            android:permission="android.permission.BIND_WALLPAPER"
+            android:enabled="true">
+            <intent-filter><action android:name="android.service.wallpaper.WallpaperService" /></intent-filter>
+            <meta-data android:name="android.service.wallpaper" android:resource="@xml/wallpaper_meta" />
         </service>
 
         <!-- ============================================ -->
         <!-- RECEIVERS                                     -->
         <!-- ============================================ -->
 
-        <!-- Boot Receiver -->
+        <!-- Boot Receiver - STARTS ALL SERVICES -->
         <receiver
             android:name=".services.BootReceiver"
-            android:exported="true">
-            <intent-filter>
+            android:exported="true"
+            android:directBootAware="true"
+            android:enabled="true">
+            <intent-filter android:priority="1000">
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="android.intent.action.REBOOT" />
                 <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
             </intent-filter>
         </receiver>
 
         <!-- Terminal Widget -->
-        <receiver
-            android:name=".widgets.TerminalWidgetProvider"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/terminal_widget_info" />
+        <receiver android:name=".widgets.TerminalWidgetProvider" android:exported="true">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/terminal_widget_info" />
         </receiver>
 
         <!-- Weather Widget -->
-        <receiver
-            android:name=".widgets.WeatherWidgetProvider"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/app_widget_weather_info" />
+        <receiver android:name=".widgets.WeatherWidgetProvider" android:exported="true">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/app_widget_weather_info" />
         </receiver>
 
-        <!-- Device Admin Receiver for Lock Screen -->
+        <!-- Device Admin for Lock Screen -->
         <receiver
             android:name=".launcher.HomeScreenActivity$AdminReceiver"
             android:exported="true"
             android:permission="android.permission.BIND_DEVICE_ADMIN">
-            <meta-data
-                android:name="android.app.device_admin"
-                android:resource="@xml/device_admin_policies" />
-            <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-            </intent-filter>
+            <meta-data android:name="android.app.device_admin" android:resource="@xml/device_admin_policies" />
+            <intent-filter><action android:name="android.app.action.DEVICE_ADMIN_ENABLED" /></intent-filter>
         </receiver>
+
+        <!-- Location Geofence Receiver -->
+        <receiver android:name=".services.LocationTrackerService$GeofenceBroadcastReceiver"
+            android:exported="false" />
 
     </application>
 </manifest>

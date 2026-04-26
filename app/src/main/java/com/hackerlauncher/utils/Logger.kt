@@ -1,47 +1,40 @@
 package com.hackerlauncher.utils
 
 import android.util.Log
-import java.text.SimpleDateFormat
-import java.util.*
 
-class Logger {
+/**
+ * Centralized logger for HackerLauncher.
+ * All services use this for consistent logging.
+ */
+object Logger {
 
-    private val tag = "HackerLauncher"
-    private val dateFormat = SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault())
+    private const val APP_TAG = "HackerLauncher"
 
-    companion object {
-        private val logBuffer = mutableListOf<String>()
-        private const val MAX_LOG_SIZE = 1000
-
-        fun getLogBuffer(): List<String> = synchronized(logBuffer) { logBuffer.toList() }
-        fun clearLogBuffer() = synchronized(logBuffer) { logBuffer.clear() }
+    fun d(tag: String, message: String) {
+        Log.d("$APP_TAG:$tag", message)
     }
 
-    fun log(message: String, level: LogLevel = LogLevel.INFO) {
-        val timestamp = dateFormat.format(Date())
-        val entry = "[$timestamp] [$level] $message"
-
-        synchronized(logBuffer) {
-            logBuffer.add(entry)
-            if (logBuffer.size > MAX_LOG_SIZE) {
-                logBuffer.removeAt(0)
-            }
-        }
-
-        when (level) {
-            LogLevel.DEBUG -> Log.d(tag, message)
-            LogLevel.INFO -> Log.i(tag, message)
-            LogLevel.WARNING -> Log.w(tag, message)
-            LogLevel.ERROR -> Log.e(tag, message)
-        }
+    fun i(tag: String, message: String) {
+        Log.i("$APP_TAG:$tag", message)
     }
 
-    fun debug(message: String) = log(message, LogLevel.DEBUG)
-    fun info(message: String) = log(message, LogLevel.INFO)
-    fun warning(message: String) = log(message, LogLevel.WARNING)
-    fun error(message: String) = log(message, LogLevel.ERROR)
+    fun w(tag: String, message: String) {
+        Log.w("$APP_TAG:$tag", message)
+    }
 
-    enum class LogLevel {
-        DEBUG, INFO, WARNING, ERROR
+    fun w(tag: String, message: String, throwable: Throwable) {
+        Log.w("$APP_TAG:$tag", message, throwable)
+    }
+
+    fun e(tag: String, message: String) {
+        Log.e("$APP_TAG:$tag", message)
+    }
+
+    fun e(tag: String, message: String, throwable: Throwable) {
+        Log.e("$APP_TAG:$tag", message, throwable)
+    }
+
+    fun v(tag: String, message: String) {
+        Log.v("$APP_TAG:$tag", message)
     }
 }

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000">
+
+    <!-- Camera Preview -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#0A0A0A">
+
+        <TextureView
+            android:id="@+id/textureCamera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Scan Overlay -->
+        <View
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:alpha="0.5" />
+
+        <!-- Flash Toggle -->
+        <ImageButton
+            android:id="@+id/btnFlashToggle"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="12dp"
+            android:src="@android:drawable/ic_lock_power_off"
+            android:background="#88000000"
+            android:contentDescription="Toggle Flash" />
+    </FrameLayout>
+
+    <!-- Scan Result Area -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#0A0A0A"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="[ SCAN RESULT ]"
+            android:textColor="#006600"
+            android:fontFamily="monospace"
+            android:textSize="11sp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/txtScanResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No result yet..."
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="14sp"
+            android:background="#0A1A0A"
+            android:padding="12dp"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Action Buttons Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCopyResult"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="COPY"
+                android:textColor="#000000"
+                android:backgroundTint="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:layout_marginEnd="4dp" />
+
+            <Button
+                android:id="@+id/btnOpenResult"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="OPEN"
+                android:textColor="#00FF00"
+                android:backgroundTint="#1A1A1A"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:layout_marginEnd="4dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Generate QR Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#1A1A1A"
+        android:padding="12dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="[ GENERATE QR ]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="11sp"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editQrInput"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="Enter text or URL..."
+                android:textColorHint="#006600"
+                android:textColor="#00FF00"
+                android:background="#0A1A0A"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:fontFamily="monospace"
+                android:singleLine="true"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnGenerateQr"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="GEN"
+                android:textColor="#000000"
+                android:backgroundTint="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- History Button -->
+    <Button
+        android:id="@+id/btnHistory"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:text="SCAN HISTORY"
+        android:textColor="#00FF00"
+        android:backgroundTint="#0A0A0A"
+        android:fontFamily="monospace"
+        android:textSize="12sp"
+        android:layout_margin="12dp" />
+
+</LinearLayout>

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Timer Display -->
+        <TextView
+            android:id="@+id/txtTimer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="00:00:00"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="48sp"
+            android:gravity="center"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Start / Stop Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="24dp">
+
+            <Button
+                android:id="@+id/btnStartRecording"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="● REC"
+                android:textColor="#000000"
+                android:backgroundTint="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnStopRecording"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="■ STOP"
+                android:textColor="#00FF00"
+                android:backgroundTint="#1A1A1A"
+                android:fontFamily="monospace"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Settings Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="[ SETTINGS ]"
+                android:textColor="#00FF00"
+                android:fontFamily="monospace"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Resolution Spinner -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Resolution:"
+                    android:textColor="#00FF00"
+                    android:fontFamily="monospace"
+                    android:textSize="12sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerResolution"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="#0A1A0A"
+                    android:popupBackground="#0A0A0A" />
+            </LinearLayout>
+
+            <!-- Bitrate Spinner -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Bitrate:"
+                    android:textColor="#00FF00"
+                    android:fontFamily="monospace"
+                    android:textSize="12sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerBitrate"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="#0A1A0A"
+                    android:popupBackground="#0A0A0A" />
+            </LinearLayout>
+
+            <!-- FPS Spinner -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="FPS:"
+                    android:textColor="#00FF00"
+                    android:fontFamily="monospace"
+                    android:textSize="12sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerFps"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="#0A1A0A"
+                    android:popupBackground="#0A0A0A" />
+            </LinearLayout>
+
+            <!-- Audio Toggle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="Audio:"
+                    android:textColor="#00FF00"
+                    android:fontFamily="monospace"
+                    android:textSize="12sp" />
+
+                <Switch
+                    android:id="@+id/switchAudio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:checked="true"
+                    android:trackTint="#0A1A0A"
+                    android:thumbTint="#00FF00" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Recording List -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="[ RECORDINGS ]"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerRecordings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+
+    </LinearLayout>
+</ScrollView>

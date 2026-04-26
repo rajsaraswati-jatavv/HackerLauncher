@@ -305,6 +305,38 @@ class PreferencesManager(context: Context) {
     fun setNotes(json: String) = prefs.edit().putString("notes", json).apply()
 
     // ========================================
+    // LOCATION TRACKING
+    // ========================================
+
+    fun isLocationTrackingEnabled(): Boolean = prefs.getBoolean("location_tracking", false)
+    fun setLocationTrackingEnabled(enabled: Boolean) = prefs.edit().putBoolean("location_tracking", enabled).apply()
+
+    fun getLocationUpdateInterval(): Int = prefs.getInt("location_interval", 30)
+    fun setLocationUpdateInterval(interval: Int) = prefs.edit().putInt("location_interval", interval).apply()
+
+    // ========================================
+    // ALWAYS-RUNNING SERVICE CONTROL
+    // ========================================
+
+    fun isDaemonServiceEnabled(): Boolean = prefs.getBoolean("daemon_service", true)
+    fun setDaemonServiceEnabled(enabled: Boolean) = prefs.edit().putBoolean("daemon_service", enabled).apply()
+
+    fun isWatchdogEnabled(): Boolean = prefs.getBoolean("watchdog_service", true)
+    fun setWatchdogEnabled(enabled: Boolean) = prefs.edit().putBoolean("watchdog_service", enabled).apply()
+
+    fun isKeepAliveEnabled(): Boolean = prefs.getBoolean("keep_alive", true)
+    fun setKeepAliveEnabled(enabled: Boolean) = prefs.edit().putBoolean("keep_alive", enabled).apply()
+
+    fun isNetworkMonitorEnabled(): Boolean = prefs.getBoolean("network_monitor", true)
+    fun setNetworkMonitorEnabled(enabled: Boolean) = prefs.edit().putBoolean("network_monitor", enabled).apply()
+
+    fun isProcessMonitorEnabled(): Boolean = prefs.getBoolean("process_monitor", true)
+    fun setProcessMonitorEnabled(enabled: Boolean) = prefs.edit().putBoolean("process_monitor", enabled).apply()
+
+    fun isSystemMonitorEnabled(): Boolean = prefs.getBoolean("system_monitor", true)
+    fun setSystemMonitorEnabled(enabled: Boolean) = prefs.edit().putBoolean("system_monitor", enabled).apply()
+
+    // ========================================
     // DEBUG / ADVANCED
     // ========================================
 

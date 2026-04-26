@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="#1A1A1A"
+    android:padding="12dp"
+    android:layout_marginBottom="4dp"
+    android:gravity="center_vertical">
+
+    <!-- Color Dot -->
+    <View
+        android:id="@+id/viewColorDot"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:background="#00FF00"
+        android:layout_marginEnd="12dp" />
+
+    <!-- Title + Time + Location -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtEventTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Team Standup"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="13sp"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="2dp">
+
+            <TextView
+                android:id="@+id/txtEventTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="09:00 - 09:30"
+                android:textColor="#006600"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:id="@+id/txtEventLocation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Room 42"
+                android:textColor="#006600"
+                android:fontFamily="monospace"
+                android:textSize="11sp"
+                android:singleLine="true"
+                android:ellipsize="end" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
