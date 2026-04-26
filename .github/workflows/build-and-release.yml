@@ -1,4 +1,4 @@
-name: Build & Release v7 Ultimate
+name: Build & Release v8 Ultimate
 
 on:
   push:
@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       release_version:
-        description: 'Release version (e.g., 6.0.0). Leave empty for build-only.'
+        description: 'Release version (e.g., 8.0.0). Leave empty for build-only.'
         required: false
-        default: ''
+        default: '8.0.0'
 
 jobs:
   build:
@@ -98,6 +98,7 @@ jobs:
           if ls app/build/outputs/apk/debug/*.apk 1> /dev/null 2>&1; then
             echo "apk_exists=true" >> $GITHUB_OUTPUT
             echo "APK built successfully"
+            ls -la app/build/outputs/apk/debug/*.apk
           else
             echo "apk_exists=false" >> $GITHUB_OUTPUT
             echo "APK build may have issues"
@@ -108,45 +109,46 @@ jobs:
         if: steps.check_apk.outputs.apk_exists == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: HackerLauncher-v6-Ultimate-debug
+          name: HackerLauncher-v8-Ultimate-debug
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 30
 
       - name: Create GitHub Release
-        if: ${{ github.event.inputs.release_version != '' && steps.check_apk.outputs.apk_exists == 'true' }}
+        if: steps.check_apk.outputs.apk_exists == 'true'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ github.event.inputs.release_version }}
-          name: HackerLauncher v${{ github.event.inputs.release_version }} Ultimate
+          tag_name: v8.0.0
+          name: HackerLauncher v8.0.0 Ultimate
           body: |
-            ## HackerLauncher v7.0 Ultimate
+            ## HackerLauncher v8.0.0 Ultimate
 
             🔥 **THE MOST POWERFUL ANDROID LAUNCHER EVER BUILT**
+
+            ### 🆕 v8.0.0 Changes
+            - **FIXED**: All 30+ View ID mismatches between Kotlin code and XML layouts (RAM Cleaner, Battery Optimizer, Process Manager, System Cleaner)
+            - **FIXED**: Notification channel ID mismatches in 5 services (KeepAlive, NetworkMonitor, LocationTracker, ProcessMonitor, SystemMonitor)
+            - **FIXED**: Missing LockScreenActivity & FakeCrashActivity in AndroidManifest.xml
+            - **FIXED**: AppLockService direct instantiation bug (never instantiate Service with constructor)
+            - **FIXED**: OverlayService missing foreground notification (was getting killed on Android 8+)
+            - **FIXED**: PreferencesManager.takeLast() bug (was returning new list but not modifying original)
+            - **FIXED**: NetworkMonitorService getTotalRxBytes() dead code
+            - **FIXED**: GeofenceBroadcastReceiver putExtra type mismatch (String vs Int)
+            - **UPGRADED**: RAM Cleaner now has process whitelist, deep cache clean, clean statistics tracking
+            - **UPGRADED**: All item layouts rewritten with proper view IDs matching adapter code
+            - **UPGRADED**: Battery Optimizer now has full charging alarm UI with threshold input
+            - **UPGRADED**: Process Manager now has refresh button, CPU usage display, empty state
+            - **UPGRADED**: System Cleaner now has select all, clean selected, storage detail, junk path/category display
 
             ### 🏠 Complete Launcher Features (20+)
             Home Screen, App Drawer, App Search, Quick Settings, Weather Widget, App Info, App Folders, App Lock (PIN/Biometric/Intruder Photo/Fake Crash), Notification Badges, Gesture Manager, Icon Pack Manager, 6 Color Themes, Calculator, Encrypted Notes, Todo Manager, Device Info, Recent Apps, Complete Settings, Device Admin Lock, Weather Widget
 
             ### 🛠️ 30+ Tool Modules
-            **Original 14**: Terminal, Network, OSINT, Crypto, WebTest, Anonymity, File Manager, Automation, AI Chat, Root Tools, WiFi Arsenal, Subnet Scanner, Password Tools, Bluetooth Scanner
-
-            **New 16**: Clipboard Manager, Screen Recorder, Audio Recorder, Flashlight (Strobe/SOS/Disco), Battery Optimizer, RAM Cleaner, Process Manager, Speed Test, QR Scanner + Generator, Compass, Download Manager, Contacts Manager, SMS Manager, Call Log, Calendar, System Cleaner
+            Terminal, Network, OSINT, Crypto, WebTest, Anonymity, File Manager, Automation, AI Chat, Root Tools, WiFi Arsenal, Subnet Scanner, Password Tools, Bluetooth Scanner, Clipboard Manager, Screen Recorder, Audio Recorder, Flashlight, Battery Optimizer, RAM Cleaner, Process Manager, Speed Test, QR Scanner, Compass, Download Manager, Contacts Manager, SMS Manager, Call Log, Calendar, System Cleaner
 
             ### ⚡ ALWAYS-RUNNING SERVICES (7)
-            - **DaemonService** - 24/7 foreground service, auto-restarts dead services
-            - **WatchdogService** - Monitors and restarts all services every 60s
-            - **KeepAliveService** - 6-layer keep-alive (Foreground+AlarmManager+JobScheduler+WorkManager+BroadcastReceiver+ContentObserver)
-            - **NetworkMonitorService** - Real-time network state monitoring
-            - **LocationTrackerService** - Background location tracking with geofencing
-            - **ProcessMonitorService** - Running process monitoring + suspicious activity detection
-            - **SystemMonitorService** - Battery/CPU/RAM/Storage/Network health monitoring
+            DaemonService, WatchdogService, KeepAliveService (6-layer), NetworkMonitorService, LocationTrackerService, ProcessMonitorService, SystemMonitorService
 
-            ### 🔒 80+ PERMISSIONS
-            Full access to ALL Android capabilities
-
-            ### 🎨 7 Live Wallpaper Effects
-            Matrix Rain, Glitch, CRT, Particle Network, Hex Fall, Circuit Board, Neon Grid
-
-            📊 **Stats**: 83 Kotlin files, 25,000+ lines of code, 64 layouts, 50+ drawables
+            ### 🔒 80+ Permissions | 🎨 7 Live Wallpaper Effects
 
             ### Disclaimer
             For educational and authorized testing purposes only.
