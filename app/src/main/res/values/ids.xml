@@ -110,7 +110,6 @@
     <item type="id" name="phonesLayout" />
     <item type="id" name="emailsLayout" />
     <item type="id" name="chipCall" />
-    <item type="id" name="chipDial" />
 
     <!-- Download Manager -->
     <item type="id" name="etUrl" />
