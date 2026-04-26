@@ -1,0 +1,132 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version (e.g., 1.0.0). Leave empty for build-only.'
+        required: false
+        default: ''
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Create google-services.json
+        run: |
+          if [ -n "${{ secrets.GOOGLE_SERVICES_JSON }}" ]; then
+            echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
+          else
+            # Create a placeholder google-services.json for build to succeed
+            cat > app/google-services.json << 'EOF'
+            {
+              "project_info": {
+                "project_number": "000000000000",
+                "project_id": "placeholder-project",
+                "storage_bucket": "placeholder-project.appspot.com"
+              },
+              "client": [
+                {
+                  "client_info": {
+                    "mobilesdk_app_id": "1:000000000000:android:0000000000000000",
+                    "android_client_info": {
+                      "package_name": "com.hackerlauncher"
+                    }
+                  },
+                  "oauth_client": [
+                    {
+                      "client_id": "000000000000-000000000000000000000.apps.googleusercontent.com",
+                      "client_type": 3
+                    }
+                  ],
+                  "api_key": [
+                    {
+                      "current_key": "placeholder-api-key"
+                    }
+                  ],
+                  "services": {
+                    "appinvite_service": {
+                      "other_platform_oauth_client": []
+                    }
+                  }
+                }
+              ],
+              "configuration_version": "1"
+            }
+            EOF
+          fi
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew || true
+
+      - name: Build Debug APK
+        run: |
+          ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Upload APK as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HackerLauncher-debug
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 30
+
+      - name: Create GitHub Release
+        if: ${{ github.event.inputs.release_version != '' }}
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.event.inputs.release_version }}
+          name: HackerLauncher v${{ github.event.inputs.release_version }}
+          body: |
+            ## HackerLauncher v${{ github.event.inputs.release_version }}
+
+            ### Installation
+            1. Download the APK from the assets below
+            2. Enable "Install from Unknown Sources" on your Android device
+            3. Install the APK
+            4. Grant all requested permissions
+            5. Set as default launcher (optional)
+
+            ### Features
+            - Live Wallpaper (Matrix Rain, Glitch, Particle Network, etc.)
+            - Terminal Emulator with Termux integration
+            - Network Tools (WiFi Scanner, Port Scanner, etc.)
+            - OSINT Tools (Username Search, Email Breach Check, etc.)
+            - Crypto Tools (Hash, Base64, XOR, Caesar, etc.)
+            - Web Testing Tools (HTTP Builder, SQLi/XSS Reference, etc.)
+            - Anonymity Tools (VPN Status, DNS Changer, Tor Check, etc.)
+            - File Management (Explorer, Encrypted Vault, Secure Delete)
+            - Task Automation (Macro Recorder, Scheduler, Auto Recon)
+            - AI Chat (Google/GitHub OAuth, OpenAI/Gemini API)
+            - Persistent Background Service
+            - Home Screen Widget
+
+            ### Disclaimer
+            For educational and authorized testing purposes only.
+          files: app/build/outputs/apk/debug/*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000"
+    android:padding="8dp">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:rowCount="3">
+
+        <Button android:id="@+id/btnWifiInfo" android:text="WiFi Info" style="@style/HackerButton" />
+        <Button android:id="@+id/btnScanWifi" android:text="Scan WiFi" style="@style/HackerButton" />
+        <Button android:id="@+id/btnArpTable" android:text="ARP Table" style="@style/HackerButton" />
+        <Button android:id="@+id/btnIfconfig" android:text="Ifconfig" style="@style/HackerButton" />
+        <Button android:id="@+id/btnNetstat" android:text="Netstat" style="@style/HackerButton" />
+        <Button android:id="@+id/btnDnsLookup" android:text="DNS Lookup" style="@style/HackerButton" />
+        <Button android:id="@+id/btnPing" android:text="Ping" style="@style/HackerButton" />
+        <Button android:id="@+id/btnPortScan" android:text="Port Scan" style="@style/HackerButton" />
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+
+        <EditText
+            android:id="@+id/etHost"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:hint="Host/IP"
+            android:textColorHint="#005500"
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:padding="8dp"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/etPort"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:hint="Port"
+            android:textColorHint="#005500"
+            android:textColor="#00FF00"
+            android:background="#0A1A0A"
+            android:fontFamily="monospace"
+            android:textSize="12sp"
+            android:padding="8dp"
+            android:singleLine="true"
+            android:inputType="number" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollViewNetwork"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/tvNetOutput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="11sp" />
+    </ScrollView>
+</LinearLayout>

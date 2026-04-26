@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center_vertical"
+        android:background="#0A0A0A">
+
+        <TextView
+            android:id="@+id/tvGreeting"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Welcome, Hacker"
+            android:textColor="#00FF00"
+            android:textSize="16sp"
+            android:fontFamily="monospace"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HackerLauncher"
+            android:textColor="#00FF00"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:alpha="0.6" />
+    </LinearLayout>
+
+    <!-- Terminal Widget -->
+    <TextView
+        android:id="@+id/tvTerminalWidget"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#0A1A0A"
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="10sp"
+        android:padding="4dp"
+        android:gravity="bottom"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:text="> System ready..." />
+
+    <!-- Tab Layout -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0A0A0A"
+        app:tabTextColor="#00AA00"
+        app:tabSelectedTextColor="#00FF00"
+        app:tabIndicatorColor="#00FF00"
+        app:tabMode="scrollable"
+        app:tabGravity="fill"
+        app:tabTextAppearance="@style/TabTextStyle" />
+
+    <!-- Fragment Container -->
+    <LinearLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" />
+
+</LinearLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000"
+    android:padding="8dp">
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="4">
+
+        <Button android:id="@+id/btnVpnStatus" android:text="VPN Status" style="@style/HackerButton" />
+        <Button android:id="@+id/btnIpCheck" android:text="Check Public IP" style="@style/HackerButton" />
+        <Button android:id="@+id/btnDnsCheck" android:text="DNS Info" style="@style/HackerButton" />
+        <Button android:id="@+id/btnDnsChange" android:text="Change DNS" style="@style/HackerButton" />
+        <Button android:id="@+id/btnProxyInfo" android:text="Proxy Info" style="@style/HackerButton" />
+        <Button android:id="@+id/btnTorCheck" android:text="Tor Check" style="@style/HackerButton" />
+        <Button android:id="@+id/btnWifiPrivacy" android:text="WiFi Privacy" style="@style/HackerButton" />
+    </GridLayout>
+
+    <ScrollView
+        android:id="@+id/scrollViewAnon"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/tvAnonOutput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="11sp" />
+    </ScrollView>
+</LinearLayout>

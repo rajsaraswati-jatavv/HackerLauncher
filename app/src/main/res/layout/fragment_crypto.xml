@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/spinnerCryptoOp"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="#1A1A1A" />
+
+        <Button
+            android:id="@+id/btnCryptoGo"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="GO"
+            android:textColor="#000000"
+            android:backgroundTint="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/btnCryptoCopy"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="COPY"
+            android:textColor="#00FF00"
+            android:backgroundTint="#1A1A1A"
+            android:fontFamily="monospace"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/etCryptoInput"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:hint="Input text / hash / encoded string"
+        android:textColorHint="#005500"
+        android:textColor="#00FF00"
+        android:background="#0A1A0A"
+        android:fontFamily="monospace"
+        android:textSize="12sp"
+        android:padding="8dp"
+        android:singleLine="true"
+        android:layout_marginTop="8dp" />
+
+    <ScrollView
+        android:id="@+id/scrollViewCrypto"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/tvCryptoOutput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#00FF00"
+            android:fontFamily="monospace"
+            android:textSize="11sp"
+            android:isScrollContainer="true" />
+    </ScrollView>
+</LinearLayout>
