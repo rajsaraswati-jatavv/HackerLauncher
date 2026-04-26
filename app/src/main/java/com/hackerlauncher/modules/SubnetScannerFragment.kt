@@ -45,10 +45,11 @@ class SubnetScannerFragment : Fragment() {
         val host = etHost.text.toString().trim()
         if (host.isNotEmpty()) {
             portScanHost()
-        } else {
-            scope.launch {
-                appendOutput("[*] Detecting subnet...\n")
-                val result = withContext(Dispatchers.IO) {
+            return
+        }
+        scope.launch {
+            appendOutput("[*] Detecting subnet...\n")
+            val result = withContext(Dispatchers.IO) {
                 try {
                     val wifiManager = requireContext().applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
                     val info = wifiManager.connectionInfo
