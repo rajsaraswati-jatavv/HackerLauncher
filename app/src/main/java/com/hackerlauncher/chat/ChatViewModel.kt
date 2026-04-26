@@ -107,7 +107,7 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    private fun callApi(userMessage: String, context: Context?): String {
+    private suspend fun callApi(userMessage: String, context: Context?): String {
         val prefs = context?.let { PreferencesManager(it) }
         val apiKey = prefs?.getChatApiKey() ?: ""
 

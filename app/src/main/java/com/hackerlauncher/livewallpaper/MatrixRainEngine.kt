@@ -24,7 +24,7 @@ class MatrixRainEngine {
     private data class Column(
         var x: Float,
         var y: Float,
-        val speed: Float,
+        var speed: Float,
         val length: Int,
         val trail: MutableList<Char>
     )
