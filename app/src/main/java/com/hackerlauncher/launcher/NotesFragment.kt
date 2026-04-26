@@ -616,6 +616,8 @@ class NotesFragment : Fragment() {
         private const val KEY_LENGTH = 256
         private const val ITERATIONS = 10000
         private const val IV_LENGTH = 16
+
+        fun newInstance(): NotesFragment = NotesFragment()
     }
 
     private fun encrypt(plainText: String, password: String): String {
@@ -803,10 +805,4 @@ class NotesFragment : Fragment() {
     }
 
     //endregion
-
-    companion object {
-        fun newInstance(): NotesFragment {
-            return NotesFragment()
-        }
-    }
 }

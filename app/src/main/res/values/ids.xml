@@ -267,6 +267,7 @@
     <item type="id" name="storage" />
     <item type="id" name="junk" />
     <item type="id" name="progress" />
+    <item type="id" name="progressBar" />
     <item type="id" name="color" />
     <item type="id" name="layout" />
     <item type="id" name="view" />
