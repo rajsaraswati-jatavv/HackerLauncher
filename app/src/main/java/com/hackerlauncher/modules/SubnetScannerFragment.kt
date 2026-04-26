@@ -219,9 +219,9 @@ class SubnetScannerFragment : Fragment() {
                     conn.requestMethod = "HEAD"
                     sb.append("  HTTPS Status: ${conn.responseCode}\n")
                     try {
-                        val certs = conn.serverCertificates?.firstOrNull()
-                        if (certs != null) {
-                            sb.append("  SSL Issuer: ${certs.issuerX500Principal?.name ?: "Unknown"}\n")
+                        val certs = conn.serverCertificates
+                        if (certs != null && certs.isNotEmpty()) {
+                            sb.append("  SSL Certs: ${certs.size} certificate(s) found\n")
                         }
                     } catch (_: Exception) {}
                     conn.disconnect()
