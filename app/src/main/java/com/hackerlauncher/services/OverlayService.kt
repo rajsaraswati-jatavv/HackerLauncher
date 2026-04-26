@@ -6,6 +6,7 @@ import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
 import android.view.Gravity
+import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import com.hackerlauncher.utils.Logger

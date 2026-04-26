@@ -20,8 +20,8 @@ class AccessibilityHelper : AccessibilityService() {
             private set
 
         // FIX: Use synchronized list for thread safety
+        @JvmStatic
         val eventLog: MutableList<String> = Collections.synchronizedList(mutableListOf())
-            private set
     }
 
     override fun onServiceConnected() {
