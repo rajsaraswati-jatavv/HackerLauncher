@@ -214,14 +214,16 @@ class SubnetScannerFragment : Fragment() {
 
                 // Check HTTPS
                 try {
-                    val conn = java.net.URL("https://$host").openConnection() as java.net.HttpURLConnection
+                    val conn = java.net.URL("https://$host").openConnection() as javax.net.ssl.HttpsURLConnection
                     conn.connectTimeout = 3000
                     conn.requestMethod = "HEAD"
                     sb.append("  HTTPS Status: ${conn.responseCode}\n")
-                    val certs = conn.serverCertificates?.firstOrNull()
-                    if (certs != null) {
-                        sb.append("  SSL Issuer: ${certs.issuerDN}\n")
-                    }
+                    try {
+                        val certs = conn.serverCertificates?.firstOrNull()
+                        if (certs != null) {
+                            sb.append("  SSL Issuer: ${certs.issuerDN}\n")
+                        }
+                    } catch (_: Exception) {}
                     conn.disconnect()
                 } catch (_: Exception) {}
 

@@ -125,9 +125,8 @@ class WifiArsenalFragment : Fragment() {
                 else -> {
                     val caps = current.allowedKeyManagement
                     when {
-                        caps?.contains(4) == true -> "WPA3"  // KeyMgmt.SAE = 4
-                        caps?.contains(4) == true -> "WPA2-PSK"  // KeyMgmt.WPA2_PSK = 4
-                        caps?.contains(1) == true -> "WPA-PSK"   // KeyMgmt.WPA_PSK = 1
+                        caps != null && caps.get(4) -> "WPA3/WPA2-PSK"  // KeyMgmt.SAE/WPA2_PSK
+                        caps != null && caps.get(1) -> "WPA-PSK"   // KeyMgmt.WPA_PSK
                         current.wepKeys?.any { it != null } == true -> "WEP"
                         else -> "Open"
                     }
