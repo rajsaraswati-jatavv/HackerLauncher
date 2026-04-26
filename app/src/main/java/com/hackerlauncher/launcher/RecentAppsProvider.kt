@@ -4,6 +4,7 @@ import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import java.util.Calendar
@@ -125,12 +126,7 @@ class RecentAppsProvider private constructor(private val context: Context) {
                     packageName = stats.packageName,
                     lastUsed = stats.lastTimeUsed,
                     totalTime = stats.totalTimeInForeground,
-                    launchCount = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        stats.appLaunchCount
-                    } else {
-                        @Suppress("DEPRECATION")
-                        0
-                    }
+                    launchCount = getLaunchCount(stats)
                 )
             }
 
@@ -162,12 +158,7 @@ class RecentAppsProvider private constructor(private val context: Context) {
                     packageName = stats.packageName,
                     lastUsed = stats.lastTimeUsed,
                     totalTime = stats.totalTimeInForeground,
-                    launchCount = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        stats.appLaunchCount
-                    } else {
-                        @Suppress("DEPRECATION")
-                        0
-                    }
+                    launchCount = getLaunchCount(stats)
                 )
             }
 
@@ -205,12 +196,7 @@ class RecentAppsProvider private constructor(private val context: Context) {
                         packageName = stats.packageName,
                         lastUsed = stats.lastTimeUsed,
                         totalTime = stats.totalTimeInForeground,
-                        launchCount = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                            stats.appLaunchCount
-                        } else {
-                            @Suppress("DEPRECATION")
-                            0
-                        }
+                        launchCount = getLaunchCount(stats)
                     )
                 }
             }
@@ -339,8 +325,18 @@ class RecentAppsProvider private constructor(private val context: Context) {
     }
 
     // Suppress Build import - use android.os.Build
-    private object Build {
-        val SDK_INT = android.os.Build.VERSION.SDK_INT
-        val VERSION = android.os.Build.VERSION
+    @Suppress("DEPRECATION")
+    private fun getLaunchCount(stats: UsageStats): Int {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            try {
+                val field = UsageStats::class.java.getDeclaredField("mLaunchCount")
+                field.isAccessible = true
+                field.getInt(stats)
+            } catch (_: Exception) {
+                0
+            }
+        } else {
+            0
+        }
     }
 }

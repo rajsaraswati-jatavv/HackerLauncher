@@ -298,6 +298,9 @@ class AppLockService : Service() {
     }
 
     companion object {
+        const val ACTION_START = "com.hackerlauncher.APP_LOCK_START"
+        const val ACTION_STOP = "com.hackerlauncher.APP_LOCK_STOP"
+
         fun hashPin(pin: String): String {
             val digest = MessageDigest.getInstance("SHA-256")
             val hash = digest.digest(pin.toByteArray(Charsets.UTF_8))

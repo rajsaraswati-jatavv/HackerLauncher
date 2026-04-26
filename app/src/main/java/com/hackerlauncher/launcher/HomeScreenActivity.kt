@@ -379,13 +379,13 @@ class HomeScreenActivity : AppCompatActivity() {
                     }
                     1 -> {
                         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                            data = android.net.Uri.fromParts("package", app.packageName)
+                            data = android.net.Uri.fromParts("package", app.packageName, null)
                         }
                         startActivity(intent)
                     }
                     2 -> {
                         val intent = Intent(Intent.ACTION_UNINSTALL_PACKAGE).apply {
-                            data = android.net.Uri.fromParts("package", app.packageName)
+                            data = android.net.Uri.fromParts("package", app.packageName, null)
                         }
                         startActivity(intent)
                     }
@@ -426,7 +426,7 @@ class HomeScreenActivity : AppCompatActivity() {
                     }
                     1 -> {
                         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                            data = android.net.Uri.fromParts("package", app.packageName)
+                            data = android.net.Uri.fromParts("package", app.packageName, null)
                         }
                         startActivity(intent)
                     }
@@ -457,7 +457,9 @@ class HomeScreenActivity : AppCompatActivity() {
             sendBroadcast(intent)
         } catch (e: Exception) {
             // Fallback: open settings
-            val intent = Intent(Settings.ACTION_NOTIFICATION_SETTINGS)
+            val intent = Intent(android.provider.Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, packageName)
+            }
             startActivity(intent)
         }
     }

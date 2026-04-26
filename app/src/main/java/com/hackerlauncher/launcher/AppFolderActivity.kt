@@ -200,13 +200,13 @@ class AppFolderActivity : AppCompatActivity() {
                     0 -> removeAppFromFolder(app)
                     1 -> {
                         val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                            data = android.net.Uri.fromParts("package", app.packageName)
+                            data = android.net.Uri.fromParts("package", app.packageName, null)
                         }
                         startActivity(intent)
                     }
                     2 -> {
                         val intent = Intent(Intent.ACTION_UNINSTALL_PACKAGE).apply {
-                            data = android.net.Uri.fromParts("package", app.packageName)
+                            data = android.net.Uri.fromParts("package", app.packageName, null)
                         }
                         startActivity(intent)
                     }
@@ -378,7 +378,7 @@ class AppFolderActivity : AppCompatActivity() {
         val folders = prefsManager.getFolders()
         if (folders.isEmpty()) {
             // Create default folders
-            val defaultFolders = mutableMapOf(
+            val defaultFolders: MutableMap<String, List<String>> = mutableMapOf(
                 "Games" to emptyList(),
                 "Social" to emptyList(),
                 "Tools" to emptyList()

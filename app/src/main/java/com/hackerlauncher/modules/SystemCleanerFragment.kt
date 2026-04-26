@@ -336,7 +336,7 @@ class SystemCleanerFragment : Fragment() {
 
         for (root in searchRoots) {
             if (!root.exists() || !root.isDirectory) continue
-            findEmptyFolders(root) { folder ->
+            findEmptyFolders(root, onFound = { folder ->
                 withContext(Dispatchers.Main) {
                     junkItems.add(
                         JunkItem(
@@ -350,7 +350,7 @@ class SystemCleanerFragment : Fragment() {
                     )
                     junkAdapter.notifyItemInserted(junkItems.size - 1)
                 }
-            }
+            })
         }
     }
 

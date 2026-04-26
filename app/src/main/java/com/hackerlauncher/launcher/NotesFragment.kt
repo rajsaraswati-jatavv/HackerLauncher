@@ -610,11 +610,13 @@ class NotesFragment : Fragment() {
 
     //region AES-256 Encryption
 
-    private const val AES_ALGORITHM = "AES/CBC/PKCS5Padding"
-    private const val SECRET_KEY_ALGORITHM = "PBKDF2WithHmacSHA256"
-    private const val KEY_LENGTH = 256
-    private const val ITERATIONS = 10000
-    private const val IV_LENGTH = 16
+    companion object {
+        private const val AES_ALGORITHM = "AES/CBC/PKCS5Padding"
+        private const val SECRET_KEY_ALGORITHM = "PBKDF2WithHmacSHA256"
+        private const val KEY_LENGTH = 256
+        private const val ITERATIONS = 10000
+        private const val IV_LENGTH = 16
+    }
 
     private fun encrypt(plainText: String, password: String): String {
         val salt = ByteArray(16).also { SecureRandom().nextBytes(it) }

@@ -41,7 +41,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import com.google.zxing.BarcodeFormat
-import com.google.zxing.MultiWriter
+import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import kotlinx.coroutines.Dispatchers
@@ -140,9 +140,9 @@ class QrScannerFragment : Fragment() {
         provider.unbindAll()
 
         val cameraSelector = if (useFrontCamera) {
-            CameraSelector.DEFAULT_FRONT_CAMERA
+            CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_FRONT).build()
         } else {
-            CameraSelector.DEFAULT_REAR_CAMERA
+            CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
         }
 
         val preview = Preview.Builder().build().also {
@@ -282,7 +282,7 @@ class QrScannerFragment : Fragment() {
 
     private fun generateQrBitmap(text: String, size: Int = 512): Bitmap? {
         return try {
-            val multiWriter = MultiWriter()
+            val multiWriter = MultiFormatWriter()
             val bitMatrix: BitMatrix = multiWriter.encode(
                 text, BarcodeFormat.QR_CODE, size, size
             )

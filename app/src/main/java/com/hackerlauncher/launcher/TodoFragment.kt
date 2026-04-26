@@ -107,7 +107,7 @@ class TodoStorage(private val prefs: android.content.SharedPreferences) {
     fun loadTasks(): MutableList<TodoTask> {
         val json = prefs.getString(KEY_TASKS, null) ?: return mutableListOf()
         val arr = JSONArray(json)
-        return (0 until arr.length()).mapTo(mutableListOf()) { arr.getJSONObject(i).toTodoTask() }
+        return (0 until arr.length()).mapTo(mutableListOf()) { arr.getJSONObject(it).toTodoTask() }
     }
 
     fun saveTasks(tasks: List<TodoTask>) {
@@ -137,7 +137,7 @@ class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 // ─── Adapter ─────────────────────────────────────────────────────────────────
 
 class TodoAdapter(
-    private var tasks: List<TodoTask>,
+    var tasks: List<TodoTask>,
     private val onDoneChanged: (TodoTask, Boolean) -> Unit,
     private val onSubtaskChanged: (TodoTask, SubTask, Boolean) -> Unit,
     private val onLongClick: (TodoTask) -> Unit,
@@ -361,7 +361,7 @@ class TodoFragment : Fragment() {
         fab = FloatingActionButton(requireContext()).apply {
             setImageResource(android.R.drawable.ic_input_add)
             setBackgroundTintList(android.content.res.ColorStateList.valueOf(Color.parseColor("#00FF00")))
-            setImageTintColor(Color.BLACK)
+            imageTintList = android.content.res.ColorStateList.valueOf(Color.BLACK)
             setOnClickListener { showAddTaskDialog() }
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT

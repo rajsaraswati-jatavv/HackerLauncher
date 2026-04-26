@@ -266,7 +266,7 @@ class AudioRecorderFragment : Fragment() {
                 prepare()
                 start()
                 setOnCompletionListener {
-                    isPlaying = false
+                    this@AudioRecorderFragment.isPlaying = false
                     updateUI()
                     Toast.makeText(requireContext(), "Playback finished", Toast.LENGTH_SHORT).show()
                 }

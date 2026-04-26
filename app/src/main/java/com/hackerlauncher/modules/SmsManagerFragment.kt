@@ -367,7 +367,7 @@ class SmsManagerFragment : Fragment() {
     private fun sendSms(phoneNumber: String, message: String) {
         try {
             val smsManager = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-                requireContext().getSystemService(android.content.Context.SMS_SERVICE) as AndroidSmsManager
+                requireContext().getSystemService("sms") as AndroidSmsManager
             } else {
                 @Suppress("DEPRECATION")
                 AndroidSmsManager.getDefault()

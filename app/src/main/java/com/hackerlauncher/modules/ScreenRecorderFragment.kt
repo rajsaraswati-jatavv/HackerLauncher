@@ -124,7 +124,7 @@ class ScreenRecorderFragment : Fragment() {
         )
         bitrateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerBitrate.adapter = bitrateAdapter
-        bitrateAdapter.setSelection(2)
+        spinnerBitrate.setSelection(2)
 
         val fpsAdapter = ArrayAdapter(
             requireContext(),
@@ -133,7 +133,7 @@ class ScreenRecorderFragment : Fragment() {
         )
         fpsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerFps.adapter = fpsAdapter
-        fpsAdapter.setSelection(1)
+        spinnerFps.setSelection(1)
     }
 
     private fun setupRecyclerView() {

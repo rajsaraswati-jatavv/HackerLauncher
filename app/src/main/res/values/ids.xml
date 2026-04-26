@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App adapter / view holders -->
+    <item type="id" name="app_icon" />
+    <item type="id" name="app_label" />
+    <item type="id" name="app_name" />
+    <item type="id" name="app_package" />
+    <item type="id" name="app_size" />
+    <item type="id" name="app_checkbox" />
+    <item type="id" name="notification_badge" />
+
+    <!-- Dock -->
+    <item type="id" name="dock_icon" />
+    <item type="id" name="dock_badge" />
+
+    <!-- Todo -->
+    <item type="id" name="priority_dot" />
+    <item type="id" name="task_checkbox" />
+    <item type="id" name="task_title" />
+    <item type="id" name="task_due_date" />
+    <item type="id" name="task_category" />
+    <item type="id" name="subtask_container" />
+    <item type="id" name="expand_button" />
+
+    <!-- Audio Recorder -->
+    <item type="id" name="buttonRecord" />
+    <item type="id" name="buttonStop" />
+    <item type="id" name="textViewTimer" />
+    <item type="id" name="textViewStatus" />
+    <item type="id" name="recyclerViewRecordings" />
+    <item type="id" name="textViewEmptyState" />
+    <item type="id" name="textViewFileName" />
+    <item type="id" name="textViewDetails" />
+    <item type="id" name="textViewDuration" />
+    <item type="id" name="buttonPlay" />
+    <item type="id" name="buttonDelete" />
+    <item type="id" name="spinnerFormat" />
+
+    <!-- Battery Optimizer -->
+    <item type="id" name="textViewBatteryLevel" />
+    <item type="id" name="progressBarBattery" />
+    <item type="id" name="textViewHealth" />
+    <item type="id" name="textViewTemp" />
+    <item type="id" name="textViewVoltage" />
+    <item type="id" name="textViewCharging" />
+    <item type="id" name="textViewTechnology" />
+    <item type="id" name="textViewCapacity" />
+    <item type="id" name="buttonKillBackground" />
+    <item type="id" name="recyclerViewRecommendations" />
+    <item type="id" name="recyclerViewProcesses" />
+    <item type="id" name="editTextAlarmThreshold" />
+    <item type="id" name="buttonSetAlarm" />
+    <item type="id" name="textViewAlarmStatus" />
+    <item type="id" name="layoutBatteryInfo" />
+    <item type="id" name="textViewRecTitle" />
+    <item type="id" name="textViewRecDesc" />
+    <item type="id" name="textViewProcessName" />
+    <item type="id" name="textViewProcessDetails" />
+
+    <!-- Calendar -->
+    <item type="id" name="tvMonthYear" />
+    <item type="id" name="btnToday" />
+    <item type="id" name="eventsRecycler" />
+    <item type="id" name="emptyState" />
+    <item type="id" name="tvEventCount" />
+    <item type="id" name="fabAddEvent" />
+    <item type="id" name="tvEventTime" />
+    <item type="id" name="tvEventLocation" />
+    <item type="id" name="tvEventCalendar" />
+    <item type="id" name="chipEditEvent" />
+    <item type="id" name="chipDeleteEvent" />
+    <item type="id" name="chipShareEvent" />
+    <item type="id" name="colorIndicator" />
+
+    <!-- Call Log -->
+    <item type="id" name="callLogRecycler" />
+    <item type="id" name="tvStats" />
+    <item type="id" name="searchInput" />
+    <item type="id" name="tvCallName" />
+    <item type="id" name="chipCallBack" />
+    <item type="id" name="chipSms" />
+    <item type="id" name="chipDial" />
+    <item type="id" name="tvCallTime" />
+
+    <!-- Clipboard Manager -->
+    <item type="id" name="recyclerViewClipboard" />
+    <item type="id" name="editTextSearch" />
+    <item type="id" name="buttonClearAll" />
+    <item type="id" name="buttonExport" />
+    <item type="id" name="textViewClipContent" />
+    <item type="id" name="textViewClipTimestamp" />
+    <item type="id" name="buttonPin" />
+    <item type="id" name="buttonCopy" />
+
+    <!-- Compass -->
+    <item type="id" name="compassImage" />
+    <item type="id" name="tvDegrees" />
+    <item type="id" name="tvDirection" />
+    <item type="id" name="tvGpsCoords" />
+    <item type="id" name="tvAltitude" />
+    <item type="id" name="tvSpeed" />
+    <item type="id" name="tvAccuracy" />
+
+    <!-- Contacts Manager -->
+    <item type="id" name="contactsRecycler" />
+    <item type="id" name="tvContactCount" />
+    <item type="id" name="btnExport" />
+    <item type="id" name="tvContactOrg" />
+    <item type="id" name="ivContactPhoto" />
+    <item type="id" name="phonesLayout" />
+    <item type="id" name="emailsLayout" />
+    <item type="id" name="chipCall" />
+    <item type="id" name="chipDial" />
+
+    <!-- Download Manager -->
+    <item type="id" name="etUrl" />
+    <item type="id" name="downloadProgressBar" />
+    <item type="id" name="tvProgress" />
+    <item type="id" name="downloadRecycler" />
+    <item type="id" name="tvStatus" />
+    <item type="id" name="tvSize" />
+    <item type="id" name="itemProgress" />
+    <item type="id" name="btnAction1" />
+    <item type="id" name="btnAction2" />
+    <item type="id" name="btnAction3" />
+
+    <!-- Flashlight -->
+    <item type="id" name="toggleStrobe" />
+    <item type="id" name="toggleSos" />
+    <item type="id" name="toggleDisco" />
+    <item type="id" name="seekBarStrobeSpeed" />
+    <item type="id" name="textViewStrobeSpeed" />
+    <item type="id" name="editTextAutoOffMinutes" />
+    <item type="id" name="buttonSetAutoOff" />
+    <item type="id" name="toggleBrightScreen" />
+    <item type="id" name="layoutBrightScreen" />
+
+    <!-- Process Manager -->
+    <item type="id" name="buttonRefresh" />
+    <item type="id" name="textViewProcessCount" />
+    <item type="id" name="textViewCpuUsage" />
+    <item type="id" name="textViewPid" />
+    <item type="id" name="textViewUid" />
+    <item type="id" name="textViewMemory" />
+    <item type="id" name="textViewCpu" />
+    <item type="id" name="textViewImportance" />
+    <item type="id" name="buttonKill" />
+    <item type="id" name="buttonBlacklist" />
+
+    <!-- QR Scanner -->
+    <item type="id" name="previewView" />
+    <item type="id" name="resultOverlay" />
+    <item type="id" name="scanHistoryRecycler" />
+    <item type="id" name="fabGenerate" />
+    <item type="id" name="fabToggleCamera" />
+    <item type="id" name="tvResultContent" />
+    <item type="id" name="tvResultFormat" />
+    <item type="id" name="tvResultTime" />
+    <item type="id" name="chipCopy" />
+    <item type="id" name="chipOpenUrl" />
+    <item type="id" name="chipShare" />
+    <item type="id" name="chipGenerate" />
+    <item type="id" name="tvHistoryContent" />
+    <item type="id" name="tvHistoryFormat" />
+    <item type="id" name="tvHistoryTime" />
+
+    <!-- RAM Cleaner -->
+    <item type="id" name="textViewUsedRam" />
+    <item type="id" name="textViewTotalRam" />
+    <item type="id" name="textViewFreeRam" />
+    <item type="id" name="textViewRamPercent" />
+    <item type="id" name="progressBarRam" />
+    <item type="id" name="viewRamMeterFill" />
+    <item type="id" name="buttonClean" />
+    <item type="id" name="textViewBoostScore" />
+    <item type="id" name="textViewAutoCleanStatus" />
+    <item type="id" name="buttonToggleAutoClean" />
+
+    <!-- Screen Recorder -->
+    <item type="id" name="spinnerResolution" />
+    <item type="id" name="spinnerBitrate" />
+    <item type="id" name="spinnerFps" />
+
+    <!-- SMS Manager -->
+    <item type="id" name="smsRecycler" />
+    <item type="id" name="tvSmsCount" />
+    <item type="id" name="fabCompose" />
+    <item type="id" name="tvConversationTitle" />
+    <item type="id" name="tvConversationAddress" />
+    <item type="id" name="messagesLayout" />
+    <item type="id" name="etReply" />
+    <item type="id" name="chipDeleteConversation" />
+    <item type="id" name="tvConvName" />
+    <item type="id" name="tvConvAddress" />
+    <item type="id" name="tvConvPreview" />
+    <item type="id" name="tvConvTime" />
+    <item type="id" name="tvConvUnread" />
+    <item type="id" name="tvConvMsgCount" />
+
+    <!-- Speed Test -->
+    <item type="id" name="buttonStartTest" />
+    <item type="id" name="textViewDownloadSpeed" />
+    <item type="id" name="textViewUploadSpeed" />
+    <item type="id" name="textViewPing" />
+    <item type="id" name="textViewJitter" />
+    <item type="id" name="progressBarTest" />
+    <item type="id" name="recyclerViewHistory" />
+    <item type="id" name="textViewCurrentSpeed" />
+    <item type="id" name="textViewTestDate" />
+    <item type="id" name="textViewHistDownload" />
+    <item type="id" name="textViewHistUpload" />
+    <item type="id" name="textViewHistPing" />
+    <item type="id" name="textViewHistServer" />
+
+    <!-- System Cleaner -->
+    <item type="id" name="tvStorageUsage" />
+    <item type="id" name="storageProgressBar" />
+    <item type="id" name="tvStorageDetail" />
+    <item type="id" name="junkRecycler" />
+    <item type="id" name="btnCleanSelected" />
+    <item type="id" name="btnSelectAll" />
+    <item type="id" name="tvTotalSize" />
+    <item type="id" name="scanProgressBar" />
+    <item type="id" name="cbSelect" />
+    <item type="id" name="tvJunkPath" />
+    <item type="id" name="tvJunkCategory" />
+    <item type="id" name="tvJunkName" />
+    <item type="id" name="tvJunkSize" />
+    <item type="id" name="cbJunkSelect" />
+
+    <!-- Weather Widget -->
+    <item type="id" name="tvWidgetTemp" />
+    <item type="id" name="tvWidgetCondition" />
+    <item type="id" name="tvWidgetLocation" />
+    <item type="id" name="weatherWidgetRoot" />
+
+    <!-- Generic -->
+    <item type="id" name="fragment" />
+    <item type="id" name="recycler" />
+    <item type="id" name="rv" />
+    <item type="id" name="scroll" />
+    <item type="id" name="search" />
+    <item type="id" name="edit" />
+    <item type="id" name="et" />
+    <item type="id" name="text" />
+    <item type="id" name="tv" />
+    <item type="id" name="btn" />
+    <item type="id" name="button" />
+    <item type="id" name="fab" />
+    <item type="id" name="toggle" />
+    <item type="id" name="seek" />
+    <item type="id" name="spinner" />
+    <item type="id" name="chip" />
+    <item type="id" name="tab" />
+    <item type="id" name="content" />
+    <item type="id" name="message" />
+    <item type="id" name="messages" />
+    <item type="id" name="result" />
+    <item type="id" name="scan" />
+    <item type="id" name="preview" />
+    <item type="id" name="weather" />
+    <item type="id" name="compass" />
+    <item type="id" name="calendar" />
+    <item type="id" name="call" />
+    <item type="id" name="sms" />
+    <item type="id" name="contacts" />
+    <item type="id" name="download" />
+    <item type="id" name="storage" />
+    <item type="id" name="junk" />
+    <item type="id" name="progress" />
+    <item type="id" name="color" />
+    <item type="id" name="layout" />
+    <item type="id" name="view" />
+    <item type="id" name="widget" />
+    <item type="id" name="item" />
+    <item type="id" name="iv" />
+    <item type="id" name="cb" />
+    <item type="id" name="empty" />
+    <item type="id" name="phones" />
+    <item type="id" name="emails" />
+    <item type="id" name="events" />
+</resources>

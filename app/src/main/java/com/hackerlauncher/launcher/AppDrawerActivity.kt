@@ -232,14 +232,14 @@ class AppDrawerActivity : AppCompatActivity() {
 
     private fun openAppInfo(packageName: String) {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-            data = Uri.fromParts("package", packageName)
+            data = Uri.fromParts("package", packageName, null)
         }
         startActivity(intent)
     }
 
     private fun uninstallApp(packageName: String) {
         val intent = Intent(Intent.ACTION_UNINSTALL_PACKAGE).apply {
-            data = Uri.fromParts("package", packageName)
+            data = Uri.fromParts("package", packageName, null)
             putExtra(Intent.EXTRA_RETURN_RESULT, true)
         }
         startActivity(intent)

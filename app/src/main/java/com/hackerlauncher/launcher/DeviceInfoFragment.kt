@@ -221,8 +221,8 @@ class DeviceInfoFragment : Fragment() {
             refreshRate = requireActivity().windowManager.defaultDisplay.refreshRate.toDouble()
         } catch (_: Exception) { }
 
-        val widthInch = widthPx / xdpi
-        val heightInch = heightPx / ydpi
+        val widthInch = widthPx / xdpi.toDouble()
+        val heightInch = heightPx / ydpi.toDouble()
         val screenSize = Math.sqrt(widthInch * widthInch + heightInch * heightInch)
 
         return "📱 SCREEN" to listOf(
@@ -260,7 +260,7 @@ class DeviceInfoFragment : Fragment() {
             } else "N/A"
             entries.add("wifi_ip" to ip)
             @Suppress("DEPRECATION")
-            entries.add("wifi_mac" to wifiInfo.macAddress ?: "N/A")
+            entries.add("wifi_mac" to (wifiInfo.macAddress ?: "N/A"))
         } catch (_: Exception) {
             entries.add("wifi" to "PERMISSION_DENIED")
         }
@@ -274,7 +274,7 @@ class DeviceInfoFragment : Fragment() {
                 while (addrs.hasMoreElements()) {
                     val addr = addrs.nextElement()
                     if (!addr.isLoopbackAddress && addr is java.net.Inet4Address) {
-                        entries.add("ipv4" to addr.hostAddress ?: "N/A")
+                        entries.add("ipv4" to (addr.hostAddress ?: "N/A"))
                     }
                 }
             }

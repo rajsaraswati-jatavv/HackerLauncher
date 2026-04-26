@@ -13,6 +13,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.storage.StorageManager
+import android.app.usage.StorageStatsManager
 import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
@@ -159,9 +160,9 @@ class AppInfoActivity : AppCompatActivity() {
                     var totalSize = apkSize + dataSize
                     try {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            val storageStatsManager = getSystemService(Context.STORAGE_STATS_SERVICE) as StorageManager
+                            val storageStatsManager = getSystemService(Context.STORAGE_STATS_SERVICE) as StorageStatsManager
                             val storageStats = storageStatsManager.queryStatsForUid(
-                                StorageManager.UUID_DEFAULT,
+                                android.os.storage.StorageManager.UUID_DEFAULT,
                                 appInfo.uid
                             )
                             totalSize = storageStats.appBytes + storageStats.dataBytes + storageStats.cacheBytes
@@ -346,7 +347,7 @@ class AppInfoActivity : AppCompatActivity() {
 
     private fun uninstallApp() {
         val intent = Intent(Intent.ACTION_UNINSTALL_PACKAGE).apply {
-            data = Uri.fromParts("package", packageNameStr)
+            data = Uri.fromParts("package", packageNameStr, null)
         }
         startActivity(intent)
     }
@@ -365,12 +366,12 @@ class AppInfoActivity : AppCompatActivity() {
         try {
             // Try to clear cache via storage manager
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val storageManager = getSystemService(Context.STORAGE_STATS_SERVICE) as StorageManager
+                val storageManager = getSystemService(Context.STORAGE_STATS_SERVICE) as StorageStatsManager
                 // Best-effort: direct user to settings
             }
             // Fallback: open app storage settings
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                data = Uri.fromParts("package", packageNameStr)
+                data = Uri.fromParts("package", packageNameStr, null)
             }
             startActivity(intent)
             Toast.makeText(this, "> open_settings_to_clear_cache", Toast.LENGTH_SHORT).show()
@@ -432,7 +433,7 @@ class AppInfoActivity : AppCompatActivity() {
 
     private fun openAppSettings() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-            data = Uri.fromParts("package", packageNameStr)
+            data = Uri.fromParts("package", packageNameStr, null)
         }
         startActivity(intent)
     }
