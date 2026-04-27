@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
@@ -79,6 +80,7 @@ class ProcessMonitorService : Service() {
         const val CPU_THRESHOLD = 50.0  // Alert if > 50%
         const val RAM_THRESHOLD = 200L   // Alert if > 200MB
         const val MONITOR_INTERVAL_MS = 5_000L
+        const val NOTIFICATION_UPDATE_MS = 15_000L // Update notification every 15s instead of 5s
         const val USAGE_STATS_INTERVAL_MS = 60_000L
 
         private var isRunning = false
@@ -97,6 +99,7 @@ class ProcessMonitorService : Service() {
     private var lastForegroundApp = ""
     private var foregroundAppChangeTime = 0L
     private val appUsageMap = mutableMapOf<String, Long>() // packageName -> usageTimeMs
+    @Volatile private var cachedProcessCount = 0 // Cached from monitor cycle to avoid heavy I/O in notification update
 
     data class ProcessInfo(
         val pid: Int,
@@ -158,6 +161,7 @@ class ProcessMonitorService : Service() {
         super.onDestroy()
         Logger.i(TAG, "ProcessMonitorService onDestroy")
         stopMonitor()
+        serviceScope.cancel()
     }
 
     // ─── Service Lifecycle ────────────────────────────────────────────
@@ -194,7 +198,7 @@ class ProcessMonitorService : Service() {
         notificationUpdateJob = serviceScope.launch {
             while (isActive) {
                 updateNotification()
-                delay(5_000L)
+                delay(NOTIFICATION_UPDATE_MS) // Every 15 seconds instead of 5
             }
         }
 
@@ -215,6 +219,7 @@ class ProcessMonitorService : Service() {
 
     private fun monitorProcesses() {
         val processes = getRunningProcesses()
+        cachedProcessCount = processes.size // Cache for notification updates
         val blacklist = getListFromPrefs(KEY_BLACKLIST)
         val killList = getListFromPrefs(KEY_KILL_LIST)
         val whitelist = getListFromPrefs(KEY_WHITELIST)
@@ -768,7 +773,8 @@ class ProcessMonitorService : Service() {
 
     private fun updateNotification() {
         try {
-            val processCount = getRunningProcesses().size
+            // Use cached process count instead of calling getRunningProcesses() which is I/O heavy
+            val processCount = cachedProcessCount
             val fgApp = if (lastForegroundApp.isNotEmpty()) lastForegroundApp else "None"
             val text = "Processes: $processCount | Foreground: $fgApp"
             val notification = buildNotification(text)

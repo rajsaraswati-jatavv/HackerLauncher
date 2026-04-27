@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
@@ -174,6 +175,7 @@ class NetworkMonitorService : Service() {
         super.onDestroy()
         Logger.i(TAG, "NetworkMonitorService onDestroy")
         stopMonitor()
+        serviceScope.cancel()
     }
 
     // ─── Service Lifecycle ────────────────────────────────────────────

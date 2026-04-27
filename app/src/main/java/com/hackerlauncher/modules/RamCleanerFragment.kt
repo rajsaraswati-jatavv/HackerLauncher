@@ -1,12 +1,15 @@
 package com.hackerlauncher.modules
 
 import android.app.ActivityManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +24,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -69,6 +73,12 @@ class RamCleanerFragment : Fragment() {
     private lateinit var buttonAddWhitelist: Button
     private lateinit var buttonViewWhitelist: Button
 
+    // ========== UPGRADE: New view references ==========
+    private lateinit var buttonSuperBoost: Button
+    private lateinit var buttonDeepHibernation: Button
+    private lateinit var buttonSmartCleanRules: Button
+    private lateinit var textViewPressureDetail: TextView
+
     // State
     private val processList = mutableListOf<RamProcessInfo>()
     private val whitelist = mutableSetOf<String>()
@@ -97,6 +107,16 @@ class RamCleanerFragment : Fragment() {
 
     // Boost score history
     private val boostScoreHistory = mutableListOf<Int>()
+
+    // ========== UPGRADE: New state ==========
+    // Auto-kill rules: packageName -> rule description
+    private val autoKillRules = mutableMapOf<String, String>()
+    // Last RAM boost notification freed bytes
+    private var lastBoostFreedMb = 0L
+    // Deep hibernation active flag
+    private var isDeepHibernationActive = false
+    // Pressure level history for tracking
+    private val pressureHistory = mutableListOf<String>()
 
     data class RamProcessInfo(
         val processName: String,
@@ -135,6 +155,7 @@ class RamCleanerFragment : Fragment() {
         loadWhitelist()
         loadCleanStats()
         loadCleanHistory()
+        loadAutoKillRules()        // UPGRADE
         updateRamInfo()
         startMonitoring()
     }
@@ -143,6 +164,7 @@ class RamCleanerFragment : Fragment() {
         super.onDestroyView()
         stopAutoClean()
         stopMonitoring()
+        isDeepHibernationActive = false
     }
 
     // ==================== Initialization ====================
@@ -174,6 +196,51 @@ class RamCleanerFragment : Fragment() {
         spinnerAutoCleanInterval = view.findViewById(R.id.spinnerAutoCleanInterval)
         buttonAddWhitelist = view.findViewById(R.id.buttonAddWhitelist)
         buttonViewWhitelist = view.findViewById(R.id.buttonViewWhitelist)
+
+        // ========== UPGRADE: Init new views ==========
+        buttonSuperBoost = view.findViewById(R.id.buttonClean) // Reuse clean button style; add dynamically if needed
+        buttonDeepHibernation = view.findViewById(R.id.buttonDeepClean) // Reuse deep clean button; add dynamically
+        buttonSmartCleanRules = view.findViewById(R.id.buttonAddWhitelist) // Reuse; add dynamically
+        textViewPressureDetail = view.findViewById(R.id.textViewPressureLevel) // Reuse; add dynamically
+
+        // Dynamically add upgrade buttons if container exists
+        try {
+            val container = view.findViewById<LinearLayout>(R.id.layoutButtonsContainer)
+            if (container != null) {
+                buttonSuperBoost = Button(requireContext()).apply {
+                    text = "⚡ SUPER BOOST"
+                    setTextColor(0xFFFF0000.toInt())
+                    textSize = 14f
+                    setOnClickListener { performSuperBoost() }
+                }
+                container.addView(buttonSuperBoost)
+
+                buttonDeepHibernation = Button(requireContext()).apply {
+                    text = "🛑 DEEP HIBERNATION"
+                    setTextColor(0xFFFF8800.toInt())
+                    textSize = 14f
+                    setOnClickListener { showDeepHibernationDialog() }
+                }
+                container.addView(buttonDeepHibernation)
+
+                buttonSmartCleanRules = Button(requireContext()).apply {
+                    text = "📋 SMART CLEAN RULES"
+                    setTextColor(0xFF00FFFF.toInt())
+                    textSize = 14f
+                    setOnClickListener { showSmartCleanRulesDialog() }
+                }
+                container.addView(buttonSmartCleanRules)
+
+                textViewPressureDetail = TextView(requireContext()).apply {
+                    text = "Pressure: --"
+                    setTextColor(0xFF888888.toInt())
+                    textSize = 12f
+                }
+                container.addView(textViewPressureDetail)
+            }
+        } catch (_: Exception) {
+            // Fallback: buttons are already assigned to existing views
+        }
     }
 
     private fun setupRecyclerView() {
@@ -185,7 +252,8 @@ class RamCleanerFragment : Fragment() {
     }
 
     private fun setupSpinner() {
-        val intervals = arrayOf("15 min", "30 min", "1 hour", "2 hours", "Custom")
+        // UPGRADE: Extended intervals: 15min, 30min, 1hr, 3hr, 6hr, Custom
+        val intervals = arrayOf("15 min", "30 min", "1 hour", "3 hours", "6 hours", "Custom")
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, intervals)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerAutoCleanInterval.adapter = adapter
@@ -197,7 +265,8 @@ class RamCleanerFragment : Fragment() {
             15 * 60 * 1000L -> 0
             30 * 60 * 1000L -> 1
             60 * 60 * 1000L -> 2
-            120 * 60 * 1000L -> 3
+            180 * 60 * 1000L -> 3
+            360 * 60 * 1000L -> 4
             else -> 1
         }
         spinnerAutoCleanInterval.setSelection(index)
@@ -332,6 +401,12 @@ class RamCleanerFragment : Fragment() {
 
         // Update process count
         textViewProcessCount.text = "Processes: ${processList.size}"
+
+        // ========== UPGRADE: Apply auto-kill rules ==========
+        applyAutoKillRules()
+
+        // ========== UPGRADE: Update pressure detail ==========
+        updatePressureDetail(percentUsed, availableRam, totalRam, threshold)
     }
 
     // ==================== CPU Usage ====================
@@ -478,6 +553,10 @@ class RamCleanerFragment : Fragment() {
 
         textViewPressureLevel.text = "Memory Pressure: $level"
         textViewPressureLevel.setTextColor(color)
+
+        // UPGRADE: Track pressure history
+        pressureHistory.add(level)
+        if (pressureHistory.size > 30) pressureHistory.removeAt(0)
     }
 
     // ==================== Clean Operations ====================
@@ -548,6 +627,9 @@ class RamCleanerFragment : Fragment() {
                 isCleaning = false
                 setCleaningState(false)
                 updateRamInfo()
+
+                // UPGRADE: RAM Boost Notification
+                sendRamBoostNotification(actuallyFreed, killedCount, cleanType)
 
                 val scoreBoost = Random.nextInt(5, 20)
                 Toast.makeText(
@@ -629,6 +711,9 @@ class RamCleanerFragment : Fragment() {
                 setCleaningState(false)
                 updateRamInfo()
 
+                // UPGRADE: RAM Boost Notification
+                sendRamBoostNotification(actuallyFreed, killedCount, "DEEP")
+
                 Toast.makeText(
                     requireContext(),
                     "DEEP Clean Complete: Killed $killedCount | Freed ${formatMemory(actuallyFreed)}",
@@ -689,6 +774,8 @@ class RamCleanerFragment : Fragment() {
                 setCleaningState(false)
                 updateRamInfo()
 
+                sendRamBoostNotification(actuallyFreed, killedCount, "KILL_ALL")
+
                 Toast.makeText(
                     requireContext(),
                     "Killed All BG: $killedCount processes | Freed ${formatMemory(actuallyFreed)}",
@@ -745,7 +832,11 @@ class RamCleanerFragment : Fragment() {
                         val isEmptyProcess = processInfo.importance >= ActivityManager.RunningAppProcessInfo.IMPORTANCE_EMPTY
                         val isHighPressure = (beforeAvailable.toFloat() / totalMem.toFloat()) < 0.25f
 
-                        if (isHeavyProcess || isCachedProcess || isEmptyProcess || isHighPressure) {
+                        // UPGRADE: Also check auto-kill rules
+                        val matchesAutoKillRule = autoKillRules.containsKey(basePkg) ||
+                                autoKillRules.containsKey(processInfo.processName)
+
+                        if (isHeavyProcess || isCachedProcess || isEmptyProcess || isHighPressure || matchesAutoKillRule) {
                             activityManager.killBackgroundProcesses(processInfo.processName)
                             killedCount++
                         }
@@ -781,6 +872,8 @@ class RamCleanerFragment : Fragment() {
                 isCleaning = false
                 setCleaningState(false)
                 updateRamInfo()
+
+                sendRamBoostNotification(actuallyFreed, killedCount, "SMART")
 
                 Toast.makeText(
                     requireContext(),
@@ -900,6 +993,10 @@ class RamCleanerFragment : Fragment() {
         buttonSmartClean.isEnabled = !cleaning
         buttonHibernate.isEnabled = !cleaning
 
+        // UPGRADE: Also disable super boost and deep hibernation buttons
+        try { buttonSuperBoost.isEnabled = !cleaning } catch (_: Exception) {}
+        try { buttonDeepHibernation.isEnabled = !cleaning } catch (_: Exception) {}
+
         if (cleaning) {
             buttonClean.text = "CLEANING..."
             progressBarRam.secondaryProgress = progressBarRam.progress
@@ -1009,12 +1106,14 @@ class RamCleanerFragment : Fragment() {
     }
 
     private fun readSpinnerInterval() {
+        // UPGRADE: Extended with 3hr and 6hr options
         autoCleanInterval = when (spinnerAutoCleanInterval.selectedItemPosition) {
             0 -> 15 * 60 * 1000L
             1 -> 30 * 60 * 1000L
             2 -> 60 * 60 * 1000L
-            3 -> 120 * 60 * 1000L
-            4 -> showCustomIntervalDialog()
+            3 -> 180 * 60 * 1000L  // 3hr
+            4 -> 360 * 60 * 1000L  // 6hr
+            5 -> showCustomIntervalDialog()
             else -> 30 * 60 * 1000L
         }
     }
@@ -1057,6 +1156,8 @@ class RamCleanerFragment : Fragment() {
             30 * 60 * 1000L -> "30min"
             60 * 60 * 1000L -> "1hr"
             120 * 60 * 1000L -> "2hr"
+            180 * 60 * 1000L -> "3hr"
+            360 * 60 * 1000L -> "6hr"
             else -> "${autoCleanInterval / 60000}min"
         }
 
@@ -1374,6 +1475,413 @@ class RamCleanerFragment : Fragment() {
         }
     }
 
+    // ==================== UPGRADE: Super Boost ====================
+
+    /**
+     * SUPER BOOST: Kills ALL non-essential processes in one tap.
+     * Force-stops background apps to free maximum RAM.
+     */
+    private fun performSuperBoost() {
+        if (isCleaning) return
+        isCleaning = true
+        setCleaningState(true)
+
+        lifecycleScope.launch {
+            val activityManager = requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            var killedCount = 0
+
+            val beforeMemory = ActivityManager.MemoryInfo()
+            activityManager.getMemoryInfo(beforeMemory)
+            val beforeAvailable = beforeMemory.availMem
+
+            withContext(Dispatchers.IO) {
+                val processes = activityManager.runningAppProcesses ?: return@withContext
+                for (processInfo in processes) {
+                    val basePkg = processInfo.processName.substringBefore(":")
+                    if (whitelist.contains(processInfo.processName)) continue
+                    if (whitelist.contains(basePkg)) continue
+
+                    // Super Boost kills everything except foreground
+                    if (processInfo.importance > ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                        try {
+                            activityManager.killBackgroundProcesses(processInfo.processName)
+                            // Also try force-stop for maximum effect
+                            try {
+                                Runtime.getRuntime().exec(arrayOf("am", "force-stop", basePkg)).waitFor()
+                            } catch (_: Exception) {}
+                            killedCount++
+                        } catch (_: Exception) {}
+                    }
+                }
+
+                // Clean all caches
+                try {
+                    val cacheDir = requireContext().cacheDir
+                    if (cacheDir.exists()) deleteDir(cacheDir)
+                    val externalCacheDir = requireContext().externalCacheDir
+                    if (externalCacheDir != null && externalCacheDir.exists()) deleteDir(externalCacheDir)
+                } catch (_: Exception) {}
+            }
+
+            delay(1500)
+
+            withContext(Dispatchers.Main) {
+                val afterMemory = ActivityManager.MemoryInfo()
+                activityManager.getMemoryInfo(afterMemory)
+                val afterAvailable = afterMemory.availMem
+                val actuallyFreed = max(0L, afterAvailable - beforeAvailable)
+
+                totalCleanedBytes += actuallyFreed
+                cleanCount++
+                saveCleanStats()
+
+                addCleanHistoryEntry(actuallyFreed, killedCount, "SUPER_BOOST")
+                updateCleanHistoryDisplay()
+
+                isCleaning = false
+                setCleaningState(false)
+                updateRamInfo()
+
+                sendRamBoostNotification(actuallyFreed, killedCount, "SUPER_BOOST")
+
+                Toast.makeText(
+                    requireContext(),
+                    "⚡ SUPER BOOST: Killed $killedCount | Freed ${formatMemory(actuallyFreed)}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    // ==================== UPGRADE: Deep Hibernation Mode ====================
+
+    /**
+     * Deep Hibernation Mode: Force-stops background apps to free maximum RAM.
+     * Persists hibernation state so apps stay killed until manually reopened.
+     */
+    private fun showDeepHibernationDialog() {
+        val bgProcesses = processList.filter {
+            it.importance > ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND_SERVICE &&
+            !whitelist.contains(it.processName) &&
+            !whitelist.contains(it.packageName)
+        }
+
+        if (bgProcesses.isEmpty()) {
+            Toast.makeText(requireContext(), "No apps to hibernate", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val names = bgProcesses.map {
+            "${it.packageName} (${formatMemory(it.memoryUsage)})"
+        }.toTypedArray()
+        val selected = BooleanArray(names.size) { true }
+
+        AlertDialog.Builder(requireContext(), R.style.DarkDialogTheme)
+            .setTitle("🛑 Deep Hibernation Mode")
+            .setMessage("Force-stop selected apps to free MAXIMUM RAM.\nApps will NOT restart automatically.\nSelect apps to hibernate:")
+            .setMultiChoiceItems(names, selected) { _, _, _ -> }
+            .setPositiveButton("DEEP HIBERNATE") { _, _ ->
+                performDeepHibernation(bgProcesses.filterIndexed { index, _ -> selected[index] })
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun performDeepHibernation(processes: List<RamProcessInfo>) {
+        if (isCleaning) return
+        isCleaning = true
+        setCleaningState(true)
+        isDeepHibernationActive = true
+
+        lifecycleScope.launch {
+            val activityManager = requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            var killedCount = 0
+
+            val beforeMemory = ActivityManager.MemoryInfo()
+            activityManager.getMemoryInfo(beforeMemory)
+            val beforeAvailable = beforeMemory.availMem
+
+            withContext(Dispatchers.IO) {
+                for (processInfo in processes) {
+                    try {
+                        // Kill background processes
+                        activityManager.killBackgroundProcesses(processInfo.packageName)
+                        // Force-stop for deep hibernation
+                        Runtime.getRuntime().exec(arrayOf("am", "force-stop", processInfo.packageName)).waitFor()
+                        killedCount++
+                    } catch (_: Exception) {}
+                }
+            }
+
+            delay(1000)
+
+            withContext(Dispatchers.Main) {
+                val afterMemory = ActivityManager.MemoryInfo()
+                activityManager.getMemoryInfo(afterMemory)
+                val afterAvailable = afterMemory.availMem
+                val actuallyFreed = max(0L, afterAvailable - beforeAvailable)
+
+                totalCleanedBytes += actuallyFreed
+                cleanCount++
+                saveCleanStats()
+
+                addCleanHistoryEntry(actuallyFreed, killedCount, "DEEP_HIBERNATION")
+                updateCleanHistoryDisplay()
+
+                isCleaning = false
+                isDeepHibernationActive = false
+                setCleaningState(false)
+                updateRamInfo()
+
+                sendRamBoostNotification(actuallyFreed, killedCount, "DEEP_HIBERNATION")
+
+                Toast.makeText(
+                    requireContext(),
+                    "🛑 Deep Hibernation: $killedCount apps force-stopped | Freed ${formatMemory(actuallyFreed)}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    // ==================== UPGRADE: Smart Clean Rules ====================
+
+    /**
+     * Smart Clean Rules: Auto-kill rules for specific apps + whitelist management.
+     */
+    private fun showSmartCleanRulesDialog() {
+        val options = arrayOf(
+            "➕ Add Auto-Kill Rule (always kill this app)",
+            "➖ Remove Auto-Kill Rule",
+            "📋 View Current Rules",
+            "🛡️ Add to Whitelist (never kill)",
+            "🗑️ Remove from Whitelist"
+        )
+
+        AlertDialog.Builder(requireContext(), R.style.DarkDialogTheme)
+            .setTitle("📋 Smart Clean Rules")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> showAddAutoKillRuleDialog()
+                    1 -> showRemoveAutoKillRuleDialog()
+                    2 -> showCurrentRulesDialog()
+                    3 -> showAddWhitelistDialog()
+                    4 -> showWhitelistDialog()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showAddAutoKillRuleDialog() {
+        val input = EditText(requireContext()).apply {
+            hint = "com.example.app (package name)"
+            setTextColor(0xFF00FF00.toInt())
+            setHintTextColor(0xFF888888.toInt())
+        }
+
+        // Show running process suggestions
+        val bgProcesses = processList.map { it.packageName }.distinct()
+            .filter { !autoKillRules.containsKey(it) && !whitelist.contains(it) }
+
+        val pad = (8 * resources.displayMetrics.density).toInt()
+        val layout = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(pad, pad, pad, pad)
+            addView(input)
+        }
+
+        if (bgProcesses.isNotEmpty()) {
+            val label = TextView(requireContext()).apply {
+                text = "Running apps (tap to add auto-kill rule):"
+                setTextColor(0xFFAAAAAA.toInt())
+                setPadding(0, pad, 0, 0)
+            }
+            layout.addView(label)
+
+            for (pkg in bgProcesses.take(8)) {
+                val btn = Button(requireContext()).apply {
+                    text = pkg
+                    setTextColor(0xFFFF4444.toInt())
+                    textSize = 11f
+                    setOnClickListener {
+                        autoKillRules[pkg] = "Auto-kill: always kill during any clean"
+                        saveAutoKillRules()
+                        Toast.makeText(requireContext(), "Auto-kill rule added: $pkg", Toast.LENGTH_SHORT).show()
+                        (parent as? AlertDialog)?.dismiss()
+                    }
+                }
+                layout.addView(btn)
+            }
+        }
+
+        AlertDialog.Builder(requireContext(), R.style.DarkDialogTheme)
+            .setTitle("Add Auto-Kill Rule")
+            .setMessage("Apps with auto-kill rules will ALWAYS be killed during any clean operation.")
+            .setView(layout)
+            .setPositiveButton("Add Rule") { _, _ ->
+                val pkg = input.text.toString().trim()
+                if (pkg.isNotEmpty()) {
+                    autoKillRules[pkg] = "Auto-kill: always kill during any clean"
+                    saveAutoKillRules()
+                    Toast.makeText(requireContext(), "Auto-kill rule added: $pkg", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showRemoveAutoKillRuleDialog() {
+        if (autoKillRules.isEmpty()) {
+            Toast.makeText(requireContext(), "No auto-kill rules defined", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val items = autoKillRules.keys.toTypedArray()
+        val selected = BooleanArray(items.size) { true }
+
+        AlertDialog.Builder(requireContext(), R.style.DarkDialogTheme)
+            .setTitle("Remove Auto-Kill Rules (uncheck to remove)")
+            .setMultiChoiceItems(items, selected) { _, which, isChecked ->
+                if (!isChecked) {
+                    autoKillRules.remove(items[which])
+                }
+            }
+            .setPositiveButton("Done") { _, _ ->
+                saveAutoKillRules()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showCurrentRulesDialog() {
+        val message = buildString {
+            append("=== AUTO-KILL RULES ===\n")
+            if (autoKillRules.isEmpty()) {
+                append("No auto-kill rules defined.\n")
+            } else {
+                for ((pkg, rule) in autoKillRules) {
+                    append("🔴 $pkg: $rule\n")
+                }
+            }
+            append("\n=== WHITELIST (Never Kill) ===\n")
+            if (whitelist.isEmpty()) {
+                append("No whitelist entries.\n")
+            } else {
+                for (pkg in whitelist) {
+                    append("🟢 $pkg\n")
+                }
+            }
+        }
+
+        AlertDialog.Builder(requireContext(), R.style.DarkDialogTheme)
+            .setTitle("📋 Current Smart Clean Rules")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
+    private fun applyAutoKillRules() {
+        if (autoKillRules.isEmpty() || isCleaning) return
+        val activityManager = requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val processes = activityManager.runningAppProcesses ?: return
+
+        for (processInfo in processes) {
+            val basePkg = processInfo.processName.substringBefore(":")
+            if (autoKillRules.containsKey(basePkg) || autoKillRules.containsKey(processInfo.processName)) {
+                if (processInfo.importance > ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    try {
+                        activityManager.killBackgroundProcesses(processInfo.processName)
+                    } catch (_: Exception) {}
+                }
+            }
+        }
+    }
+
+    private fun saveAutoKillRules() {
+        val prefs = requireContext().getSharedPreferences("ram_cleaner_prefs", Context.MODE_PRIVATE)
+        prefs.edit().putStringSet("auto_kill_rules", autoKillRules.keys).apply()
+    }
+
+    private fun loadAutoKillRules() {
+        val prefs = requireContext().getSharedPreferences("ram_cleaner_prefs", Context.MODE_PRIVATE)
+        val rules = prefs.getStringSet("auto_kill_rules", emptySet()) ?: emptySet()
+        autoKillRules.clear()
+        for (pkg in rules) {
+            autoKillRules[pkg] = "Auto-kill: always kill during any clean"
+        }
+    }
+
+    // ==================== UPGRADE: RAM Boost Notification ====================
+
+    /**
+     * Show notification after cleaning with freed MB count.
+     */
+    private fun sendRamBoostNotification(freedBytes: Long, killedCount: Int, cleanType: String) {
+        try {
+            val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val channelId = "ram_boost_channel"
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel = NotificationChannel(
+                    channelId,
+                    "RAM Boost Notifications",
+                    NotificationManager.IMPORTANCE_DEFAULT
+                ).apply {
+                    description = "Notifications after RAM cleaning"
+                    setShowBadge(true)
+                }
+                notificationManager.createNotificationChannel(channel)
+            }
+
+            val freedMb = freedBytes / (1024.0 * 1024.0)
+            lastBoostFreedMb = freedBytes / (1024 * 1024)
+
+            val notification = NotificationCompat.Builder(requireContext(), channelId)
+                .setContentTitle("⚡ RAM Boost Complete")
+                .setContentText("$cleanType: Freed ${"%.1f".format(freedMb)} MB ($killedCount processes killed)")
+                .setStyle(NotificationCompat.BigTextStyle()
+                    .bigText("$cleanType Clean completed!\nFreed: ${formatMemory(freedBytes)}\nProcesses killed: $killedCount\nBoost Score: $currentBoostScore%"))
+                .setSmallIcon(android.R.drawable.ic_menu_delete)
+                .setAutoCancel(true)
+                .setCategory(NotificationCompat.CATEGORY_STATUS)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .build()
+
+            notificationManager.notify(4001, notification)
+        } catch (_: Exception) {
+            // Notification failed silently
+        }
+    }
+
+    // ==================== UPGRADE: Pressure Detail ====================
+
+    /**
+     * Memory pressure level indicator with detailed info (LOW/MEDIUM/HIGH/CRITICAL).
+     */
+    private fun updatePressureDetail(usedPercent: Int, availableRam: Long, totalRam: Long, threshold: Long) {
+        try {
+            val pressureRatio = availableRam.toFloat() / totalRam.toFloat()
+            val thresholdRatio = availableRam.toFloat() / threshold.toFloat()
+
+            val detail = buildString {
+                append("Pressure Detail: ")
+                append("${(pressureRatio * 100).toInt()}% free | ")
+                append("Threshold gap: ${formatMemory(availableRam - threshold)} | ")
+                append("Critical in: ${if (thresholdRatio > 2) "Safe" else "Near limit"}")
+            }
+
+            textViewPressureDetail.text = detail
+            textViewPressureDetail.setTextColor(
+                when {
+                    usedPercent > 85 -> 0xFFFF0000.toInt()
+                    usedPercent > 60 -> 0xFFFFFF00.toInt()
+                    else -> 0xFF00FF00.toInt()
+                }
+            )
+        } catch (_: Exception) {}
+    }
+
     // ==================== Custom Graph View ====================
 
     inner class RamGraphView @JvmOverloads constructor(
@@ -1612,9 +2120,10 @@ class RamCleanerFragment : Fragment() {
             val cpuStr = if (item.cpuUsage > 0f) " | CPU: ${item.cpuUsage.toInt()}%" else ""
             val isWhitelisted = whitelist.contains(item.processName) || whitelist.contains(item.packageName)
             val whitelistTag = if (isWhitelisted) " [WL]" else ""
+            val autoKillTag = if (autoKillRules.containsKey(item.packageName) || autoKillRules.containsKey(item.processName)) " [AK]" else ""
 
             holder.textViewProcessDetails.text =
-                "PID:${item.pid} | ${formatMemory(item.memoryUsage)}$cpuStr | $importanceStr$whitelistTag"
+                "PID:${item.pid} | ${formatMemory(item.memoryUsage)}$cpuStr | $importanceStr$whitelistTag$autoKillTag"
 
             val importanceColor = when {
                 item.importance <= ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND -> 0xFF00FF00.toInt()

@@ -35,31 +35,31 @@ class BootReceiver : BroadcastReceiver() {
         val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
 
         // Start core service immediately
-        tryStartService(context, HackerForegroundService::class.java, "ACTION_START")
+        tryStartService(context, HackerForegroundService::class.java, HackerForegroundService.ACTION_START)
 
         // Stagger the rest
         mainHandler.postDelayed({
-            tryStartService(context, DaemonService::class.java, "ACTION_START")
+            tryStartService(context, DaemonService::class.java, DaemonService.ACTION_START)
         }, 3000L)
 
         mainHandler.postDelayed({
-            tryStartService(context, WatchdogService::class.java, "ACTION_START")
+            tryStartService(context, WatchdogService::class.java, WatchdogService.ACTION_START)
         }, 6000L)
 
         mainHandler.postDelayed({
-            tryStartService(context, KeepAliveService::class.java, "ACTION_START")
+            tryStartService(context, KeepAliveService::class.java, KeepAliveService.ACTION_START)
         }, 9000L)
 
         mainHandler.postDelayed({
-            tryStartService(context, NetworkMonitorService::class.java, "ACTION_START")
+            tryStartService(context, NetworkMonitorService::class.java, NetworkMonitorService.ACTION_START)
         }, 12000L)
 
         mainHandler.postDelayed({
-            tryStartService(context, ProcessMonitorService::class.java, "ACTION_START")
+            tryStartService(context, ProcessMonitorService::class.java, ProcessMonitorService.ACTION_START)
         }, 15000L)
 
         mainHandler.postDelayed({
-            tryStartService(context, SystemMonitorService::class.java, "ACTION_START")
+            tryStartService(context, SystemMonitorService::class.java, SystemMonitorService.ACTION_START)
         }, 18000L)
     }
 

@@ -23,6 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.RandomAccessFile
@@ -60,6 +61,9 @@ class DaemonService : Service() {
         const val HEALTH_CHECK_INTERVAL_MS = 30_000L
         const val HEARTBEAT_INTERVAL_MS = 60_000L
         const val ALARM_INTERVAL_MS = 5 * 60_000L
+        const val RESTART_RATE_LIMIT_MS = 30_000L // Minimum 30 seconds between restart attempts per service
+        const val PREFS_NAME = "daemon_service_prefs"
+        const val KEY_PREFIX_RESTART = "last_restart_"
 
         private var isRunning = false
 
@@ -72,6 +76,7 @@ class DaemonService : Service() {
     private var healthCheckJob: Job? = null
     private var heartbeatJob: Job? = null
     private var notificationUpdateJob: Job? = null
+    private var wakeLockRenewalJob: Job? = null
 
     private val alarmReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -128,6 +133,7 @@ class DaemonService : Service() {
         super.onDestroy()
         Logger.i(TAG, "DaemonService onDestroy")
         stopDaemon()
+        serviceScope.cancel()
         try {
             unregisterReceiver(alarmReceiver)
         } catch (e: Exception) {
@@ -171,6 +177,14 @@ class DaemonService : Service() {
             }
         }
 
+        // Periodic WakeLock re-acquisition (every 6 hours, before 12-hour expiry)
+        wakeLockRenewalJob = serviceScope.launch {
+            while (isActive) {
+                delay(6 * 60 * 60 * 1000L) // 6 hours
+                renewWakeLock()
+            }
+        }
+
         Logger.i(TAG, "DaemonService started successfully")
     }
 
@@ -180,6 +194,7 @@ class DaemonService : Service() {
         healthCheckJob?.cancel()
         heartbeatJob?.cancel()
         notificationUpdateJob?.cancel()
+        wakeLockRenewalJob?.cancel()
         releaseWakeLock()
         cancelAlarmKeepAlive()
         stopForeground(STOP_FOREGROUND_REMOVE)
@@ -215,6 +230,17 @@ class DaemonService : Service() {
         }
     }
 
+    private fun renewWakeLock() {
+        try {
+            // Release old WakeLock and acquire a new one before the 12-hour timeout expires
+            releaseWakeLock()
+            acquireWakeLock()
+            Logger.i(TAG, "WakeLock renewed (re-acquired before 12-hour expiry)")
+        } catch (e: Exception) {
+            Logger.e(TAG, "Failed to renew WakeLock", e)
+        }
+    }
+
     private fun performHealthCheck() {
         Logger.d(TAG, "Performing health check...")
 
@@ -239,6 +265,7 @@ class DaemonService : Service() {
 
     private fun restartDeadServices() {
         val servicesToMonitor = listOf(
+            HackerForegroundService::class.java,
             WatchdogService::class.java,
             KeepAliveService::class.java,
             NetworkMonitorService::class.java,
@@ -247,14 +274,27 @@ class DaemonService : Service() {
             SystemMonitorService::class.java
         )
 
+        val restartPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
         for (serviceClass in servicesToMonitor) {
             if (!isServiceRunningCompat(serviceClass)) {
-                Logger.w(TAG, "Service ${serviceClass.simpleName} is dead, restarting...")
+                val serviceName = serviceClass.simpleName
+                val lastRestart = restartPrefs.getLong(KEY_PREFIX_RESTART + serviceName, 0L)
+                val elapsed = System.currentTimeMillis() - lastRestart
+
+                if (elapsed < RESTART_RATE_LIMIT_MS) {
+                    Logger.d(TAG, "Rate-limited: skipping restart of $serviceName (${elapsed}ms since last attempt)")
+                    continue
+                }
+
+                Logger.w(TAG, "Service $serviceName is dead, restarting...")
                 try {
                     val intent = Intent(this, serviceClass)
                     startForegroundService(intent)
+                    // Record restart time for rate-limiting
+                    restartPrefs.edit().putLong(KEY_PREFIX_RESTART + serviceName, System.currentTimeMillis()).apply()
                 } catch (e: Exception) {
-                    Logger.e(TAG, "Failed to restart ${serviceClass.simpleName}", e)
+                    Logger.e(TAG, "Failed to restart $serviceName", e)
                 }
             }
         }

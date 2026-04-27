@@ -22,6 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 /**
@@ -46,6 +47,9 @@ class WatchdogService : Service() {
 
         const val CHECK_INTERVAL_MS = 60_000L
         const val ALARM_INTERVAL_MS = 120_000L
+        const val RESTART_RATE_LIMIT_MS = 30_000L // Minimum 30 seconds between restart attempts per service
+        const val PREFS_NAME = "watchdog_service_prefs"
+        const val KEY_PREFIX_RESTART = "last_restart_"
 
         private var isRunning = false
 
@@ -65,6 +69,7 @@ class WatchdogService : Service() {
     )
 
     private val watchedServices = listOf(
+        WatchedService(HackerForegroundService::class.java, "HackerForegroundService"),
         WatchedService(DaemonService::class.java, "DaemonService"),
         WatchedService(KeepAliveService::class.java, "KeepAliveService"),
         WatchedService(NetworkMonitorService::class.java, "NetworkMonitorService"),
@@ -135,6 +140,7 @@ class WatchdogService : Service() {
         super.onDestroy()
         Logger.i(TAG, "WatchdogService onDestroy")
         stopWatchdog()
+        serviceScope.cancel()
         try {
             unregisterReceiver(selfHealReceiver)
         } catch (e: Exception) {
@@ -226,10 +232,22 @@ class WatchdogService : Service() {
     }
 
     private fun restartService(serviceClass: Class<*>, name: String) {
+        // Rate-limit: check if we restarted this service recently
+        val restartPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        val lastRestart = restartPrefs.getLong(KEY_PREFIX_RESTART + name, 0L)
+        val elapsed = System.currentTimeMillis() - lastRestart
+
+        if (elapsed < RESTART_RATE_LIMIT_MS) {
+            Logger.d(TAG, "Rate-limited: skipping restart of $name (${elapsed}ms since last attempt)")
+            return
+        }
+
         try {
             val intent = Intent(this, serviceClass)
             startForegroundService(intent)
             restartCount++
+            // Record restart time for rate-limiting
+            restartPrefs.edit().putLong(KEY_PREFIX_RESTART + name, System.currentTimeMillis()).apply()
             Logger.i(TAG, "$name restart initiated (total restarts: $restartCount)")
         } catch (e: Exception) {
             Logger.e(TAG, "Failed to restart $name", e)

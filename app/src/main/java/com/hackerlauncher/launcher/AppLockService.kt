@@ -96,6 +96,12 @@ class AppLockService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Handle intruder photo action even if service is already running
+        if (intent?.action == ACTION_TAKE_INTRUDER_PHOTO) {
+            takeIntruderPhoto()
+            return START_STICKY
+        }
+
         if (isRunning) return START_STICKY
 
         startForeground(NOTIFICATION_ID, buildNotification())
@@ -300,6 +306,7 @@ class AppLockService : Service() {
     companion object {
         const val ACTION_START = "com.hackerlauncher.APP_LOCK_START"
         const val ACTION_STOP = "com.hackerlauncher.APP_LOCK_STOP"
+        const val ACTION_TAKE_INTRUDER_PHOTO = "TAKE_INTRUDER_PHOTO"
 
         fun hashPin(pin: String): String {
             val digest = MessageDigest.getInstance("SHA-256")
@@ -462,7 +469,7 @@ class LockScreenActivity : AppCompatActivity() {
                 // Take intruder photo
                 // Trigger intruder photo through the running service
                 val photoIntent = Intent(this, AppLockService::class.java).apply {
-                    action = "TAKE_INTRUDER_PHOTO"
+                    action = AppLockService.ACTION_TAKE_INTRUDER_PHOTO
                 }
                 startService(photoIntent)
             }

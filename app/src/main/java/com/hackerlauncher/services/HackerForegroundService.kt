@@ -21,6 +21,10 @@ class HackerForegroundService : Service() {
         const val NOTIFICATION_ID = 1008
         const val ACTION_START = "com.hackerlauncher.START_SERVICE"
         const val ACTION_STOP = "com.hackerlauncher.STOP_SERVICE"
+
+        private var isRunning = false
+
+        fun isServiceRunning(): Boolean = isRunning
     }
 
     private var wakeLock: PowerManager.WakeLock? = null
@@ -40,6 +44,7 @@ class HackerForegroundService : Service() {
             }
         }
 
+        isRunning = true
         val notification = buildNotification()
         startForeground(NOTIFICATION_ID, notification)
 
@@ -54,6 +59,7 @@ class HackerForegroundService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        isRunning = false
         releaseWakeLock()
         Logger.log("HackerForegroundService destroyed")
     }

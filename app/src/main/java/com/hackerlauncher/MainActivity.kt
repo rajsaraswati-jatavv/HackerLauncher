@@ -35,7 +35,9 @@ class MainActivity : AppCompatActivity() {
     private val logger = Logger
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
+    // 78 fragments total - original 47 + 31 new
     private val fragmentTags = arrayOf(
+        // Original 47
         "home", "drawer", "search", "quicksettings", "weather",
         "calculator", "notes", "todo", "deviceinfo",
         "clipboard", "screenrec", "audiorec", "flashlight",
@@ -46,10 +48,19 @@ class MainActivity : AppCompatActivity() {
         "terminal", "network", "osint", "crypto", "web",
         "anonymity", "files", "automation", "chat",
         "root", "wifarsenal", "subnetscan", "password", "bluetooth",
-        "cpumonitor", "netspeed", "appmgr", "datausage"
+        "cpumonitor", "netspeed", "appmgr", "datausage",
+        // 31 NEW features
+        "vpn", "portscan", "dns", "ipgeo", "whois",
+        "ssl", "httphead", "mac", "packet", "connlog",
+        "wifipass", "sip", "netboost",
+        "antitheft", "intruder", "perman", "deeplink", "honeypot",
+        "vault", "panic", "fakeloc", "pinapp",
+        "apkext", "sensor", "dimmer", "notifhist", "callrec",
+        "appclone", "devadmin", "revimg", "metadata"
     )
 
     private val tabLabels = listOf(
+        // Original 47
         "Home", "Apps", "Search", "Quick", "Wthr",
         "Calc", "Notes", "Todo", "DevI",
         "Clip", "Rec", "Audio", "Flash",
@@ -60,7 +71,15 @@ class MainActivity : AppCompatActivity() {
         "Term", "Net", "OSINT", "Crypt", "Web",
         "Anon", "Files", "Auto", "Chat",
         "Root", "WiFi", "Sub", "Pass", "BT",
-        "CPU", "NetS", "AppM", "Data"
+        "CPU", "NetS", "AppM", "Data",
+        // 31 NEW tabs
+        "VPN", "Port", "DNS", "IP", "Whois",
+        "SSL", "HTTP", "MAC", "Pkt", "Conn",
+        "WPass", "SIP", "Boost",
+        "AntiT", "Intr", "Perm", "Deep", "Honey",
+        "Vault", "Panic", "Fake", "Pin",
+        "APK", "Sensor", "Dim", "Notif", "CallR",
+        "Clone", "DevAd", "RevImg", "Meta"
     )
 
     private lateinit var gestureDetector: GestureDetector
@@ -107,7 +126,6 @@ class MainActivity : AppCompatActivity() {
         scheduleAutoUpgradeCheck()
 
         // Services are started by HackerApp - don't start them again here
-        // Just start optional services based on prefs
         startOptionalServices()
 
         startLogUpdater()
@@ -140,7 +158,7 @@ class MainActivity : AppCompatActivity() {
     private fun showDisclaimer() {
         AlertDialog.Builder(this)
             .setTitle("DISCLAIMER")
-            .setMessage("HackerLauncher v10.0 CRASH-FIX is designed for EDUCATIONAL and AUTHORIZED TESTING purposes only.\n\n" +
+            .setMessage("HackerLauncher v12.0 ULTIMATE is designed for EDUCATIONAL and AUTHORIZED TESTING purposes only.\n\n" +
                 "By using this application, you agree that:\n\n" +
                 "1. You will ONLY use these tools on systems you own or have explicit permission to test.\n" +
                 "2. You are solely responsible for any actions performed using this application.\n" +
@@ -155,7 +173,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateGreeting() {
         try {
-            val userName = FirebaseAuthManager.getUserName() // Safe - won't crash
+            val userName = FirebaseAuthManager.getUserName()
             val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
             val greeting = when (hour) { in 0..5 -> "Good night"; in 6..11 -> "Good morning"; in 12..17 -> "Good afternoon"; else -> "Good evening" }
             tvGreeting.text = "$greeting, $userName"
@@ -175,6 +193,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createFragment(index: Int): Fragment = when (index) {
+        // Original 47 fragments
         0 -> HomeLauncherFragment()
         1 -> AppDrawerFragment()
         2 -> SearchFragment()
@@ -222,6 +241,38 @@ class MainActivity : AppCompatActivity() {
         44 -> NetworkSpeedMonitorFragment()
         45 -> AppManagerFragment()
         46 -> DataUsageTrackerFragment()
+        // 31 NEW features (index 47-77)
+        47 -> VpnMonitorFragment()
+        48 -> PortScannerFragment()
+        49 -> DnsChangerFragment()
+        50 -> IpGeolocationFragment()
+        51 -> WhoisLookupFragment()
+        52 -> SslCertificateCheckerFragment()
+        53 -> HttpHeaderInspectorFragment()
+        54 -> MacAddressChangerFragment()
+        55 -> PacketCaptureFragment()
+        56 -> ConnectionLoggerFragment()
+        57 -> WifiPasswordViewerFragment()
+        58 -> SipScannerFragment()
+        59 -> NetworkBoosterFragment()
+        60 -> AntiTheftFragment()
+        61 -> IntruderSelfieFragment()
+        62 -> PermissionAnalyzerFragment()
+        63 -> DeepLinkScannerFragment()
+        64 -> HoneypotDetectorFragment()
+        65 -> SecureVaultFragment()
+        66 -> PanicButtonFragment()
+        67 -> FakeLocationFragment()
+        68 -> ScreenPinningFragment()
+        69 -> ApkExtractorFragment()
+        70 -> SensorBoxFragment()
+        71 -> ScreenDimmerFragment()
+        72 -> NotificationHistoryFragment()
+        73 -> CallRecorderFragment()
+        74 -> AppClonerFragment()
+        75 -> DeviceAdminManagerFragment()
+        76 -> ReverseImageSearchFragment()
+        77 -> MetadataExtractorFragment()
         else -> TerminalFragment()
     }
 
@@ -366,7 +417,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() { super.onResume(); updateGreeting() }
     override fun onDestroy() { super.onDestroy(); scope.cancel() }
 
-    // Inner fragment wrappers
+    // Inner fragment wrappers for launcher features
     class HomeLauncherFragment : androidx.fragment.app.Fragment() {
         override fun onCreateView(inflater: android.view.LayoutInflater, container: android.view.ViewGroup?, savedInstanceState: android.os.Bundle?) =
             android.widget.TextView(inflater.context).apply {

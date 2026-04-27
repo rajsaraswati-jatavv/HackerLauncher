@@ -2,10 +2,13 @@ package com.hackerlauncher.modules
 
 import com.hackerlauncher.R
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
@@ -13,12 +16,18 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,9 +36,12 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 class AppCacheCleanerFragment : Fragment() {
@@ -42,12 +54,31 @@ class AppCacheCleanerFragment : Fragment() {
     private lateinit var checkBoxSelectAll: CheckBox
     private lateinit var editTextSearch: EditText
 
+    // ========== UPGRADE: New view references ==========
+    private lateinit var buttonOneTapClean: MaterialButton
+    private lateinit var buttonSmartRules: MaterialButton
+    private lateinit var buttonScheduledClean: MaterialButton
+    private lateinit var buttonCacheGrowth: MaterialButton
+    private lateinit var spinnerSort: Spinner
+    private lateinit var textViewCacheStats: TextView
+
     private val appCacheList = mutableListOf<AppCacheInfo>()
     private val filteredList = mutableListOf<AppCacheInfo>()
     private lateinit var appCacheAdapter: AppCacheAdapter
 
     private var scanJob: Job? = null
     private var searchQuery = ""
+
+    // ========== UPGRADE: New state ==========
+    private var currentSortMode = "cache_size" // cache_size, name, last_cleaned
+    private var smartCacheThreshold = 100L * 1024 * 1024 // 100MB default
+    private var isSmartCleanEnabled = false
+    private var scheduledCleanEnabled = false
+    private var scheduledCleanHour = 3 // 3 AM default
+    private val cacheGrowthTracker = mutableMapOf<String, MutableList<CacheGrowthEntry>>()
+    private val lastCleanedMap = mutableMapOf<String, Long>() // pkg -> timestamp
+    private var totalFreedHistorical = 0L
+    private var cleanCount = 0
 
     data class AppCacheInfo(
         val packageName: String,
@@ -56,6 +87,12 @@ class AppCacheCleanerFragment : Fragment() {
         val dataSize: Long,
         val appIcon: Drawable?,
         var isSelected: Boolean = false
+    )
+
+    // ========== UPGRADE: Cache growth tracking ==========
+    data class CacheGrowthEntry(
+        val timestamp: Long,
+        val cacheSize: Long
     )
 
     override fun onCreateView(
@@ -100,8 +137,88 @@ class AppCacheCleanerFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        // ========== UPGRADE: Add upgrade views ==========
+        addUpgradeViews(view)
+        loadUpgradeSettings()
+
         // Auto-scan on open
         startScan()
+    }
+
+    // ========== UPGRADE: Add upgrade views dynamically ==========
+    private fun addUpgradeViews(view: View) {
+        try {
+            val root = view.findViewById<ViewGroup>(R.id.recyclerViewApps).parent as? ViewGroup
+            if (root != null) {
+                // One-tap clean all
+                buttonOneTapClean = MaterialButton(requireContext()).apply {
+                    text = "⚡ ONE-TAP CLEAN ALL"
+                    setTextColor(0xFFFF4444.toInt())
+                    textSize = 14f
+                    setOnClickListener { performOneTapClean() }
+                }
+                root.addView(buttonOneTapClean, 0)
+
+                // Smart rules button
+                buttonSmartRules = MaterialButton(requireContext()).apply {
+                    text = "📋 Smart Rules"
+                    setTextColor(0xFF00FFFF.toInt())
+                    textSize = 12f
+                    setOnClickListener { showSmartRulesDialog() }
+                }
+
+                // Scheduled clean button
+                buttonScheduledClean = MaterialButton(requireContext()).apply {
+                    text = "📅 Scheduled Clean"
+                    setTextColor(0xFF2196F3.toInt())
+                    textSize = 12f
+                    setOnClickListener { showScheduledCleanDialog() }
+                }
+
+                // Cache growth button
+                buttonCacheGrowth = MaterialButton(requireContext()).apply {
+                    text = "📈 Cache Growth"
+                    setTextColor(0xFF9C27B0.toInt())
+                    textSize = 12f
+                    setOnClickListener { showCacheGrowthDialog() }
+                }
+
+                val buttonRow = LinearLayout(requireContext()).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                }
+                buttonRow.addView(buttonSmartRules)
+                buttonRow.addView(buttonScheduledClean)
+                buttonRow.addView(buttonCacheGrowth)
+                root.addView(buttonRow, 1)
+
+                // Sort spinner
+                spinnerSort = Spinner(requireContext()).apply {
+                    adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item,
+                        arrayOf("Sort: Cache Size", "Sort: Name", "Sort: Last Cleaned"))
+                    onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(parent: android.widget.AdapterView<*>?, v: View?, position: Int, id: Long) {
+                            currentSortMode = when (position) {
+                                0 -> "cache_size"
+                                1 -> "name"
+                                2 -> "last_cleaned"
+                                else -> "cache_size"
+                            }
+                            sortAndFilter()
+                        }
+                        override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+                    }
+                }
+                root.addView(spinnerSort, 2)
+
+                // Cache stats
+                textViewCacheStats = TextView(requireContext()).apply {
+                    text = "Cache Stats: --"
+                    setTextColor(0xFF888888.toInt())
+                    textSize = 12f
+                }
+                root.addView(textViewCacheStats, 3)
+            }
+        } catch (_: Exception) {}
     }
 
     private fun startScan() {
@@ -136,6 +253,14 @@ class AppCacheCleanerFragment : Fragment() {
 
                             appCacheList.add(info)
 
+                            // UPGRADE: Track cache growth
+                            recordCacheGrowth(appInfo.packageName, cacheSize)
+
+                            // UPGRADE: Apply smart rules - auto-select apps over threshold
+                            if (isSmartCleanEnabled && cacheSize > smartCacheThreshold) {
+                                info.isSelected = true
+                            }
+
                             withContext(Dispatchers.Main) {
                                 applyFilter()
                                 updateTotalCache()
@@ -146,7 +271,7 @@ class AppCacheCleanerFragment : Fragment() {
                     }
 
                     // Sort by cache size descending
-                    appCacheList.sortByDescending { it.cacheSize }
+                    sortAndFilter()
 
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
@@ -160,6 +285,7 @@ class AppCacheCleanerFragment : Fragment() {
                 buttonCleanAll.isEnabled = appCacheList.any { it.cacheSize > 0 }
                 applyFilter()
                 updateTotalCache()
+                updateCacheStats()
                 showToast("Scan complete: ${appCacheList.size} apps found")
             }
         }
@@ -240,6 +366,16 @@ class AppCacheCleanerFragment : Fragment() {
         return size
     }
 
+    // ========== UPGRADE: Sort and filter ==========
+    private fun sortAndFilter() {
+        when (currentSortMode) {
+            "cache_size" -> appCacheList.sortByDescending { it.cacheSize }
+            "name" -> appCacheList.sortBy { it.appName.lowercase(Locale.getDefault()) }
+            "last_cleaned" -> appCacheList.sortedByDescending { lastCleanedMap[it.packageName] ?: 0L }
+        }
+        applyFilter()
+    }
+
     private fun applyFilter() {
         filteredList.clear()
         val source = if (searchQuery.isEmpty()) {
@@ -263,6 +399,22 @@ class AppCacheCleanerFragment : Fragment() {
         buttonCleanSelected.text = "Clean Selected ($selectedCount)"
         buttonCleanSelected.isEnabled = selectedCount > 0
         buttonCleanAll.isEnabled = appCacheList.any { it.cacheSize > 0 }
+    }
+
+    // ========== UPGRADE: Update cache stats ==========
+    private fun updateCacheStats() {
+        try {
+            val totalCache = appCacheList.sumOf { it.cacheSize }
+            val appsOverThreshold = appCacheList.count { it.cacheSize > smartCacheThreshold }
+            val avgCache = if (appCacheList.isNotEmpty()) totalCache / appCacheList.size else 0L
+
+            textViewCacheStats.text = buildString {
+                append("Apps: ${appCacheList.size} | ")
+                append("Over ${smartCacheThreshold / (1024 * 1024)}MB: $appsOverThreshold | ")
+                append("Avg: ${formatFileSize(avgCache)} | ")
+                append("Freed: ${formatFileSize(totalFreedHistorical)} ($cleanCount sessions)")
+            }
+        } catch (_: Exception) {}
     }
 
     private fun cleanAllCaches() {
@@ -314,12 +466,22 @@ class AppCacheCleanerFragment : Fragment() {
                         if (freed > 0) {
                             cleanedCount++
                             freedBytes += freed
+                            // UPGRADE: Record last cleaned time
+                            lastCleanedMap[packageName] = System.currentTimeMillis()
                         }
                     } catch (e: Exception) {
                         failedCount++
                     }
                 }
             }
+
+            // UPGRADE: Update historical stats
+            totalFreedHistorical += freedBytes
+            cleanCount++
+            saveUpgradeSettings()
+
+            // UPGRADE: Send notification
+            sendCacheCleanNotification(freedBytes, cleanedCount)
 
             showToast("Cleaned $cleanedCount apps, freed ${formatFileSize(freedBytes)}" +
                     if (failedCount > 0) " ($failedCount failed)" else "")
@@ -395,6 +557,309 @@ class AppCacheCleanerFragment : Fragment() {
         return freed
     }
 
+    // ========== UPGRADE: One-Tap Clean All ==========
+    private fun performOneTapClean() {
+        val appsWithCache = appCacheList.filter { it.cacheSize > 0 }
+        if (appsWithCache.isEmpty()) {
+            showToast("No cache to clean")
+            return
+        }
+
+        val totalSize = appsWithCache.sumOf { it.cacheSize }
+        AlertDialog.Builder(requireContext(), R.style.DarkDialogTheme)
+            .setTitle("⚡ One-Tap Clean All")
+            .setMessage("Clean ALL app caches in one tap?\n${appsWithCache.size} apps (${formatFileSize(totalSize)})")
+            .setPositiveButton("⚡ CLEAN ALL NOW") { _, _ ->
+                performCleanCache(appsWithCache.map { it.packageName })
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    // ========== UPGRADE: Smart Cache Rules ==========
+    private fun showSmartRulesDialog() {
+        val options = arrayOf(
+            "Enable Smart Auto-Clean (auto-clean apps > threshold)",
+            "Set Cache Threshold (currently ${smartCacheThreshold / (1024 * 1024)}MB)",
+            "View Apps Over Threshold",
+            "Disable Smart Auto-Clean"
+        )
+        val checkedItems = booleanArrayOf(
+            isSmartCleanEnabled,
+            false,
+            false,
+            false
+        )
+
+        AlertDialog.Builder(requireContext(), R.style.DarkDialogTheme)
+            .setTitle("📋 Smart Cache Rules")
+            .setMessage("Automatically clean cache for apps exceeding the size threshold.")
+            .setMultiChoiceItems(options, checkedItems) { _, which, isChecked ->
+                when (which) {
+                    0 -> isSmartCleanEnabled = isChecked
+                    1 -> {
+                        if (isChecked) showThresholdDialog()
+                    }
+                    2 -> {
+                        if (isChecked) showAppsOverThreshold()
+                    }
+                    3 -> {
+                        if (isChecked) {
+                            isSmartCleanEnabled = false
+                            showToast("Smart auto-clean disabled")
+                        }
+                    }
+                }
+            }
+            .setPositiveButton("Save") { _, _ ->
+                saveUpgradeSettings()
+                startScan() // Rescan with new rules
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showThresholdDialog() {
+        val input = EditText(requireContext()).apply {
+            hint = "Threshold in MB (e.g. 100)"
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            setText("${smartCacheThreshold / (1024 * 1024)}")
+            setTextColor(0xFF00FF00.toInt())
+            setHintTextColor(0xFF888888.toInt())
+        }
+
+        AlertDialog.Builder(requireContext(), R.style.DarkDialogTheme)
+            .setTitle("Set Cache Threshold")
+            .setMessage("Apps with cache exceeding this threshold will be auto-selected for cleaning.")
+            .setView(input)
+            .setPositiveButton("Set") { _, _ ->
+                val mb = input.text.toString().toLongOrNull()
+                if (mb != null && mb > 0) {
+                    smartCacheThreshold = mb * 1024 * 1024
+                    saveUpgradeSettings()
+                    showToast("Threshold set to ${mb}MB")
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showAppsOverThreshold() {
+        val appsOver = appCacheList.filter { it.cacheSize > smartCacheThreshold }
+        if (appsOver.isEmpty()) {
+            showToast("No apps over ${smartCacheThreshold / (1024 * 1024)}MB threshold")
+            return
+        }
+
+        val message = buildString {
+            append("Apps with cache > ${smartCacheThreshold / (1024 * 1024)}MB:\n\n")
+            for ((index, app) in appsOver.withIndex()) {
+                append("${index + 1}. ${app.appName}: ${formatFileSize(app.cacheSize)}\n")
+            }
+            append("\nTotal: ${formatFileSize(appsOver.sumOf { it.cacheSize })}")
+        }
+
+        AlertDialog.Builder(requireContext(), R.style.DarkDialogTheme)
+            .setTitle("Apps Over Threshold")
+            .setMessage(message)
+            .setPositiveButton("Clean All", ) { _, _ ->
+                performCleanCache(appsOver.map { it.packageName })
+            }
+            .setNegativeButton("Close", null)
+            .show()
+    }
+
+    // ========== UPGRADE: Scheduled Cache Cleaning ==========
+    private fun showScheduledCleanDialog() {
+        val options = arrayOf("Disable Scheduled Clean", "Daily at 3:00 AM", "Daily at 6:00 AM", "Custom Time")
+        val currentIndex = when {
+            !scheduledCleanEnabled -> 0
+            scheduledCleanHour == 3 -> 1
+            scheduledCleanHour == 6 -> 2
+            else -> 3
+        }
+
+        AlertDialog.Builder(requireContext(), R.style.DarkDialogTheme)
+            .setTitle("📅 Scheduled Cache Cleaning")
+            .setSingleChoiceItems(options, currentIndex) { _, which ->
+                when (which) {
+                    0 -> {
+                        scheduledCleanEnabled = false
+                        showToast("Scheduled clean disabled")
+                    }
+                    1 -> {
+                        scheduledCleanEnabled = true
+                        scheduledCleanHour = 3
+                        showToast("Daily clean at 3:00 AM enabled")
+                    }
+                    2 -> {
+                        scheduledCleanEnabled = true
+                        scheduledCleanHour = 6
+                        showToast("Daily clean at 6:00 AM enabled")
+                    }
+                    3 -> showCustomScheduleDialog()
+                }
+                saveUpgradeSettings()
+            }
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
+    private fun showCustomScheduleDialog() {
+        val input = EditText(requireContext()).apply {
+            hint = "Hour (0-23)"
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER
+            setText("3")
+            setTextColor(0xFF00FF00.toInt())
+            setHintTextColor(0xFF888888.toInt())
+        }
+
+        AlertDialog.Builder(requireContext(), R.style.DarkDialogTheme)
+            .setTitle("Custom Schedule Time")
+            .setMessage("Enter hour (0-23) for daily cache clean:")
+            .setView(input)
+            .setPositiveButton("Set") { _, _ ->
+                val hour = input.text.toString().toIntOrNull()
+                if (hour != null && hour in 0..23) {
+                    scheduledCleanEnabled = true
+                    scheduledCleanHour = hour
+                    saveUpgradeSettings()
+                    showToast("Daily clean at ${String.format("%02d:00", hour)} enabled")
+                } else {
+                    showToast("Enter a valid hour (0-23)")
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    // ========== UPGRADE: Cache Growth Tracking ==========
+    private fun recordCacheGrowth(packageName: String, cacheSize: Long) {
+        if (!cacheGrowthTracker.containsKey(packageName)) {
+            cacheGrowthTracker[packageName] = mutableListOf()
+        }
+        cacheGrowthTracker[packageName]!!.add(CacheGrowthEntry(System.currentTimeMillis(), cacheSize))
+        // Keep last 30 readings
+        if (cacheGrowthTracker[packageName]!!.size > 30) {
+            cacheGrowthTracker[packageName]!!.removeAt(0)
+        }
+    }
+
+    private fun showCacheGrowthDialog() {
+        // Find apps with fastest growing cache
+        val growthRates = mutableListOf<Pair<String, Long>>()
+        for ((pkg, entries) in cacheGrowthTracker) {
+            if (entries.size < 2) continue
+            val firstSize = entries.first().cacheSize
+            val lastSize = entries.last().cacheSize
+            val growth = lastSize - firstSize
+            if (growth > 0) {
+                growthRates.add(pkg to growth)
+            }
+        }
+        growthRates.sortByDescending { it.second }
+
+        val message = buildString {
+            append("═══ CACHE GROWTH TRACKING ═══\n\n")
+
+            if (growthRates.isEmpty()) {
+                append("No significant cache growth detected.\n")
+                append("Data is collected over time - check back later.\n")
+            } else {
+                append("Apps with fastest growing cache:\n\n")
+                for ((index, pair) in growthRates.take(15).withIndex()) {
+                    val appName = try {
+                        val pm = requireContext().packageManager
+                        pm.getApplicationInfo(pair.first, 0).let { pm.getApplicationLabel(it) }
+                    } catch (_: Exception) { pair.first }
+                    append("${index + 1}. $appName: +${formatFileSize(pair.second)}\n")
+                }
+            }
+
+            append("\n── Last Cleaned ──\n")
+            if (lastCleanedMap.isEmpty()) {
+                append("No cleaning history yet.\n")
+            } else {
+                val dateFormat = SimpleDateFormat("MM/dd HH:mm", Locale.getDefault())
+                val sorted = lastCleanedMap.entries.sortedByDescending { it.value }
+                for ((pkg, time) in sorted.take(10)) {
+                    val appName = try {
+                        val pm = requireContext().packageManager
+                        pm.getApplicationInfo(pkg, 0).let { pm.getApplicationLabel(it) }
+                    } catch (_: Exception) { pkg }
+                    append("$appName: ${dateFormat.format(Date(time))}\n")
+                }
+            }
+        }
+
+        AlertDialog.Builder(requireContext(), R.style.DarkDialogTheme)
+            .setTitle("📈 Cache Growth Tracking")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
+    // ========== UPGRADE: Notification ==========
+    private fun sendCacheCleanNotification(freedBytes: Long, cleanedCount: Int) {
+        try {
+            val nm = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val channelId = "cache_cleaner"
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                nm.createNotificationChannel(
+                    NotificationChannel(channelId, "Cache Cleaner", NotificationManager.IMPORTANCE_DEFAULT)
+                )
+            }
+
+            NotificationCompat.Builder(requireContext(), channelId)
+                .setContentTitle("🧹 Cache Clean Complete")
+                .setContentText("Freed ${formatFileSize(freedBytes)} from $cleanedCount apps")
+                .setSmallIcon(android.R.drawable.ic_menu_delete)
+                .setAutoCancel(true)
+                .build()
+                .also { nm.notify(7001, it) }
+        } catch (_: Exception) {}
+    }
+
+    // ========== UPGRADE: Settings ==========
+    private fun loadUpgradeSettings() {
+        val prefs = requireContext().getSharedPreferences("app_cache_cleaner_prefs", Context.MODE_PRIVATE)
+        smartCacheThreshold = prefs.getLong("smart_threshold", 100L * 1024 * 1024)
+        isSmartCleanEnabled = prefs.getBoolean("smart_enabled", false)
+        scheduledCleanEnabled = prefs.getBoolean("scheduled_enabled", false)
+        scheduledCleanHour = prefs.getInt("scheduled_hour", 3)
+        totalFreedHistorical = prefs.getLong("total_freed", 0L)
+        cleanCount = prefs.getInt("clean_count", 0)
+
+        // Load last cleaned map
+        val cleanedStr = prefs.getString("last_cleaned", "") ?: ""
+        if (cleanedStr.isNotEmpty()) {
+            cleanedStr.split(";").forEach { entry ->
+                val parts = entry.split(",")
+                if (parts.size == 2) {
+                    try { lastCleanedMap[parts[0]] = parts[1].toLong() } catch (_: Exception) {}
+                }
+            }
+        }
+    }
+
+    private fun saveUpgradeSettings() {
+        val prefs = requireContext().getSharedPreferences("app_cache_cleaner_prefs", Context.MODE_PRIVATE)
+        prefs.edit()
+            .putLong("smart_threshold", smartCacheThreshold)
+            .putBoolean("smart_enabled", isSmartCleanEnabled)
+            .putBoolean("scheduled_enabled", scheduledCleanEnabled)
+            .putInt("scheduled_hour", scheduledCleanHour)
+            .putLong("total_freed", totalFreedHistorical)
+            .putInt("clean_count", cleanCount)
+            .apply()
+
+        // Save last cleaned map (most recent 50)
+        val cleanedStr = lastCleanedMap.entries.sortedByDescending { it.value }.take(50)
+            .joinToString(";") { "${it.key},${it.value}" }
+        prefs.edit().putString("last_cleaned", cleanedStr).apply()
+    }
+
     private fun deleteDirectory(directory: File): Boolean {
         if (!directory.exists()) return true
         val files = directory.listFiles() ?: return directory.delete()
@@ -468,6 +933,18 @@ class AppCacheCleanerFragment : Fragment() {
                     else -> 0xFF00FF00.toInt()
                 }
             )
+
+            // UPGRADE: Show last cleaned time
+            val lastCleaned = lastCleanedMap[item.packageName]
+            if (lastCleaned != null && lastCleaned > 0) {
+                val timeAgo = (System.currentTimeMillis() - lastCleaned) / 60000
+                val timeStr = when {
+                    timeAgo < 60 -> "${timeAgo}m ago"
+                    timeAgo < 1440 -> "${timeAgo / 60}h ago"
+                    else -> "${timeAgo / 1440}d ago"
+                }
+                holder.textViewDataSize.text = "Data: ${formatFileSize(item.dataSize)} | Cleaned: $timeStr"
+            }
 
             // Set app icon
             if (item.appIcon != null) {

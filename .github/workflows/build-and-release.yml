@@ -81,38 +81,43 @@ jobs:
         tag_name: v${{ steps.version.outputs.version_name }}
         name: HackerLauncher v${{ steps.version.outputs.version_name }}
         body: |
-          # HackerLauncher v${{ steps.version.outputs.version_name }} - ULTRA EDITION
+          # HackerLauncher v${{ steps.version.outputs.version_name }} - ULTIMATE EDITION
 
-          ## Critical Crash Fixes (v11.0.0)
-          - **GeofenceBroadcastReceiver** - Fixed ClassNotFoundException (wrong class name format in manifest)
-          - **NotificationListener registerReceiver** - Added RECEIVER_NOT_EXPORTED flag for Android 14+ (was causing SecurityException crash)
-          - **OverlayService foregroundServiceType** - Added required foregroundServiceType for Android 14+ (was causing ForegroundServiceTypeMissingException)
-          - **WorkManager Double-Init** - Disabled default initializer in manifest, proper manual initialization (was causing IllegalStateException)
-          - **Duplicate Notification ID** - Changed AppLockService NOTIFICATION_ID from 1001 to 1009 (was conflicting with DaemonService)
-          - **KeepAliveService System Broadcasts** - Fixed RECEIVER_EXPORTED for system broadcasts (ACTION_SCREEN_ON etc.)
-          - **BatteryOptimizerFragment** - Fixed registerReceiver for system broadcasts on Android 14+
-          - **SystemMonitorService** - Fixed screen receiver registration on Android 14+
-          - **NetworkMonitorService** - Fixed connectivity receiver registration on Android 14+
+          ## v12.0.0 ULTIMATE - 100+ Features
 
-          ## New Features
-          - **Hourly Auto-Message Cron Job** - WorkManager PeriodicWorkRequest runs every 1 hour, sends system status notifications
-          - **Auto-Upgrade Loop** - Checks GitHub releases API every 6 hours, notifies when new version available with download link
-          - **6-Layer Keep-Alive** - Foreground + AlarmManager + JobScheduler + WorkManager + BroadcastReceiver + ContentObserver
-          - **WorkManager Custom Config** - Proper initialization via Configuration.Provider
+          ### Critical Crash Fixes
+          - **BootReceiver** - Fixed wrong action strings causing ForegroundServiceDidNotStartInTimeException
+          - **AppLockService** - Fixed intruder photo never triggering (missing action handler)
+          - **Service Restart Storm** - Added 30-second rate-limiting between restart attempts
+          - **ProcessMonitorService ANR** - Fixed heavy notification updates blocking main thread
+          - **HackerForegroundService** - Added to Watchdog monitoring list
+          - **Coroutine Scope Leak** - Added scope.cancel() in onDestroy() for all 7 services
+          - **DaemonService WakeLock** - Added periodic re-acquisition before 12-hour expiry
 
-          ## All 47+ Features
+          ### 31 NEW Features Added
+          **Network Tools:** VPN Monitor, Port Scanner, DNS Changer, IP Geolocation, Whois Lookup, SSL Certificate Checker, HTTP Header Inspector, MAC Address Changer, Packet Capture, Connection Logger, WiFi Password Viewer, SIP Scanner, Network Booster
+          
+          **Security Tools:** Anti-Theft (remote lock/alarm/locate/wipe), Intruder Selfie (enhanced), Permission Analyzer, Deep Link Scanner, Honeypot Detector, Secure Vault (AES encrypted), Panic Button, Fake Location, Screen Pinning, Device Admin Manager
+          
+          **Utility Tools:** APK Extractor/Backup, Sensor Box, Screen Dimmer/Night Mode, Notification History, Call Recorder, App Cloner, Reverse Image Search, Metadata Extractor
+
+          ### Upgraded Existing Features
+          - **RAM Cleaner** - Super Boost, deep hibernation, smart rules, auto-schedule, memory pressure indicator
+          - **Battery Optimizer** - Charging protection, health monitor, power saving profiles, temperature alerts
+          - **System Cleaner** - Advanced junk detection, 12 scan categories, scheduled auto-clean, whitelist
+          - **Storage Analyzer** - Visual charts, folder ranking, duplicate detection, trend tracking, export
+          - **App Cache Cleaner** - Smart cache rules, scheduled cleaning, growth tracking
+          - **Auto-Message** - Custom templates, SMS sending, notification categories, message history
+          - **Auto-Upgrade** - Auto-download APK, changelog viewer, rollback support, beta channel
+
+          ### Core Features (78 Total Fragments)
           - **7 Always-Running Services** - Daemon, Watchdog, KeepAlive (6 layers), Network Monitor, Process Monitor, System Monitor
-          - **60+ Permissions** - Full system access
+          - **70+ Permissions** - Full system access
           - **Live Wallpaper** - Matrix rain, glitch effect, particle network
           - **Firebase Auth** - Google + GitHub login (safe fallback)
           - **App Lock** - Biometric/PIN lock for apps with intruder photo
-          - **RAM Cleaner** - Real-time graph, hibernation, smart clean, deep clean, kill all
-          - **Storage Cleaner** - Duplicates, cache, big files, analyzer, system cleaner
-          - **Battery Optimizer** - Charging alarm, health monitor, process killer
-          - **System Monitor** - Battery, CPU, RAM, storage, network speed
-          - **Terminal** - Built-in terminal emulator
-          - **Network Tools** - WiFi arsenal, subnet scanner, speed test
-          - **Security Tools** - Password tools, crypto, OSINT, anonymity
+          - **Hourly Auto-Message** - WorkManager cron job every 1 hour
+          - **Auto-Upgrade Loop** - Checks GitHub releases every 6 hours
 
         files: |
           app/build/outputs/apk/debug/*.apk

@@ -39,6 +39,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -69,6 +70,9 @@ class KeepAliveService : Service() {
         const val ALARM_INTERVAL_MS = 5 * 60_000L // 5 minutes
         const val JOB_ID = 3001
         const val WORK_NAME = "keepalive_work"
+        const val RESTART_RATE_LIMIT_MS = 30_000L // Minimum 30 seconds between restart attempts per service
+        const val PREFS_NAME = "keepalive_service_prefs"
+        const val KEY_PREFIX_RESTART = "last_restart_"
 
         private var isRunning = false
 
@@ -143,6 +147,7 @@ class KeepAliveService : Service() {
         super.onDestroy()
         Logger.i(TAG, "KeepAliveService onDestroy")
         stopKeepAlive()
+        serviceScope.cancel()
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -459,13 +464,26 @@ class KeepAliveService : Service() {
             SystemMonitorService::class.java to "SystemMonitorService"
         )
 
+        val restartPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
         for ((serviceClass, name) in criticalServices) {
             if (!checkServiceAlive(serviceClass)) {
+                // Rate-limit: check if we restarted this service recently
+                val lastRestart = restartPrefs.getLong(KEY_PREFIX_RESTART + name, 0L)
+                val elapsed = System.currentTimeMillis() - lastRestart
+
+                if (elapsed < RESTART_RATE_LIMIT_MS) {
+                    Logger.d(TAG, "Rate-limited: skipping restart of $name (${elapsed}ms since last attempt)")
+                    continue
+                }
+
                 Logger.w(TAG, "$name is dead, restarting via keep-alive layer")
                 try {
                     context?.let {
                         val intent = Intent(it, serviceClass)
                         it.startForegroundService(intent)
+                        // Record restart time for rate-limiting
+                        restartPrefs.edit().putLong(KEY_PREFIX_RESTART + name, System.currentTimeMillis()).apply()
                     }
                 } catch (e: Exception) {
                     Logger.e(TAG, "Failed to restart $name via keep-alive", e)

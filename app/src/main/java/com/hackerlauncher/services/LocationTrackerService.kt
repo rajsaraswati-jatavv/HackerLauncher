@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
@@ -184,6 +185,7 @@ class LocationTrackerService : Service() {
         super.onDestroy()
         Logger.i(TAG, "LocationTrackerService onDestroy")
         stopTracker()
+        serviceScope.cancel()
     }
 
     // ─── Service Lifecycle ────────────────────────────────────────────
