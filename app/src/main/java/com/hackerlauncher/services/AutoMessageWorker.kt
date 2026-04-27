@@ -7,6 +7,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
 import android.os.Environment
@@ -183,7 +184,7 @@ class AutoMessageWorker(
 
     private fun getBatteryInfo(): Pair<Int, String> {
         return try {
-            val batteryIntent = applicationContext.registerReceiver(null, Intent(Intent.ACTION_BATTERY_CHANGED))
+            val batteryIntent = applicationContext.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
             if (batteryIntent != null) {
                 val level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
                 val scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)

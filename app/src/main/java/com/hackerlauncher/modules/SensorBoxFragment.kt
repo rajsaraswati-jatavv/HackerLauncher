@@ -279,7 +279,7 @@ class SensorBoxFragment : Fragment(), SensorEventListener {
                 info.sensor,
                 SensorManager.SENSOR_DELAY_UI
             )
-            activeSensors[info.type] = sensorValueViews[info.type]
+            activeSensors[info.type] = sensorValueViews[info.type]!!
             statusText.text = "[>] Testing: ${info.name}"
             Toast.makeText(requireContext(), "Testing ${info.name}", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {

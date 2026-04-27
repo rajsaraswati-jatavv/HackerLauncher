@@ -260,7 +260,7 @@ class IntruderSelfieFragment : Fragment() {
                 scope.launch {
                     delay(1500)
                     try {
-                        camera.takePicture(null, null, { _, data ->
+                        camera.takePicture(null, null, { data, _ ->
                             try {
                                 val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
                                 val file = File(getIntruderDir(), "intruder_$timestamp.jpg")

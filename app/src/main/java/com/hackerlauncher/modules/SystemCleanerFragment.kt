@@ -734,7 +734,7 @@ class SystemCleanerFragment : Fragment() {
             ".part", ".crdownload", ".download", ".old", ".orig"
         )
 
-        findFilesByExtension(storageRoot, junkExtensions, maxDepth = 8) { file ->
+        findFilesByExtension(storageRoot, junkExtensions, { file ->
             if (cleanWhitelist.contains(file.absolutePath)) return@findFilesByExtension
             withContext(Dispatchers.Main) {
                 junkItems.add(
@@ -749,7 +749,7 @@ class SystemCleanerFragment : Fragment() {
                 )
                 junkAdapter.notifyItemInserted(junkItems.size - 1)
             }
-        }
+        }, maxDepth = 8)
     }
 
     private suspend fun findFilesByExtension(

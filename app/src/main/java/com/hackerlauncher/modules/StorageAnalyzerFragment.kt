@@ -216,7 +216,7 @@ class StorageAnalyzerFragment : Fragment() {
             try {
                 val parentLayout = view.findViewById<LinearLayout>(R.id.storagePieContainer).parent?.parent as? ViewGroup
                 if (parentLayout != null) {
-                    val index = parentLayout.indexOfChild(view.findViewById(R.id.storagePieContainer).parent as View)
+                    val index = parentLayout.indexOfChild(view.findViewById<View>(R.id.storagePieContainer).parent as View)
                     if (index >= 0) {
                         parentLayout.addView(buttonContainer, index + 1)
                     } else {
