@@ -1,6 +1,5 @@
 package com.hackerlauncher.modules
 
-import android.app.admin.DeviceAdminInfo
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
@@ -155,22 +154,7 @@ class DeviceAdminManagerFragment : Fragment() {
                     appendOutput("     Status: $status\n")
 
                     // Check admin capabilities
-                    try {
-                        val adminInfo = dpm.getAdminInfo(componentName)
-                        if (adminInfo != null) {
-                            appendOutput("     Policies:\n")
-                            if (adminInfo.usesEncryptedStorage()) appendOutput("       - Encrypted storage\n")
-                            if (adminInfo.usesForceLock()) appendOutput("       - Force lock\n")
-                            if (adminInfo.usesWipeData()) appendOutput("       - Wipe data\n")
-                            if (adminInfo.usesResetPassword()) appendOutput("       - Reset password\n")
-                            if (adminInfo.usesLimitPassword()) appendOutput("       - Limit password\n")
-                            if (adminInfo.usesWatchLogin()) appendOutput("       - Watch login\n")
-                            if (adminInfo.usesDisableCamera()) appendOutput("       - Disable camera\n")
-                            if (adminInfo.usesDisableKeyguardFeatures()) appendOutput("       - Disable keyguard\n")
-                        }
-                    } catch (e: Exception) {
-                        appendOutput("     [!] Info unavailable\n")
-                    }
+                    appendOutput("     Component: ${componentName.packageName}/${componentName.className}\n")
                     appendOutput("\n")
                 }
             }
@@ -366,7 +350,7 @@ class DeviceAdminManagerFragment : Fragment() {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 try {
-                    appendOutput("  FBE supported: ${dpm.isFileBasedEncryptionEnabled()}\n")
+                    appendOutput("  FBE supported: ${dpm.getStorageEncryptionStatus() == DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_PER_USER}\n")
                 } catch (_: Exception) {}
             }
 
@@ -456,26 +440,10 @@ class DeviceAdminManagerFragment : Fragment() {
             } else {
                 for (componentName in activeAdmins) {
                     try {
-                        val adminInfo = dpm.getAdminInfo(componentName)
-                        if (adminInfo != null) {
-                            appendOutput("  [${componentName.packageName}]\n")
-                            appendOutput("  Component: ${componentName.className}\n")
-
-                            try { appendOutput("  Label: ${adminInfo.loadLabel(requireContext().packageManager)}\n") } catch (_: Exception) {}
-                            try { appendOutput("  Description: ${adminInfo.loadDescription(requireContext().packageManager)}\n") } catch (_: Exception) {}
-
-                            appendOutput("  Uses:\n")
-                            if (adminInfo.usesEncryptedStorage()) appendOutput("    - Encrypted Storage\n")
-                            if (adminInfo.usesForceLock()) appendOutput("    - Force Lock\n")
-                            if (adminInfo.usesWipeData()) appendOutput("    - Wipe Data\n")
-                            if (adminInfo.usesResetPassword()) appendOutput("    - Reset Password\n")
-                            if (adminInfo.usesLimitPassword()) appendOutput("    - Limit Password\n")
-                            if (adminInfo.usesWatchLogin()) appendOutput("    - Watch Login\n")
-                            if (adminInfo.usesDisableCamera()) appendOutput("    - Disable Camera\n")
-                            if (adminInfo.usesDisableKeyguardFeatures()) appendOutput("    - Disable Keyguard\n")
-
-                            appendOutput("\n")
-                        }
+                        appendOutput("  [${componentName.packageName}]\n")
+                        appendOutput("  Component: ${componentName.className}\n")
+                        appendOutput("  Active: ${dpm.isAdminActive(componentName)}\n")
+                        appendOutput("\n")
                     } catch (e: Exception) {
                         appendOutput("  [E] ${componentName.packageName}: ${e.message}\n\n")
                     }
@@ -594,7 +562,7 @@ class DeviceAdminManagerFragment : Fragment() {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 try {
-                    val deviceOwner = dpm.deviceOwner
+                    val deviceOwner = if (dpm.isDeviceOwnerApp(requireContext().packageName)) requireContext().packageName else null
                     appendOutput("  Device owner: ${deviceOwner ?: "None"}\n")
                 } catch (_: Exception) {
                     appendOutput("  Device owner: N/A\n")
@@ -603,7 +571,7 @@ class DeviceAdminManagerFragment : Fragment() {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 try {
-                    val profileOwner = dpm.profileOwner
+                    val profileOwner = if (dpm.isProfileOwnerApp(requireContext().packageName)) requireContext().packageName else null
                     appendOutput("  Profile owner: ${profileOwner ?: "None"}\n")
                 } catch (_: Exception) {}
             }

@@ -126,7 +126,7 @@ class SslCertificateCheckerFragment : Fragment() {
                         conn.connect()
 
                         val certs = conn.serverCertificates
-                        val session = conn.sslSession
+                        val session = (conn as? HttpsURLConnection)?.sslSession
 
                         sb.append("╔══════════════════════════════════╗\n")
                         sb.append("║   SSL Certificate Report        ║\n")
@@ -186,7 +186,7 @@ class SslCertificateCheckerFragment : Fragment() {
                                 }
                                 sb.append("║   Sig Alg:  $sigAlg [$sigStrength]\n")
                                 sb.append("║   Version:  ${cert.version}\n")
-                                sb.append("║   Key Type: ${cert.publicKey.algorithm} ${cert.publicKey.bitLength()}bit\n\n")
+                                sb.append("║   Key Type: ${cert.publicKey.algorithm} (${cert.sigAlgName})\n\n")
                             }
                         }
 

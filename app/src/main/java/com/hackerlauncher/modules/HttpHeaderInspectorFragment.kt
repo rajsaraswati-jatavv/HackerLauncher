@@ -353,8 +353,8 @@ class HttpHeaderInspectorFragment : Fragment() {
                         sb.append("║ HTTPS Status: ${httpsConn.responseCode}\n")
                         val hsts = httpsConn.getHeaderField("Strict-Transport-Security")
                         sb.append("║ HTTPS HSTS:   ${hsts ?: "Not set"}\n")
-                        sb.append("║ TLS Protocol: ${httpsConn.sslSession?.protocol}\n")
-                        sb.append("║ Cipher:       ${httpsConn.sslSession?.cipherSuite}\n")
+                        sb.append("║ TLS Protocol: ${httpsConn.session?.protocol}\n")
+                        sb.append("║ Cipher:       ${httpsConn.session?.cipherSuite}\n")
                         httpsConn.disconnect()
                     } catch (e: Exception) {
                         sb.append("║ HTTPS: Connection failed (${e.message})\n")

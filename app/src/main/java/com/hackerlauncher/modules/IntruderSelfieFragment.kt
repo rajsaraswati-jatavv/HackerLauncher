@@ -236,7 +236,18 @@ class IntruderSelfieFragment : Fragment() {
 
     private fun captureWithOldApi() {
         try {
-            val camera = android.hardware.Camera.open(android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT)
+            // Find front camera ID using old API
+            val numberOfCameras = android.hardware.Camera.getNumberOfCameras()
+            var frontCameraId = -1
+            for (i in 0 until numberOfCameras) {
+                val info = android.hardware.Camera.CameraInfo()
+                android.hardware.Camera.getCameraInfo(i, info)
+                if (info.facing == android.hardware.Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                    frontCameraId = i
+                    break
+                }
+            }
+            val camera = if (frontCameraId >= 0) android.hardware.Camera.open(frontCameraId) else android.hardware.Camera.open()
             if (camera != null) {
                 try {
                     val params = camera.parameters

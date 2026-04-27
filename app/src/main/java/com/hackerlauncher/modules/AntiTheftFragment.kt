@@ -249,15 +249,13 @@ class AntiTheftFragment : Fragment() {
             }
             simChangeReceiver = object : BroadcastReceiver() {
                 override fun onReceive(ctx: Context, intent: Intent) {
-                    if (intent.action == TelephonyManager.ACTION_SIM_CARD_STATE_CHANGED ||
-                        intent.action == "android.intent.action.SIM_STATE_CHANGED") {
+                    if (intent.action == "android.intent.action.SIM_STATE_CHANGED") {
                         appendOutput("[!!!] SIM STATE CHANGED BROADCAST RECEIVED!\n")
                         checkSimChange()
                     }
                 }
             }
             val filter = IntentFilter().apply {
-                addAction(TelephonyManager.ACTION_SIM_CARD_STATE_CHANGED)
                 addAction("android.intent.action.SIM_STATE_CHANGED")
             }
             requireContext().registerReceiver(simChangeReceiver, filter)

@@ -215,30 +215,63 @@ class WhoisLookupFragment : Fragment() {
             } catch (e: Exception) { appendOutput("║ A:    [Failed: ${e.message}]\n") }
 
             try {
-                val records = withContext(Dispatchers.IO) {
-                    val attrs = javax.naming.directory.InitialDirContext()
-                        .getAttributes("dns:/$domain", arrayOf("MX"))
-                    attrs.get("MX")?.all?.toList()?.map { it.toString() } ?: emptyList()
+                // MX lookup via DNS-over-HTTPS (Google Public DNS API)
+                val mxRecords = withContext(Dispatchers.IO) {
+                    try {
+                        val url = URL("https://dns.google/resolve?name=$domain&type=MX")
+                        val conn = url.openConnection() as HttpURLConnection
+                        conn.requestMethod = "GET"
+                        conn.connectTimeout = 8000
+                        conn.readTimeout = 8000
+                        val reader = BufferedReader(InputStreamReader(conn.inputStream))
+                        val response = reader.readText()
+                        reader.close()
+                        conn.disconnect()
+                        parseDnsJsonRecords(response, "MX")
+                    } catch (_: Exception) { emptyList<String>() }
                 }
-                for (mx in records) { appendOutput("║ MX:   $mx\n") }
+                if (mxRecords.isEmpty()) { appendOutput("║ MX:   [Not available]\n") }
+                else { for (mx in mxRecords) { appendOutput("║ MX:   $mx\n") } }
             } catch (_: Exception) { appendOutput("║ MX:   [Not available]\n") }
 
             try {
-                val records = withContext(Dispatchers.IO) {
-                    val attrs = javax.naming.directory.InitialDirContext()
-                        .getAttributes("dns:/$domain", arrayOf("TXT"))
-                    attrs.get("TXT")?.all?.toList()?.map { it.toString() } ?: emptyList()
+                // TXT lookup via DNS-over-HTTPS
+                val txtRecords = withContext(Dispatchers.IO) {
+                    try {
+                        val url = URL("https://dns.google/resolve?name=$domain&type=TXT")
+                        val conn = url.openConnection() as HttpURLConnection
+                        conn.requestMethod = "GET"
+                        conn.connectTimeout = 8000
+                        conn.readTimeout = 8000
+                        val reader = BufferedReader(InputStreamReader(conn.inputStream))
+                        val response = reader.readText()
+                        reader.close()
+                        conn.disconnect()
+                        parseDnsJsonRecords(response, "TXT")
+                    } catch (_: Exception) { emptyList<String>() }
                 }
-                for (txt in records) { appendOutput("║ TXT:  $txt\n") }
+                if (txtRecords.isEmpty()) { appendOutput("║ TXT:  [Not available]\n") }
+                else { for (txt in txtRecords) { appendOutput("║ TXT:  $txt\n") } }
             } catch (_: Exception) { appendOutput("║ TXT:  [Not available]\n") }
 
             try {
-                val records = withContext(Dispatchers.IO) {
-                    val attrs = javax.naming.directory.InitialDirContext()
-                        .getAttributes("dns:/$domain", arrayOf("NS"))
-                    attrs.get("NS")?.all?.toList()?.map { it.toString() } ?: emptyList()
+                // NS lookup via DNS-over-HTTPS
+                val nsRecords = withContext(Dispatchers.IO) {
+                    try {
+                        val url = URL("https://dns.google/resolve?name=$domain&type=NS")
+                        val conn = url.openConnection() as HttpURLConnection
+                        conn.requestMethod = "GET"
+                        conn.connectTimeout = 8000
+                        conn.readTimeout = 8000
+                        val reader = BufferedReader(InputStreamReader(conn.inputStream))
+                        val response = reader.readText()
+                        reader.close()
+                        conn.disconnect()
+                        parseDnsJsonRecords(response, "NS")
+                    } catch (_: Exception) { emptyList<String>() }
                 }
-                for (ns in records) { appendOutput("║ NS:   $ns\n") }
+                if (nsRecords.isEmpty()) { appendOutput("║ NS:   [Not available]\n") }
+                else { for (ns in nsRecords) { appendOutput("║ NS:   $ns\n") } }
             } catch (_: Exception) { appendOutput("║ NS:   [Not available]\n") }
 
             appendOutput("╚══════════════════════════════════╝\n\n")
@@ -292,6 +325,58 @@ class WhoisLookupFragment : Fragment() {
         val start = idx + pattern.length
         val end = json.indexOf("\"", start)
         return if (end > start) json.substring(start, end) else "N/A"
+    }
+
+    private fun parseDnsJsonRecords(json: String, recordType: String): List<String> {
+        val results = mutableListOf<String>()
+        try {
+            // Find the "Answer" array in the JSON response
+            val answerKey = "\"Answer\":"
+            val answerIdx = json.indexOf(answerKey)
+            if (answerIdx < 0) return results
+            val arrayStart = json.indexOf('[', answerIdx)
+            val arrayEnd = json.indexOf(']', arrayStart)
+            if (arrayStart < 0 || arrayEnd < 0) return results
+            val answerArray = json.substring(arrayStart, arrayEnd + 1)
+
+            // Extract "data" fields from records matching the type
+            val typeKey = "\"type\":"
+            val dataKey = "\"data\":"
+            var searchIdx = 0
+            while (searchIdx < answerArray.length) {
+                val typeIdx = answerArray.indexOf(typeKey, searchIdx)
+                if (typeIdx < 0) break
+                // Read the type value
+                val typeValStart = typeIdx + typeKey.length
+                val typeValEnd = answerArray.indexOfAny(charArrayOf(',', '}', '\n'), typeValStart)
+                if (typeValEnd < 0) break
+                val typeVal = answerArray.substring(typeValStart, typeValEnd).trim().removeSurrounding("\"")
+
+                // Check if the type matches
+                val typeMatches = when (recordType) {
+                    "MX" -> typeVal == "15"
+                    "TXT" -> typeVal == "16"
+                    "NS" -> typeVal == "2"
+                    else -> false
+                }
+
+                if (typeMatches) {
+                    val dataIdx = answerArray.indexOf(dataKey, typeIdx)
+                    if (dataIdx in typeIdx..answerArray.indexOf(typeKey, typeIdx + 1).let { if (it < 0) answerArray.length else it }) {
+                        val dataValStart = dataIdx + dataKey.length
+                        val dataVal = answerArray.substring(dataValStart).trim()
+                        if (dataVal.startsWith("\"")) {
+                            val endQuote = dataVal.indexOf('"', 1)
+                            if (endQuote > 0) {
+                                results.add(dataVal.substring(1, endQuote))
+                            }
+                        }
+                    }
+                }
+                searchIdx = typeIdx + 1
+            }
+        } catch (_: Exception) {}
+        return results
     }
 
     private fun extractField(data: String, fieldName: String): String? {

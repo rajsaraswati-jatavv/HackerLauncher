@@ -476,7 +476,7 @@ class StorageAnalyzerFragment : Fragment() {
     }
 
     // ========== UPGRADE: Folder size ranking ==========
-    private fun scanForLargeFolders(
+    private suspend fun scanForLargeFolders(
         directory: File,
         results: MutableList<FolderInfo>
     ) {
@@ -536,7 +536,7 @@ class StorageAnalyzerFragment : Fragment() {
         }
     }
 
-    private fun scanForDuplicates(directory: File, hashMap: MutableMap<String, MutableList<String>>, minSize: Long) {
+    private suspend fun scanForDuplicates(directory: File, hashMap: MutableMap<String, MutableList<String>>, minSize: Long) {
         if (!directory.exists() || !directory.isDirectory) return
         val files = directory.listFiles() ?: return
 

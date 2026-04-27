@@ -27,6 +27,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.ArrayAdapter
+import android.view.Gravity
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -47,7 +48,7 @@ data class RecordingInfo(
     val fileSize: Long,
     val date: Long,
     val duration: Long = 0,
-    val phoneNumber: String = ""
+    var phoneNumber: String = ""
 )
 
 class CallRecorderFragment : Fragment() {
@@ -73,7 +74,7 @@ class CallRecorderFragment : Fragment() {
     private lateinit var audioSourceSpinner: Spinner
     private lateinit var storagePathEdit: EditText
     private lateinit var recordingsContainer: LinearLayout
-    private lateinit var disclaimerShown: Boolean
+    private var disclaimerShown: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,

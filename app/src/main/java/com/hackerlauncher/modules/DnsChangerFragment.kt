@@ -278,7 +278,7 @@ class DnsChangerFragment : Fragment() {
             }
 
             for ((name, avg) in results) {
-                val bar = "█".repeat((avg / 10).coerceAtMost(30))
+                val bar = "█".repeat((avg / 10).coerceAtMost(30).toInt())
                 val grade = when {
                     avg < 30 -> "FAST"
                     avg < 100 -> "GOOD"

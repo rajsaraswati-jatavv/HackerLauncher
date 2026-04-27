@@ -417,7 +417,7 @@ class FakeLocationFragment : Fragment() {
             try {
                 val mockEnabled = Settings.Secure.getInt(
                     requireContext().contentResolver,
-                    Settings.Global.MOCK_LOCATION, 0
+                    "mock_location", 0
                 )
                 appendOutput("  Mock Location: ${if (mockEnabled == 1) "Enabled" else "Disabled (API 22-)"}\n")
             } catch (_: Exception) {

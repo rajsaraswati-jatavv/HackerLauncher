@@ -862,7 +862,7 @@ class BatteryOptimizerFragment : Fragment() {
                     // Enable battery saver
                     if (!powerManager.isPowerSaveMode) {
                         try {
-                            Settings.Global.putInt(requireContext().contentResolver, Settings.Global.LOW_POWER_MODE, 1)
+                            Settings.Global.putInt(requireContext().contentResolver, "low_power", 1)
                         } catch (_: Exception) {}
                     }
                     // Reduce brightness

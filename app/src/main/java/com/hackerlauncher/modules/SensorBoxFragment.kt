@@ -168,10 +168,10 @@ class SensorBoxFragment : Fragment(), SensorEventListener {
         // Group by sensor type name for better readability
         val grouped = sensorList.groupBy { sensorTypeNames[it.type] ?: "Other (${it.type})" }
 
-        for ((typeName, sensors) in grouped.sortedBy { it.key }) {
+        for ((typeName, sensorInfos) in grouped.sortedBy { it.key }) {
             // Group header
             appListContainer.addView(TextView(requireContext()).apply {
-                text = "━━━ $typeName (${sensors.size}) ━━━"
+                text = "━━━ $typeName (${sensorInfos.size}) ━━━"
                 setTextColor(Color.parseColor("#FFFF00"))
                 textSize = 13f
                 setTypeface(Typeface.MONOSPACE, Typeface.BOLD)
@@ -182,7 +182,7 @@ class SensorBoxFragment : Fragment(), SensorEventListener {
                 )
             })
 
-            for ((index, info) in sensors.withIndex()) {
+            for ((index, info) in sensorInfos.withIndex()) {
                 val row = LinearLayout(requireContext()).apply {
                     orientation = LinearLayout.VERTICAL
                     setBackgroundColor(if (index % 2 == 0) DARK_GRAY else BLACK)

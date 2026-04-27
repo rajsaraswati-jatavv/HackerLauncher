@@ -198,46 +198,16 @@ class RamCleanerFragment : Fragment() {
         buttonViewWhitelist = view.findViewById(R.id.buttonViewWhitelist)
 
         // ========== UPGRADE: Init new views ==========
-        buttonSuperBoost = view.findViewById(R.id.buttonClean) // Reuse clean button style; add dynamically if needed
-        buttonDeepHibernation = view.findViewById(R.id.buttonDeepClean) // Reuse deep clean button; add dynamically
-        buttonSmartCleanRules = view.findViewById(R.id.buttonAddWhitelist) // Reuse; add dynamically
-        textViewPressureDetail = view.findViewById(R.id.textViewPressureLevel) // Reuse; add dynamically
+        buttonSuperBoost = view.findViewById(R.id.buttonClean) // Reuse clean button style
+        buttonDeepHibernation = view.findViewById(R.id.buttonDeepClean) // Reuse deep clean button
+        buttonSmartCleanRules = view.findViewById(R.id.buttonAddWhitelist) // Reuse whitelist button
+        textViewPressureDetail = view.findViewById(R.id.textViewPressureLevel) // Reuse pressure level
 
-        // Dynamically add upgrade buttons if container exists
+        // Reassign click listeners for upgrade functionality
         try {
-            val container = view.findViewById<LinearLayout>(R.id.layoutButtonsContainer)
-            if (container != null) {
-                buttonSuperBoost = Button(requireContext()).apply {
-                    text = "⚡ SUPER BOOST"
-                    setTextColor(0xFFFF0000.toInt())
-                    textSize = 14f
-                    setOnClickListener { performSuperBoost() }
-                }
-                container.addView(buttonSuperBoost)
-
-                buttonDeepHibernation = Button(requireContext()).apply {
-                    text = "🛑 DEEP HIBERNATION"
-                    setTextColor(0xFFFF8800.toInt())
-                    textSize = 14f
-                    setOnClickListener { showDeepHibernationDialog() }
-                }
-                container.addView(buttonDeepHibernation)
-
-                buttonSmartCleanRules = Button(requireContext()).apply {
-                    text = "📋 SMART CLEAN RULES"
-                    setTextColor(0xFF00FFFF.toInt())
-                    textSize = 14f
-                    setOnClickListener { showSmartCleanRulesDialog() }
-                }
-                container.addView(buttonSmartCleanRules)
-
-                textViewPressureDetail = TextView(requireContext()).apply {
-                    text = "Pressure: --"
-                    setTextColor(0xFF888888.toInt())
-                    textSize = 12f
-                }
-                container.addView(textViewPressureDetail)
-            }
+            buttonSuperBoost.setOnClickListener { performSuperBoost() }
+            buttonDeepHibernation.setOnClickListener { showDeepHibernationDialog() }
+            buttonSmartCleanRules.setOnClickListener { showSmartCleanRulesDialog() }
         } catch (_: Exception) {
             // Fallback: buttons are already assigned to existing views
         }

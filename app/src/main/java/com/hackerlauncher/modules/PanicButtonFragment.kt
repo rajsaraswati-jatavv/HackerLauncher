@@ -335,6 +335,7 @@ class PanicButtonFragment : Fragment() {
         appendOutput("\n╚══════════════════════════════════╝\n\n")
     }
 
+    @Suppress("DEPRECATION")
     private fun clearBrowserHistory() {
         try {
             requireContext().contentResolver.delete(

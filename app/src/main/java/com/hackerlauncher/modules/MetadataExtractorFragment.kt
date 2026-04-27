@@ -9,7 +9,6 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
-import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -269,7 +268,7 @@ class MetadataExtractorFragment : Fragment() {
                     // Standard EXIF tags
                     val exifTags = mapOf(
                         "Image Width" to AndroidXExifInterface.TAG_IMAGE_WIDTH,
-                        "Image Height" to AndroidXExifInterface.TAG_IMAGE_HEIGHT,
+                        "Image Height" to "ImageLength",
                         "Make" to AndroidXExifInterface.TAG_MAKE,
                         "Model" to AndroidXExifInterface.TAG_MODEL,
                         "Orientation" to AndroidXExifInterface.TAG_ORIENTATION,
@@ -330,9 +329,12 @@ class MetadataExtractorFragment : Fragment() {
 
                     // Altitude
                     try {
-                        val altitude = exif.altitude
-                        if (!altitude.isNaN()) {
-                            fields.add(MetadataField("GPS Altitude (computed)", "${"%.2f".format(altitude)}m"))
+                        val altitudeStr = exif.getAttribute(AndroidXExifInterface.TAG_GPS_ALTITUDE)
+                        if (!altitudeStr.isNullOrEmpty()) {
+                            val altitude = altitudeStr.toDoubleOrNull()
+                            if (altitude != null && !altitude.isNaN()) {
+                                fields.add(MetadataField("GPS Altitude (computed)", "${"%.2f".format(altitude)}m"))
+                            }
                         }
                     } catch (_: Exception) { }
 
@@ -342,16 +344,31 @@ class MetadataExtractorFragment : Fragment() {
                         fields.add(MetadataField("Has Thumbnail", hasThumbnail.toString()))
                     } catch (_: Exception) { }
 
-                    // All attributes via ExifInterface direct method
+                    // Additional EXIF tags (manual iteration)
                     try {
-                        val allTags = exif.allAttributesAsMap()
-                        if (allTags != null && allTags.isNotEmpty()) {
-                            fields.add(MetadataField("--- ALL EXIF TAGS ---", ""))
-                            for ((tag, value) in allTags.entries.sortedBy { it.key }) {
-                                if (value.isNotBlank() && fields.none { it.key == tag || it.value == value && it.key != tag }) {
+                        val additionalTags = listOf(
+                            AndroidXExifInterface.TAG_DATETIME,
+                            AndroidXExifInterface.TAG_MAKE,
+                            AndroidXExifInterface.TAG_MODEL,
+                            AndroidXExifInterface.TAG_ORIENTATION,
+                            AndroidXExifInterface.TAG_FLASH,
+                            AndroidXExifInterface.TAG_FOCAL_LENGTH,
+                            AndroidXExifInterface.TAG_WHITE_BALANCE,
+                            AndroidXExifInterface.TAG_GPS_LATITUDE,
+                            AndroidXExifInterface.TAG_GPS_LONGITUDE,
+                            AndroidXExifInterface.TAG_GPS_ALTITUDE,
+                            AndroidXExifInterface.TAG_GPS_DATESTAMP,
+                            AndroidXExifInterface.TAG_SOFTWARE,
+                            AndroidXExifInterface.TAG_COPYRIGHT
+                        )
+                        fields.add(MetadataField("--- ADDITIONAL EXIF TAGS ---", ""))
+                        for (tag in additionalTags) {
+                            try {
+                                val value = exif.getAttribute(tag)
+                                if (!value.isNullOrEmpty() && fields.none { it.key == tag || it.value == value && it.key != tag }) {
                                     fields.add(MetadataField("EXIF: $tag", value))
                                 }
-                            }
+                            } catch (_: Exception) { }
                         }
                     } catch (_: Exception) { }
 
