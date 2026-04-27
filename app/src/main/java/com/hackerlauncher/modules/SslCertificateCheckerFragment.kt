@@ -126,7 +126,7 @@ class SslCertificateCheckerFragment : Fragment() {
                         conn.connect()
 
                         val certs = conn.serverCertificates
-                        val session = (conn as? HttpsURLConnection)?.session
+                        val session: javax.net.ssl.SSLSession? = try { (conn as? HttpsURLConnection)?.session } catch (_: Exception) { null }
 
                         sb.append("╔══════════════════════════════════╗\n")
                         sb.append("║   SSL Certificate Report        ║\n")
