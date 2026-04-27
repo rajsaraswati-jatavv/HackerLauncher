@@ -4,66 +4,76 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.Log
-import com.hackerlauncher.launcher.AppLockService
-import com.hackerlauncher.utils.PreferencesManager
+import com.hackerlauncher.utils.Logger
 
+/**
+ * BootReceiver - Starts all services on device boot.
+ * CRITICAL FIX: Stagger service starts to prevent crash.
+ */
 class BootReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "BootReceiver"
     }
 
-    override fun onReceive(context: Context, intent: Intent) {
-        val action = intent.action ?: return
-        Log.d(TAG, "Received broadcast: $action")
+    override fun onReceive(context: Context, intent: Intent?) {
+        Logger.i(TAG, "BootReceiver triggered: ${intent?.action}")
 
-        val prefs = PreferencesManager(context)
-
-        // Always start core services regardless of action
-        startAllCoreServices(context, prefs)
-
-        // Log boot event
-        Log.i(TAG, "HackerLauncher services started on: $action")
+        when (intent?.action) {
+            Intent.ACTION_BOOT_COMPLETED,
+            "android.intent.action.QUICKBOOT_POWERON",
+            Intent.ACTION_REBOOT,
+            Intent.ACTION_USER_PRESENT,
+            Intent.ACTION_SCREEN_ON,
+            Intent.ACTION_MY_PACKAGE_REPLACED -> {
+                startServicesStaggered(context)
+            }
+        }
     }
 
-    private fun startAllCoreServices(context: Context, prefs: PreferencesManager) {
-        val servicesToStart = mutableListOf<Class<*>>()
+    private fun startServicesStaggered(context: Context) {
+        val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
 
-        // ALWAYS start these services - they are always-running
-        servicesToStart.add(DaemonService::class.java)
-        servicesToStart.add(WatchdogService::class.java)
-        servicesToStart.add(KeepAliveService::class.java)
-        servicesToStart.add(HackerForegroundService::class.java)
-        servicesToStart.add(NetworkMonitorService::class.java)
-        servicesToStart.add(ProcessMonitorService::class.java)
-        servicesToStart.add(SystemMonitorService::class.java)
+        // Start core service immediately
+        tryStartService(context, HackerForegroundService::class.java, "ACTION_START")
 
-        // Optional services based on settings
-        if (prefs.isAppLockEnabled()) {
-            servicesToStart.add(AppLockService::class.java)
-        }
-        if (prefs.isLocationTrackingEnabled()) {
-            servicesToStart.add(LocationTrackerService::class.java)
-        }
-        if (prefs.isOverlayEnabled()) {
-            servicesToStart.add(OverlayService::class.java)
-        }
+        // Stagger the rest
+        mainHandler.postDelayed({
+            tryStartService(context, DaemonService::class.java, "ACTION_START")
+        }, 3000L)
 
-        for (serviceClass in servicesToStart) {
-            try {
-                val serviceIntent = Intent(context, serviceClass).apply {
-                    action = "ACTION_START"
-                }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(serviceIntent)
-                } else {
-                    context.startService(serviceIntent)
-                }
-                Log.d(TAG, "Started service: ${serviceClass.simpleName}")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start ${serviceClass.simpleName}: ${e.message}")
+        mainHandler.postDelayed({
+            tryStartService(context, WatchdogService::class.java, "ACTION_START")
+        }, 6000L)
+
+        mainHandler.postDelayed({
+            tryStartService(context, KeepAliveService::class.java, "ACTION_START")
+        }, 9000L)
+
+        mainHandler.postDelayed({
+            tryStartService(context, NetworkMonitorService::class.java, "ACTION_START")
+        }, 12000L)
+
+        mainHandler.postDelayed({
+            tryStartService(context, ProcessMonitorService::class.java, "ACTION_START")
+        }, 15000L)
+
+        mainHandler.postDelayed({
+            tryStartService(context, SystemMonitorService::class.java, "ACTION_START")
+        }, 18000L)
+    }
+
+    private fun tryStartService(context: Context, serviceClass: Class<*>, action: String) {
+        try {
+            val intent = Intent(context, serviceClass).apply { this.action = action }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(intent)
+            } else {
+                context.startService(intent)
             }
+            Logger.i(TAG, "Boot-started: ${serviceClass.simpleName}")
+        } catch (e: Exception) {
+            Logger.e(TAG, "Failed to boot-start ${serviceClass.simpleName}: ${e.message}")
         }
     }
 }

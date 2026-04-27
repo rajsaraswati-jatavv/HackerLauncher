@@ -193,9 +193,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:stateNotNeeded="true"
-            android:clearTaskOnLaunch="true"
-            android:resumeWhilePausing="true">
+            android:stateNotNeeded="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -351,10 +349,10 @@
                 android:value="app_lock_monitor_service" />
         </service>
 
-        <!-- App Lock Activities -->
-        <activity android:name=".launcher.AppLockService$LockScreenActivity" android:exported="false"
+        <!-- App Lock Activities (top-level classes, not inner) -->
+        <activity android:name=".launcher.LockScreenActivity" android:exported="false"
             android:theme="@style/Theme.HackerLauncher" android:excludeFromRecents="true" />
-        <activity android:name=".launcher.AppLockService$FakeCrashActivity" android:exported="false"
+        <activity android:name=".launcher.FakeCrashActivity" android:exported="false"
             android:theme="@style/Theme.HackerLauncher" android:excludeFromRecents="true" />
 
         <!-- Notification Listener Service -->

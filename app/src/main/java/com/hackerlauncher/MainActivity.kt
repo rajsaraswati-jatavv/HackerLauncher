@@ -1,7 +1,5 @@
 package com.hackerlauncher
 
-import com.hackerlauncher.R
-
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
@@ -15,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.work.*
 import com.hackerlauncher.auth.FirebaseAuthManager
 import com.hackerlauncher.launcher.*
 import com.hackerlauncher.modules.*
@@ -37,40 +36,30 @@ class MainActivity : AppCompatActivity() {
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
     private val fragmentTags = arrayOf(
-        // Launcher features
         "home", "drawer", "search", "quicksettings", "weather",
         "calculator", "notes", "todo", "deviceinfo",
-        // New tools
         "clipboard", "screenrec", "audiorec", "flashlight",
         "battery", "ramcleaner", "processmgr", "speedtest",
         "qrscanner", "compass", "downloads", "contacts",
         "sms", "calllog", "calendar", "syscleaner",
-        // Storage cleaner tools
         "dupcleaner", "storageanalyzer", "appcache", "bigfiles",
-        // Hacker tools
         "terminal", "network", "osint", "crypto", "web",
         "anonymity", "files", "automation", "chat",
         "root", "wifarsenal", "subnetscan", "password", "bluetooth",
-        // Power tools
         "cpumonitor", "netspeed", "appmgr", "datausage"
     )
 
     private val tabLabels = listOf(
-        // Launcher tabs
         "Home", "Apps", "Search", "Quick", "Wthr",
         "Calc", "Notes", "Todo", "DevI",
-        // New tools
         "Clip", "Rec", "Audio", "Flash",
         "Batt", "RAM", "Proc", "Speed",
         "QR", "Comp", "DL", "Cont",
         "SMS", "Call", "Cal", "Clean",
-        // Storage cleaner tools
         "Dup", "Store", "Cache", "BigF",
-        // Hacker tools
         "Term", "Net", "OSINT", "Crypt", "Web",
         "Anon", "Files", "Auto", "Chat",
         "Root", "WiFi", "Sub", "Pass", "BT",
-        // Power tools
         "CPU", "NetS", "AppM", "Data"
     )
 
@@ -83,8 +72,12 @@ class MainActivity : AppCompatActivity() {
 
         prefs = PreferencesManager(this)
 
-        if (prefs.isBiometricLockEnabled()) showBiometricLock()
-        if (!prefs.isDisclaimerAccepted()) showDisclaimer()
+        try {
+            if (prefs.isBiometricLockEnabled()) showBiometricLock()
+            if (!prefs.isDisclaimerAccepted()) showDisclaimer()
+        } catch (e: Exception) {
+            Logger.error("Init check failed: ${e.message}")
+        }
 
         tabLayout = findViewById(R.id.tabLayout)
         fragmentContainer = findViewById(R.id.fragmentContainer)
@@ -96,15 +89,26 @@ class MainActivity : AppCompatActivity() {
         setupTabs()
         setupGestures()
 
-        // Request ALL permissions
-        val ph = PermissionHelper(this)
-        ph.requestAllPermissions()
-        ph.requestOverlayPermission()
-        ph.requestManageExternalStorage()
-        ph.requestIgnoreBatteryOptimization()
+        // Request permissions safely
+        try {
+            val ph = PermissionHelper(this)
+            ph.requestAllPermissions()
+            ph.requestOverlayPermission()
+            ph.requestManageExternalStorage()
+            ph.requestIgnoreBatteryOptimization()
+        } catch (e: Exception) {
+            Logger.error("Permission request failed: ${e.message}")
+        }
 
-        // Start ALL always-running services
-        startAllServices()
+        // Start auto-messaging cron job (every 1 hour)
+        scheduleHourlyAutoMessage()
+
+        // Start auto-upgrade check loop
+        scheduleAutoUpgradeCheck()
+
+        // Services are started by HackerApp - don't start them again here
+        // Just start optional services based on prefs
+        startOptionalServices()
 
         startLogUpdater()
         startStatusUpdater()
@@ -136,7 +140,7 @@ class MainActivity : AppCompatActivity() {
     private fun showDisclaimer() {
         AlertDialog.Builder(this)
             .setTitle("DISCLAIMER")
-            .setMessage("HackerLauncher v9.0 NEXT LEVEL is designed for EDUCATIONAL and AUTHORIZED TESTING purposes only.\n\n" +
+            .setMessage("HackerLauncher v10.0 CRASH-FIX is designed for EDUCATIONAL and AUTHORIZED TESTING purposes only.\n\n" +
                 "By using this application, you agree that:\n\n" +
                 "1. You will ONLY use these tools on systems you own or have explicit permission to test.\n" +
                 "2. You are solely responsible for any actions performed using this application.\n" +
@@ -150,10 +154,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateGreeting() {
-        val userName = if (FirebaseAuthManager.isLoggedIn()) FirebaseAuthManager.getUserName() else "Hacker"
-        val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
-        val greeting = when (hour) { in 0..5 -> "Good night"; in 6..11 -> "Good morning"; in 12..17 -> "Good afternoon"; else -> "Good evening" }
-        tvGreeting.text = "$greeting, $userName"
+        try {
+            val userName = FirebaseAuthManager.getUserName() // Safe - won't crash
+            val hour = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
+            val greeting = when (hour) { in 0..5 -> "Good night"; in 6..11 -> "Good morning"; in 12..17 -> "Good afternoon"; else -> "Good evening" }
+            tvGreeting.text = "$greeting, $userName"
+        } catch (e: Exception) {
+            tvGreeting.text = "Welcome, Hacker"
+        }
     }
 
     private fun setupTabs() {
@@ -167,7 +175,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createFragment(index: Int): Fragment = when (index) {
-        // Launcher features
         0 -> HomeLauncherFragment()
         1 -> AppDrawerFragment()
         2 -> SearchFragment()
@@ -177,7 +184,6 @@ class MainActivity : AppCompatActivity() {
         6 -> NotesFragment()
         7 -> TodoFragment()
         8 -> DeviceInfoFragment()
-        // New tools
         9 -> ClipboardManagerFragment()
         10 -> ScreenRecorderFragment()
         11 -> AudioRecorderFragment()
@@ -194,12 +200,10 @@ class MainActivity : AppCompatActivity() {
         22 -> CallLogFragment()
         23 -> CalendarFragment()
         24 -> SystemCleanerFragment()
-        // Storage cleaner tools
         25 -> DuplicateFileCleanerFragment()
         26 -> StorageAnalyzerFragment()
         27 -> AppCacheCleanerFragment()
         28 -> BigFileFinderFragment()
-        // Hacker tools
         29 -> TerminalFragment()
         30 -> NetworkModuleFragment()
         31 -> OsintFragment()
@@ -214,7 +218,6 @@ class MainActivity : AppCompatActivity() {
         40 -> SubnetScannerFragment()
         41 -> PasswordToolsFragment()
         42 -> BluetoothScannerFragment()
-        // Power tools
         43 -> CpuMonitorFragment()
         44 -> NetworkSpeedMonitorFragment()
         45 -> AppManagerFragment()
@@ -223,10 +226,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showFragment(index: Int) {
-        val tag = if (index < fragmentTags.size) fragmentTags[index] else "terminal"
-        val existingFragment = supportFragmentManager.findFragmentByTag(tag)
-        val fragment = existingFragment ?: createFragment(index)
-        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment, tag).commit()
+        try {
+            val tag = if (index < fragmentTags.size) fragmentTags[index] else "terminal"
+            val existingFragment = supportFragmentManager.findFragmentByTag(tag)
+            val fragment = existingFragment ?: createFragment(index)
+            supportFragmentManager.beginTransaction().replace(R.id.fragmentContainer, fragment, tag).commit()
+        } catch (e: Exception) {
+            Logger.error("Fragment show failed: ${e.message}")
+        }
     }
 
     private fun setupGestures() {
@@ -250,43 +257,82 @@ class MainActivity : AppCompatActivity() {
 
     override fun onTouchEvent(event: MotionEvent): Boolean = gestureDetector.onTouchEvent(event) || super.onTouchEvent(event)
 
-    /** START ALL ALWAYS-RUNNING SERVICES */
-    private fun startAllServices() {
-        val services = listOf(
-            DaemonService::class.java,
-            WatchdogService::class.java,
-            KeepAliveService::class.java,
-            HackerForegroundService::class.java,
-            NetworkMonitorService::class.java,
-            ProcessMonitorService::class.java,
-            SystemMonitorService::class.java
-        )
+    /**
+     * HOURLY AUTO-MESSAGE CRON JOB
+     * WorkManager PeriodicWorkRequest that runs every 1 hour
+     */
+    private fun scheduleHourlyAutoMessage() {
+        try {
+            val constraints = Constraints.Builder()
+                .setRequiresBatteryNotLow(false)
+                .setRequiresCharging(false)
+                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+                .build()
 
-        for (serviceClass in services) {
-            try {
-                val intent = Intent(this, serviceClass).apply { action = "ACTION_START" }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
-                Logger.info("Started service: ${serviceClass.simpleName}")
-            } catch (e: Exception) {
-                Logger.error("Failed to start ${serviceClass.simpleName}: ${e.message}")
+            val autoMessageWork = PeriodicWorkRequestBuilder<AutoMessageWorker>(
+                1, java.util.concurrent.TimeUnit.HOURS
+            )
+                .setConstraints(constraints)
+                .addTag("auto_message_hourly")
+                .build()
+
+            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "auto_message_hourly",
+                ExistingPeriodicWorkPolicy.KEEP,
+                autoMessageWork
+            )
+
+            Logger.info("Hourly auto-message cron job scheduled")
+        } catch (e: Exception) {
+            Logger.error("Failed to schedule auto-message: ${e.message}")
+        }
+    }
+
+    /**
+     * AUTO-UPGRADE CHECK LOOP
+     * Checks for new version every 6 hours and notifies user
+     */
+    private fun scheduleAutoUpgradeCheck() {
+        try {
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val upgradeWork = PeriodicWorkRequestBuilder<AutoUpgradeWorker>(
+                6, java.util.concurrent.TimeUnit.HOURS
+            )
+                .setConstraints(constraints)
+                .addTag("auto_upgrade_check")
+                .build()
+
+            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "auto_upgrade_check",
+                ExistingPeriodicWorkPolicy.KEEP,
+                upgradeWork
+            )
+
+            Logger.info("Auto-upgrade check loop scheduled (every 6 hours)")
+        } catch (e: Exception) {
+            Logger.error("Failed to schedule auto-upgrade: ${e.message}")
+        }
+    }
+
+    private fun startOptionalServices() {
+        try {
+            if (prefs.isOverlayEnabled()) {
+                startService(Intent(this, OverlayService::class.java))
             }
+        } catch (e: Exception) {
+            Logger.error("Failed to start overlay service: ${e.message}")
         }
 
-        // Start optional services
-        if (prefs.isOverlayEnabled()) {
-            try { startService(Intent(this, OverlayService::class.java)) } catch (_: Exception) {}
-        }
-        if (prefs.isAppLockEnabled()) {
-            try {
+        try {
+            if (prefs.isAppLockEnabled()) {
                 val intent = Intent(this, AppLockService::class.java).apply { action = AppLockService.ACTION_START }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
-            } catch (_: Exception) {}
-        }
-        if (prefs.isLocationTrackingEnabled()) {
-            try {
-                val intent = Intent(this, LocationTrackerService::class.java).apply { action = "ACTION_START" }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) startForegroundService(intent) else startService(intent)
-            } catch (_: Exception) {}
+            }
+        } catch (e: Exception) {
+            Logger.error("Failed to start app lock service: ${e.message}")
         }
     }
 
@@ -294,8 +340,10 @@ class MainActivity : AppCompatActivity() {
         scope.launch {
             while (isActive) {
                 delay(2000)
-                val logs = Logger.getLogBuffer().takeLast(3).joinToString("\n")
-                if (logs.isNotEmpty()) tvTerminalWidget.text = logs
+                try {
+                    val logs = Logger.getLogBuffer().takeLast(3).joinToString("\n")
+                    if (logs.isNotEmpty()) tvTerminalWidget.text = logs
+                } catch (e: Exception) { /* ignore */ }
             }
         }
     }
@@ -310,7 +358,7 @@ class MainActivity : AppCompatActivity() {
                     val caps = cm.getNetworkCapabilities(network)
                     val hasInternet = caps?.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
                     tvSystemStatus.setTextColor(if (hasInternet) 0xFF00FF00.toInt() else 0xFFFF0000.toInt())
-                } catch (_: Exception) { tvSystemStatus.setTextColor(0xFFFF0000.toInt()) }
+                } catch (e: Exception) { tvSystemStatus.setTextColor(0xFFFF0000.toInt()) }
             }
         }
     }
@@ -318,7 +366,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() { super.onResume(); updateGreeting() }
     override fun onDestroy() { super.onDestroy(); scope.cancel() }
 
-    // Inner fragment wrappers for launcher features
+    // Inner fragment wrappers
     class HomeLauncherFragment : androidx.fragment.app.Fragment() {
         override fun onCreateView(inflater: android.view.LayoutInflater, container: android.view.ViewGroup?, savedInstanceState: android.os.Bundle?) =
             android.widget.TextView(inflater.context).apply {

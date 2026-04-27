@@ -4,11 +4,12 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.hackerlauncher.services.*
 import com.hackerlauncher.utils.Logger
 
-class HackerApp : Application() {
+class HackerApp : Application(), Configuration.Provider {
 
     companion object {
         lateinit var instance: HackerApp
@@ -21,14 +22,28 @@ class HackerApp : Application() {
         super.onCreate()
         instance = this
 
-        createAllNotificationChannels()
-        WorkManager.getInstance(this)
+        try {
+            createAllNotificationChannels()
+        } catch (e: Exception) {
+            Logger.error("Failed to create notification channels: ${e.message}")
+        }
 
-        // Auto-start all always-running services on app create
-        startAlwaysRunningServices()
+        try {
+            WorkManager.initialize(this, workManagerConfiguration)
+        } catch (e: Exception) {
+            Logger.error("WorkManager already initialized: ${e.message}")
+        }
 
-        Logger.info("HackerApp v6.0 Ultimate initialized - ALL services running")
+        // Stagger service starts - DO NOT start all at once (causes crash)
+        startServicesStaggered()
+
+        Logger.info("HackerApp v10.0 CRASH-FIX initialized")
     }
+
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
+            .setMinimumLoggingLevel(android.util.Log.INFO)
+            .build()
 
     private fun createAllNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -95,6 +110,9 @@ class HackerApp : Application() {
                 },
                 NotificationChannel("system_health", "System Health", NotificationManager.IMPORTANCE_LOW).apply {
                     description = "System health reports"
+                },
+                NotificationChannel("auto_messages", "Auto Messages", NotificationManager.IMPORTANCE_DEFAULT).apply {
+                    description = "Automatic hourly message notifications"
                 }
             )
 
@@ -103,29 +121,54 @@ class HackerApp : Application() {
         }
     }
 
-    private fun startAlwaysRunningServices() {
-        val services = listOf(
-            DaemonService::class.java,
-            WatchdogService::class.java,
-            KeepAliveService::class.java,
-            HackerForegroundService::class.java,
-            NetworkMonitorService::class.java,
-            ProcessMonitorService::class.java,
-            SystemMonitorService::class.java
-        )
+    /**
+     * STAGGERED SERVICE START - CRITICAL FIX
+     * Starting all services at once causes ForegroundServiceDidNotStartInTimeException
+     * Now we start them with delays to give each service time to call startForeground()
+     */
+    private fun startServicesStaggered() {
+        val mainHandler = android.os.Handler(android.os.Looper.getMainLooper())
 
-        for (serviceClass in services) {
-            try {
-                val intent = android.content.Intent(this, serviceClass).apply { action = "ACTION_START" }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    startForegroundService(intent)
-                } else {
-                    startService(intent)
-                }
-                Logger.info("Auto-started: ${serviceClass.simpleName}")
-            } catch (e: Exception) {
-                Logger.error("Auto-start failed ${serviceClass.simpleName}: ${e.message}")
+        // Start only the core service immediately
+        tryStartService(HackerForegroundService::class.java, "ACTION_START")
+
+        // Stagger the rest with increasing delays
+        mainHandler.postDelayed({
+            tryStartService(DaemonService::class.java, "ACTION_START")
+        }, 2000L)
+
+        mainHandler.postDelayed({
+            tryStartService(WatchdogService::class.java, "ACTION_START")
+        }, 4000L)
+
+        mainHandler.postDelayed({
+            tryStartService(KeepAliveService::class.java, "ACTION_START")
+        }, 6000L)
+
+        mainHandler.postDelayed({
+            tryStartService(NetworkMonitorService::class.java, "ACTION_START")
+        }, 8000L)
+
+        mainHandler.postDelayed({
+            tryStartService(ProcessMonitorService::class.java, "ACTION_START")
+        }, 10000L)
+
+        mainHandler.postDelayed({
+            tryStartService(SystemMonitorService::class.java, "ACTION_START")
+        }, 12000L)
+    }
+
+    private fun tryStartService(serviceClass: Class<*>, action: String) {
+        try {
+            val intent = android.content.Intent(this, serviceClass).apply { this.action = action }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(intent)
+            } else {
+                startService(intent)
             }
+            Logger.info("Started service: ${serviceClass.simpleName}")
+        } catch (e: Exception) {
+            Logger.error("Failed to start ${serviceClass.simpleName}: ${e.message}")
         }
     }
 }
