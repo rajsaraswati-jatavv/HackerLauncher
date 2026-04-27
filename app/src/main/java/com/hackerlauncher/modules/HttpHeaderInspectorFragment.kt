@@ -354,7 +354,7 @@ class HttpHeaderInspectorFragment : Fragment() {
                         sb.append("║ HTTPS Status: ${httpsConn.responseCode}\n")
                         val hsts = httpsConn.getHeaderField("Strict-Transport-Security")
                         sb.append("║ HTTPS HSTS:   ${hsts ?: "Not set"}\n")
-                        val sslSess: javax.net.ssl.SSLSession? = try { httpsConn.session } catch (_: Exception) { null }
+                        val sslSess: javax.net.ssl.SSLSession? = try { httpsConn.getSession() } catch (_: Exception) { null }
                         sb.append("║ TLS Protocol: ${sslSess?.protocol ?: "N/A"}\n")
                         sb.append("║ Cipher:       ${sslSess?.cipherSuite ?: "N/A"}\n")
                         httpsConn.disconnect()
