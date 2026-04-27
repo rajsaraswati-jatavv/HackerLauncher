@@ -10,7 +10,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
-import android.provider.Browser
+// Browser import removed - API deprecated in API 30+
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
@@ -335,14 +335,11 @@ class PanicButtonFragment : Fragment() {
         appendOutput("\n╚══════════════════════════════════╝\n\n")
     }
 
-    @Suppress("DEPRECATION")
     private fun clearBrowserHistory() {
         try {
-            requireContext().contentResolver.delete(
-                Browser.BOOKMARKS_URI,
-                Browser.BookmarkColumns.BOOKMARK + " = 0",
-                null
-            )
+            // Browser.BOOKMARKS_URI removed in API 30+, use content provider approach
+            val bookmarkUri = android.net.Uri.parse("content://com.android.browser/history")
+            requireContext().contentResolver.delete(bookmarkUri, null, null)
             appendOutput("[+] Browser history cleared\n")
         } catch (e: Exception) {
             appendOutput("[*] Browser clear attempted (${e.message})\n")

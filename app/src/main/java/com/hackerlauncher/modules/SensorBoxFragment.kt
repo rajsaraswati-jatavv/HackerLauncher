@@ -168,7 +168,7 @@ class SensorBoxFragment : Fragment(), SensorEventListener {
         // Group by sensor type name for better readability
         val grouped = sensorList.groupBy { sensorTypeNames[it.type] ?: "Other (${it.type})" }
 
-        for ((typeName, sensorInfos) in grouped.sortedBy { it.key }) {
+        for ((typeName, sensorInfos) in grouped.toList().sortedBy { it.first }) {
             // Group header
             appListContainer.addView(TextView(requireContext()).apply {
                 text = "━━━ $typeName (${sensorInfos.size}) ━━━"

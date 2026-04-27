@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.coroutines.*
 import java.net.HttpURLConnection
 import java.net.URL
+import javax.net.ssl.HttpsURLConnection
 
 class HttpHeaderInspectorFragment : Fragment() {
 
@@ -353,8 +354,9 @@ class HttpHeaderInspectorFragment : Fragment() {
                         sb.append("║ HTTPS Status: ${httpsConn.responseCode}\n")
                         val hsts = httpsConn.getHeaderField("Strict-Transport-Security")
                         sb.append("║ HTTPS HSTS:   ${hsts ?: "Not set"}\n")
-                        sb.append("║ TLS Protocol: ${httpsConn.session?.protocol}\n")
-                        sb.append("║ Cipher:       ${httpsConn.session?.cipherSuite}\n")
+                        val sslSess = httpsConn.session
+                        sb.append("║ TLS Protocol: ${sslSess.protocol}\n")
+                        sb.append("║ Cipher:       ${sslSess.cipherSuite}\n")
                         httpsConn.disconnect()
                     } catch (e: Exception) {
                         sb.append("║ HTTPS: Connection failed (${e.message})\n")

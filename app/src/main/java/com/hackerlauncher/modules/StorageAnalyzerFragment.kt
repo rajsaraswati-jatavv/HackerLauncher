@@ -179,8 +179,7 @@ class StorageAnalyzerFragment : Fragment() {
             }
 
             // Add folder ranking recycler
-            val rootContainer = view.findViewById<ViewGroup>(android.R.id.content)?.getChildAt(0) as? ViewGroup
-                ?: view.findViewById<ViewGroup>(R.id.storagePieContainer).root as ViewGroup
+            val rootContainer = (view as? ViewGroup) ?: (view.parent as? ViewGroup) ?: view.rootView as ViewGroup
 
             // Add upgrade buttons
             val buttonContainer = LinearLayout(requireContext()).apply {
