@@ -75,7 +75,6 @@ private const val DEFAULT_TIMEOUT = 5
 class AppLockService : Service() {
 
     private val handler = Handler(Looper.getMainLooper())
-    private var isRunning = false
     private var lastUnlockedPackage: String? = null
     private var lastUnlockedTime: Long = 0
     private lateinit var prefs: SharedPreferences
@@ -307,6 +306,11 @@ class AppLockService : Service() {
         const val ACTION_START = "com.hackerlauncher.APP_LOCK_START"
         const val ACTION_STOP = "com.hackerlauncher.APP_LOCK_STOP"
         const val ACTION_TAKE_INTRUDER_PHOTO = "TAKE_INTRUDER_PHOTO"
+
+        @Volatile
+        private var isRunning = false
+
+        fun isServiceRunning(): Boolean = isRunning
 
         fun hashPin(pin: String): String {
             val digest = MessageDigest.getInstance("SHA-256")

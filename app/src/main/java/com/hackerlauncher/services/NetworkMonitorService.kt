@@ -92,7 +92,7 @@ class NetworkMonitorService : Service() {
     private var speedMonitorJob: Job? = null
     private var notificationUpdateJob: Job? = null
     private lateinit var connectivityManager: ConnectivityManager
-    private lateinit var wifiManager: WifiManager
+    private var wifiManager: WifiManager? = null
     private lateinit var prefs: SharedPreferences
 
     private var currentNetworkType = "none"
@@ -143,7 +143,7 @@ class NetworkMonitorService : Service() {
         Logger.i(TAG, "NetworkMonitorService onCreate")
         createNotificationChannel()
         connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        wifiManager = applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
         prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         lastRxBytes = getTotalRxBytes()
         lastTxBytes = getTotalTxBytes()
@@ -299,9 +299,10 @@ class NetworkMonitorService : Service() {
 
     private fun getWifiInfo(): Pair<String, Int> {
         return try {
-            if (!wifiManager.isWifiEnabled) return Pair("", 0)
+            val wm = wifiManager ?: return Pair("", 0)
+            if (!wm.isWifiEnabled) return Pair("", 0)
 
-            val wifiInfo = wifiManager.connectionInfo
+            val wifiInfo = wm.connectionInfo
             val ssid = wifiInfo?.ssid?.removeSurrounding("\"") ?: ""
             val rssi = wifiInfo?.rssi ?: -100
             val level = WifiManager.calculateSignalLevel(rssi, 101) // 0-100
@@ -315,8 +316,9 @@ class NetworkMonitorService : Service() {
 
     private fun getNetworkLinkSpeed(): Int {
         return try {
-            if (!wifiManager.isWifiEnabled) return 0
-            val wifiInfo = wifiManager.connectionInfo
+            val wm = wifiManager ?: return 0
+            if (!wm.isWifiEnabled) return 0
+            val wifiInfo = wm.connectionInfo
             wifiInfo?.linkSpeed ?: 0 // Mbps
         } catch (e: Exception) {
             0
@@ -529,7 +531,7 @@ class NetworkMonitorService : Service() {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
                 registerReceiver(connectivityReceiver, filter, Context.RECEIVER_EXPORTED)
             } else {
-                registerReceiver(connectivityReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+                registerReceiver(connectivityReceiver, filter, Context.RECEIVER_EXPORTED)
             }
             Logger.d(TAG, "Connectivity receiver registered")
         } catch (e: Exception) {

@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.work.*
 import com.hackerlauncher.auth.FirebaseAuthManager
 import com.hackerlauncher.launcher.*
 import com.hackerlauncher.modules.*
@@ -35,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     private val logger = Logger
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
-    // 78 fragments total - original 47 + 31 new
+    // 84 fragments total - original 47 + 31 new + 6 new modules
     private val fragmentTags = arrayOf(
         // Original 47
         "home", "drawer", "search", "quicksettings", "weather",
@@ -56,7 +55,9 @@ class MainActivity : AppCompatActivity() {
         "antitheft", "intruder", "perman", "deeplink", "honeypot",
         "vault", "panic", "fakeloc", "pinapp",
         "apkext", "sensor", "dimmer", "notifhist", "callrec",
-        "appclone", "devadmin", "revimg", "metadata"
+        "appclone", "devadmin", "revimg", "metadata",
+        // 6 NEW modules (v6.0.0)
+        "adblocker", "batterysaver", "storagemgr", "appbackup", "privacyguard", "netscanner"
     )
 
     private val tabLabels = listOf(
@@ -79,7 +80,9 @@ class MainActivity : AppCompatActivity() {
         "AntiT", "Intr", "Perm", "Deep", "Honey",
         "Vault", "Panic", "Fake", "Pin",
         "APK", "Sensor", "Dim", "Notif", "CallR",
-        "Clone", "DevAd", "RevImg", "Meta"
+        "Clone", "DevAd", "RevImg", "Meta",
+        // 6 NEW modules (v6.0.0)
+        "AdBlk", "BatSv", "StorM", "Bckup", "PrivG", "NetSc"
     )
 
     private lateinit var gestureDetector: GestureDetector
@@ -119,11 +122,8 @@ class MainActivity : AppCompatActivity() {
             Logger.error("Permission request failed: ${e.message}")
         }
 
-        // Start auto-messaging cron job (every 1 hour)
-        scheduleHourlyAutoMessage()
-
-        // Start auto-upgrade check loop
-        scheduleAutoUpgradeCheck()
+        // WorkManager scheduling is now handled in HackerApp.kt onCreate()
+        // No need to schedule here - avoids duplicate scheduling
 
         // Services are started by HackerApp - don't start them again here
         startOptionalServices()
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
     private fun showDisclaimer() {
         AlertDialog.Builder(this)
             .setTitle("DISCLAIMER")
-            .setMessage("HackerLauncher v12.0 ULTIMATE is designed for EDUCATIONAL and AUTHORIZED TESTING purposes only.\n\n" +
+            .setMessage("HackerLauncher v6.0.0 is designed for EDUCATIONAL and AUTHORIZED TESTING purposes only.\n\n" +
                 "By using this application, you agree that:\n\n" +
                 "1. You will ONLY use these tools on systems you own or have explicit permission to test.\n" +
                 "2. You are solely responsible for any actions performed using this application.\n" +
@@ -273,6 +273,13 @@ class MainActivity : AppCompatActivity() {
         75 -> DeviceAdminManagerFragment()
         76 -> ReverseImageSearchFragment()
         77 -> MetadataExtractorFragment()
+        // 6 NEW modules (v6.0.0) (index 78-83)
+        78 -> AdBlockerFragment()
+        79 -> BatterySaverFragment()
+        80 -> StorageManagerFragment()
+        81 -> AppBackupFragment()
+        82 -> PrivacyGuardFragment()
+        83 -> NetworkScannerFragment()
         else -> TerminalFragment()
     }
 
@@ -308,65 +315,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onTouchEvent(event: MotionEvent): Boolean = gestureDetector.onTouchEvent(event) || super.onTouchEvent(event)
 
-    /**
-     * HOURLY AUTO-MESSAGE CRON JOB
-     * WorkManager PeriodicWorkRequest that runs every 1 hour
-     */
-    private fun scheduleHourlyAutoMessage() {
-        try {
-            val constraints = Constraints.Builder()
-                .setRequiresBatteryNotLow(false)
-                .setRequiresCharging(false)
-                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
-                .build()
 
-            val autoMessageWork = PeriodicWorkRequestBuilder<AutoMessageWorker>(
-                1, java.util.concurrent.TimeUnit.HOURS
-            )
-                .setConstraints(constraints)
-                .addTag("auto_message_hourly")
-                .build()
-
-            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                "auto_message_hourly",
-                ExistingPeriodicWorkPolicy.KEEP,
-                autoMessageWork
-            )
-
-            Logger.info("Hourly auto-message cron job scheduled")
-        } catch (e: Exception) {
-            Logger.error("Failed to schedule auto-message: ${e.message}")
-        }
-    }
-
-    /**
-     * AUTO-UPGRADE CHECK LOOP
-     * Checks for new version every 6 hours and notifies user
-     */
-    private fun scheduleAutoUpgradeCheck() {
-        try {
-            val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build()
-
-            val upgradeWork = PeriodicWorkRequestBuilder<AutoUpgradeWorker>(
-                6, java.util.concurrent.TimeUnit.HOURS
-            )
-                .setConstraints(constraints)
-                .addTag("auto_upgrade_check")
-                .build()
-
-            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                "auto_upgrade_check",
-                ExistingPeriodicWorkPolicy.KEEP,
-                upgradeWork
-            )
-
-            Logger.info("Auto-upgrade check loop scheduled (every 6 hours)")
-        } catch (e: Exception) {
-            Logger.error("Failed to schedule auto-upgrade: ${e.message}")
-        }
-    }
 
     private fun startOptionalServices() {
         try {

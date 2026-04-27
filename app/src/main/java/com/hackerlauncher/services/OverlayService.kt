@@ -29,6 +29,8 @@ class OverlayService : Service() {
         var isRunning = false
             private set
 
+        fun isServiceRunning(): Boolean = isRunning
+
         @Volatile
         var overlayText: String = "HackerLauncher Active"
 

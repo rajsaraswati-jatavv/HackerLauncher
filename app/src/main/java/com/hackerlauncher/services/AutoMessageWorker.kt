@@ -1,7 +1,6 @@
 package com.hackerlauncher.services
 
 import android.app.ActivityManager
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -25,7 +24,13 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 
 /**
- * AutoMessageWorker - Hourly cron job that sends automatic messages.
+ * AutoMessageWorker - PeriodicWorkRequest that runs every 1 hour.
+ *
+ * FEATURE 1: WorkManager Hourly Auto-Messaging
+ * - Proper PeriodicWorkRequest running every 1 hour
+ * - Shows a notification with a hacker tip/message each time
+ * - Scheduled in HackerApp.kt onCreate() using WorkManager.getInstance(context).enqueueUniquePeriodicWork()
+ * - Uses ExistingPeriodicWorkPolicy.KEEP so it doesn't reschedule if already scheduled
  *
  * UPGRADE Features:
  * - Custom message templates (user can set their own messages)
@@ -34,6 +39,7 @@ import java.util.concurrent.TimeUnit
  * - Message history viewer (show all sent messages with timestamps)
  * - Scheduled messages (set specific time for messages)
  * - Message content includes: RAM usage, battery level, network status, uptime
+ * - Hacker tips rotation with 50+ tips
  */
 class AutoMessageWorker(
     context: Context,
@@ -51,13 +57,66 @@ class AutoMessageWorker(
         const val KEY_MESSAGE_COUNT = "message_count"
         const val KEY_LAST_MESSAGE_TIME = "last_message_time"
         const val KEY_MESSAGES_SENT = "messages_sent_log"
-        // UPGRADE: New keys
         const val KEY_CUSTOM_TEMPLATES = "custom_templates"
         const val KEY_SMS_CONTACTS = "sms_contacts"
         const val KEY_NOTIFICATION_CATEGORY = "notification_category"
         const val KEY_MESSAGE_HISTORY = "message_history"
         const val KEY_SCHEDULED_MESSAGES = "scheduled_messages"
         const val KEY_SMS_ENABLED = "sms_enabled"
+
+        /** 50+ Hacker tips for hourly notifications */
+        val HACKER_TIPS = listOf(
+            "Use VPN on public WiFi to prevent MITM attacks.",
+            "Always verify SSL certificates before entering credentials.",
+            "Enable 2FA on all accounts - it blocks 99.9% of automated attacks.",
+            "Use a password manager to generate unique 16+ char passwords.",
+            "Keep your device updated - patches fix critical CVEs.",
+            "Disable Bluetooth when not in use to prevent BlueBorne attacks.",
+            "Use Tor Browser for anonymous web browsing.",
+            "Check app permissions regularly - many apps over-request.",
+            "Encrypt your storage - Android encryption is hardware-backed.",
+            "Use SSH keys instead of passwords for server access.",
+            "Monitor network connections with: netstat -tulnp",
+            "Scan open ports with: nmap -sV target_ip",
+            "Check DNS leaks at dnsleaktest.com after connecting VPN.",
+            "Use fail2ban to prevent brute-force SSH attacks.",
+            "Regularly backup your data using the 3-2-1 rule.",
+            "Disable USB debugging when not needed.",
+            "Use Wireshark to analyze network traffic for anomalies.",
+            "Enable Android's built-in malware scanner in Google Play Protect.",
+            "Use signal or Element for encrypted messaging.",
+            "Never reuse passwords across different services.",
+            "Check for keyloggers: monitor running processes regularly.",
+            "Use uBlock Origin to block malicious ads and trackers.",
+            "Verify APK signatures before sideloading apps.",
+            "Use Kubernetes network policies to restrict pod communication.",
+            "Enable auditd for system call monitoring on Linux servers.",
+            "Use strace to debug process behavior: strace -p PID",
+            "Check for rootkits with rkhunter and chkrootkit.",
+            "Use iptables to configure firewall rules: iptables -L -n -v",
+            "Scan web apps with OWASP ZAP for vulnerabilities.",
+            "Use burp suite for API security testing.",
+            "Enable SELinux in enforcing mode for maximum protection.",
+            "Use GPG to encrypt sensitive emails and files.",
+            "Monitor logins with: last -a and lastb for failed attempts.",
+            "Use DNSSEC to prevent DNS spoofing attacks.",
+            "Configure SPF, DKIM, and DMARC for email security.",
+            "Use HSTS headers to enforce HTTPS on web servers.",
+            "Implement CSP headers to prevent XSS attacks.",
+            "Use container scanning tools like Trivy for Docker images.",
+            "Enable Android's Find My Device for remote wipe capability.",
+            "Review app data usage - high background data may indicate spyware.",
+            "Use VirtualBox snapshots before testing potentially dangerous software.",
+            "Regularly rotate API keys and access tokens.",
+            "Use certificate pinning in mobile apps to prevent MITM.",
+            "Check WiFi security: avoid WEP, use WPA3 if available.",
+            "Monitor battery drain - sudden spikes may indicate malware.",
+            "Use proxychains for routing traffic through multiple proxies.",
+            "Enable remote wipe for lost/stolen devices.",
+            "Use hashcat or john the ripper for password auditing.",
+            "Check for evil twin APs using WiFi scanning tools.",
+            "Use airgeddon to secure your wireless networks."
+        )
     }
 
     override suspend fun doWork(): Result {
@@ -74,8 +133,10 @@ class AutoMessageWorker(
             // Determine notification category
             val category = determineNotificationCategory(count)
 
-            // Show notification with proper category
-            sendAutoMessageNotification(message, category)
+            // Show notification with proper category and hacker tip
+            val tip = HACKER_TIPS[(count - 1) % HACKER_TIPS.size]
+            val fullMessage = "$message\n\n💡 Hacker Tip: $tip"
+            sendAutoMessageNotification(fullMessage, category)
 
             // UPGRADE: Process custom templates
             processCustomTemplates(count, now)
@@ -106,7 +167,7 @@ class AutoMessageWorker(
     }
 
     /**
-     * UPGRADE: Build message with comprehensive system status info
+     * Build message with comprehensive system status info
      * including RAM usage, battery level, network status, uptime
      */
     private fun buildHourlyMessage(count: Int, now: Long, lastTime: Long): String {
@@ -117,16 +178,16 @@ class AutoMessageWorker(
         val uptimeHours = uptimeMs / (1000 * 60 * 60)
         val uptimeMins = (uptimeMs / (1000 * 60)) % 60
 
-        // UPGRADE: Get RAM usage
+        // Get RAM usage
         val ramInfo = getRamUsageInfo()
 
-        // UPGRADE: Get battery level
+        // Get battery level
         val batteryInfo = getBatteryInfo()
 
-        // UPGRADE: Get network status
+        // Get network status
         val networkInfo = getNetworkStatus()
 
-        // UPGRADE: Get storage info
+        // Get storage info
         val storageInfo = getStorageInfo()
 
         // Check for custom templates first
@@ -164,7 +225,7 @@ class AutoMessageWorker(
         return "[${timeStr}] ${messages[index]}"
     }
 
-    // ========== UPGRADE: System info helpers ==========
+    // ========== System info helpers ==========
 
     private fun getRamUsageInfo(): Pair<String, Int> {
         return try {
@@ -235,10 +296,9 @@ class AutoMessageWorker(
         }
     }
 
-    // ========== UPGRADE: Notification categories ==========
+    // ========== Notification categories ==========
 
     private fun determineNotificationCategory(count: Int): String {
-        // Cycle through categories based on count
         return when (count % 4) {
             0 -> "SYSTEM_STATUS"
             1 -> "SECURITY_ALERT"
@@ -327,14 +387,13 @@ class AutoMessageWorker(
         }
     }
 
-    // ========== UPGRADE: Custom templates ==========
+    // ========== Custom templates ==========
 
     private fun processCustomTemplates(count: Int, now: Long) {
         // Custom templates are already processed in buildHourlyMessage
-        // This method handles additional template logic if needed
     }
 
-    // ========== UPGRADE: Scheduled messages ==========
+    // ========== Scheduled messages ==========
 
     private fun processScheduledMessages(now: Long) {
         val prefs = applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -357,7 +416,7 @@ class AutoMessageWorker(
         }
     }
 
-    // ========== UPGRADE: SMS auto-sending ==========
+    // ========== SMS auto-sending ==========
 
     private fun sendSmsToContacts(message: String) {
         try {
@@ -376,7 +435,6 @@ class AutoMessageWorker(
                 try {
                     val trimmed = phoneNumber.trim()
                     if (trimmed.isNotEmpty()) {
-                        // Send only first 160 chars for SMS
                         val smsText = message.take(160)
                         smsManager.sendTextMessage(trimmed, null, smsText, null, null)
                         Logger.i(TAG, "SMS sent to $trimmed")
@@ -390,406 +448,17 @@ class AutoMessageWorker(
         }
     }
 
-    // ========== UPGRADE: Message history ==========
+    // ========== Message history ==========
 
     private fun addMessageToHistory(timestamp: Long, message: String, category: String) {
         try {
             val prefs = applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             val historyStr = prefs.getString(KEY_MESSAGE_HISTORY, "") ?: ""
             val entry = "$timestamp|$category|${message.take(100)}"
-            val newHistory = "$historyStr\n$entry".takeLast(10000) // Keep last 10KB
+            val newHistory = "$historyStr\n$entry".takeLast(10000)
             prefs.edit().putString(KEY_MESSAGE_HISTORY, newHistory).apply()
         } catch (e: Exception) {
             Logger.e(TAG, "Failed to save message history: ${e.message}")
-        }
-    }
-}
-
-/**
- * AutoUpgradeWorker - Checks for app upgrades every 6 hours.
- *
- * UPGRADE Features:
- * - Auto-download APK when upgrade available
- * - Changelog viewer (show release notes from GitHub)
- * - Rollback support (keep last version APK)
- * - Beta channel option (check pre-releases too)
- * - Installation prompt with new features summary
- * - Version comparison details
- */
-class AutoUpgradeWorker(
-    context: Context,
-    params: WorkerParameters
-) : CoroutineWorker(context, params) {
-
-    companion object {
-        const val TAG = "AutoUpgradeWorker"
-        const val PREFS_NAME = "auto_upgrade_prefs"
-        const val KEY_CURRENT_VERSION = "current_version"
-        const val KEY_LAST_CHECK_TIME = "last_check_time"
-        const val KEY_AVAILABLE_VERSION = "available_version"
-        const val KEY_UPGRADE_AVAILABLE = "upgrade_available"
-        const val KEY_CHECK_COUNT = "check_count"
-        const val GITHUB_REPO = "rajsaraswati-jatavv/HackerLauncher"
-        // UPGRADE: New keys
-        const val KEY_AUTO_DOWNLOAD = "auto_download"
-        const val KEY_CHANGELOG = "changelog"
-        const val KEY_ROLLBACK_APK_PATH = "rollback_apk_path"
-        const val KEY_BETA_CHANNEL = "beta_channel"
-        const val KEY_PREVIOUS_VERSION = "previous_version"
-        const val KEY_DOWNLOAD_PATH = "download_path"
-        const val KEY_VERSION_COMPARISON = "version_comparison"
-        const val CHANNEL_ID_UPGRADE = "upgrade_alerts"
-        const val CHANNEL_ID_BETA = "beta_alerts"
-    }
-
-    override suspend fun doWork(): Result {
-        Logger.i(TAG, "AutoUpgradeWorker triggered - checking for upgrades")
-        return try {
-            val prefs = applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val checkCount = prefs.getInt(KEY_CHECK_COUNT, 0) + 1
-            val isBetaChannel = prefs.getBoolean(KEY_BETA_CHANNEL, false)
-            val isAutoDownload = prefs.getBoolean(KEY_AUTO_DOWNLOAD, false)
-
-            val currentVersion = try {
-                val pi = applicationContext.packageManager.getPackageInfo(applicationContext.packageName, 0)
-                pi.versionName ?: "10.0.0"
-            } catch (e: Exception) { "10.0.0" }
-
-            // Save previous version for rollback
-            val previousVersion = prefs.getString(KEY_CURRENT_VERSION, currentVersion) ?: currentVersion
-            prefs.edit().putString(KEY_PREVIOUS_VERSION, previousVersion).apply()
-
-            // Check GitHub API for latest release
-            var latestVersion = currentVersion
-            var upgradeAvailable = false
-            var downloadUrl = ""
-            var changelog = ""
-            var isPrerelease = false
-
-            try {
-                val apiUrl = if (isBetaChannel) {
-                    // Beta channel: check all releases including pre-releases
-                    "https://api.github.com/repos/$GITHUB_REPO/releases"
-                } else {
-                    "https://api.github.com/repos/$GITHUB_REPO/releases/latest"
-                }
-
-                val url = URL(apiUrl)
-                val connection = url.openConnection()
-                connection.connectTimeout = 10000
-                connection.readTimeout = 15000
-                connection.setRequestProperty("Accept", "application/vnd.github.v3+json")
-
-                val response = connection.getInputStream().bufferedReader().readText()
-
-                if (isBetaChannel) {
-                    // Parse array of releases for beta channel
-                    val releases = org.json.JSONArray(response)
-                    if (releases.length() > 0) {
-                        val latestRelease = releases.getJSONObject(0)
-                        latestVersion = latestRelease.optString("tag_name", currentVersion)
-                        changelog = latestRelease.optString("body", "No changelog available")
-                        isPrerelease = latestRelease.optBoolean("prerelease", false)
-
-                        val assets = latestRelease.optJSONArray("assets")
-                        if (assets != null && assets.length() > 0) {
-                            for (i in 0 until assets.length()) {
-                                val asset = assets.getJSONObject(i)
-                                val name = asset.optString("name", "")
-                                if (name.endsWith(".apk")) {
-                                    downloadUrl = asset.optString("browser_download_url", "")
-                                    break
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    // Parse single release for stable channel
-                    val json = org.json.JSONObject(response)
-                    latestVersion = json.optString("tag_name", currentVersion)
-                    changelog = json.optString("body", "No changelog available")
-
-                    val assets = json.optJSONArray("assets")
-                    if (assets != null && assets.length() > 0) {
-                        for (i in 0 until assets.length()) {
-                            val asset = assets.getJSONObject(i)
-                            val name = asset.optString("name", "")
-                            if (name.endsWith(".apk")) {
-                                downloadUrl = asset.optString("browser_download_url", "")
-                                break
-                            }
-                        }
-                    }
-                }
-
-                // Compare versions
-                upgradeAvailable = compareVersions(latestVersion, currentVersion) > 0
-
-                // UPGRADE: Build version comparison details
-                val comparisonDetails = buildVersionComparison(currentVersion, latestVersion, changelog, isPrerelease)
-
-                Logger.i(TAG, "Version check: current=$currentVersion latest=$latestVersion upgrade=$upgradeAvailable beta=$isBetaChannel")
-
-                // Update prefs
-                prefs.edit()
-                    .putString(KEY_CURRENT_VERSION, currentVersion)
-                    .putString(KEY_AVAILABLE_VERSION, latestVersion)
-                    .putBoolean(KEY_UPGRADE_AVAILABLE, upgradeAvailable)
-                    .putLong(KEY_LAST_CHECK_TIME, System.currentTimeMillis())
-                    .putInt(KEY_CHECK_COUNT, checkCount)
-                    .putString(KEY_CHANGELOG, changelog.take(5000))
-                    .putString(KEY_VERSION_COMPARISON, comparisonDetails)
-                    .putBoolean(KEY_BETA_CHANNEL, isBetaChannel)
-                    .apply()
-
-                // Show upgrade notification if available
-                if (upgradeAvailable) {
-                    sendUpgradeNotification(latestVersion, downloadUrl, changelog, isPrerelease)
-
-                    // UPGRADE: Auto-download APK if enabled
-                    if (isAutoDownload && downloadUrl.isNotEmpty()) {
-                        autoDownloadApk(downloadUrl, latestVersion)
-                    }
-
-                    // UPGRADE: Save rollback APK path (current version)
-                    saveRollbackInfo(currentVersion)
-                }
-
-            } catch (e: Exception) {
-                Logger.e(TAG, "GitHub API check failed: ${e.message}")
-                // Don't fail the worker - just log and continue
-            }
-
-            Logger.i(TAG, "Auto-upgrade check #$checkCount complete. Upgrade: $upgradeAvailable")
-            Result.success()
-        } catch (e: Exception) {
-            Logger.e(TAG, "Auto-upgrade check failed: ${e.message}")
-            Result.retry()
-        }
-    }
-
-    private fun compareVersions(v1: String, v2: String): Int {
-        val stripPrefix: (String) -> String = { v -> v.removePrefix("v").removePrefix("V") }
-        val parts1 = stripPrefix(v1).split(".").map { it.toIntOrNull() ?: 0 }
-        val parts2 = stripPrefix(v2).split(".").map { it.toIntOrNull() ?: 0 }
-        val maxLen = maxOf(parts1.size, parts2.size)
-        for (i in 0 until maxLen) {
-            val p1 = parts1.getOrElse(i) { 0 }
-            val p2 = parts2.getOrElse(i) { 0 }
-            if (p1 != p2) return p1 - p2
-        }
-        return 0
-    }
-
-    // ========== UPGRADE: Version comparison details ==========
-    private fun buildVersionComparison(
-        currentVersion: String,
-        latestVersion: String,
-        changelog: String,
-        isPrerelease: Boolean
-    ): String {
-        val stripPrefix: (String) -> String = { v -> v.removePrefix("v").removePrefix("V") }
-        val current = stripPrefix(currentVersion).split(".").map { it.toIntOrNull() ?: 0 }
-        val latest = stripPrefix(latestVersion).split(".").map { it.toIntOrNull() ?: 0 }
-
-        val sb = StringBuilder()
-        sb.appendLine("═══ VERSION COMPARISON ═══")
-        sb.appendLine("Current: v$currentVersion")
-        sb.appendLine("Available: v$latestVersion")
-        if (isPrerelease) sb.appendLine("⚠ PRE-RELEASE (Beta)")
-        sb.appendLine()
-
-        // Compare each version component
-        val labels = listOf("Major", "Minor", "Patch")
-        for (i in 0 until maxOf(current.size, latest.size)) {
-            val curr = current.getOrElse(i) { 0 }
-            val new = latest.getOrElse(i) { 0 }
-            val label = labels.getOrElse(i) { "Build" }
-            val status = when {
-                new > curr -> "⬆ UPGRADING"
-                new < curr -> "⬇ DOWNGRADING"
-                else -> "= Same"
-            }
-            sb.appendLine("$label: $curr → $new $status")
-        }
-
-        sb.appendLine()
-        sb.appendLine("── Changelog ──")
-        sb.append(changelog.take(2000))
-
-        return sb.toString()
-    }
-
-    // ========== UPGRADE: Auto-download APK ==========
-    private fun autoDownloadApk(downloadUrl: String, version: String) {
-        try {
-            Logger.i(TAG, "Auto-downloading APK for version $version")
-
-            val downloadDir = File(Environment.getExternalStorageDirectory(), Environment.DIRECTORY_DOWNLOADS)
-            if (!downloadDir.exists()) downloadDir.mkdirs()
-
-            val fileName = "HackerLauncher-${version.removePrefix("v").removePrefix("V")}.apk"
-            val targetFile = File(downloadDir, fileName)
-
-            // Download in background
-            val url = URL(downloadUrl)
-            val connection = url.openConnection()
-            connection.connectTimeout = 30000
-            connection.readTimeout = 60000
-
-            val input = connection.getInputStream()
-            val output = FileWriter(targetFile) // Use proper file output
-
-            val fileOutput = java.io.FileOutputStream(targetFile)
-            val buffer = ByteArray(8192)
-            var bytesRead: Int
-            while (input.read(buffer).also { bytesRead = it } != -1) {
-                fileOutput.write(buffer, 0, bytesRead)
-            }
-            fileOutput.close()
-            input.close()
-
-            // Save download path
-            val prefs = applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            prefs.edit().putString(KEY_DOWNLOAD_PATH, targetFile.absolutePath).apply()
-
-            Logger.i(TAG, "APK downloaded to ${targetFile.absolutePath}")
-
-            // Send notification for installation prompt
-            sendInstallPromptNotification(version, targetFile.absolutePath)
-
-        } catch (e: Exception) {
-            Logger.e(TAG, "Auto-download failed: ${e.message}")
-        }
-    }
-
-    // ========== UPGRADE: Rollback support ==========
-    private fun saveRollbackInfo(currentVersion: String) {
-        try {
-            val prefs = applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            // Save current version info for rollback
-            prefs.edit()
-                .putString(KEY_PREVIOUS_VERSION, currentVersion)
-                .putString(KEY_ROLLBACK_APK_PATH, "") // Would need to save current APK
-                .apply()
-        } catch (e: Exception) {
-            Logger.e(TAG, "Failed to save rollback info: ${e.message}")
-        }
-    }
-
-    // ========== UPGRADE: Installation prompt notification ==========
-    private fun sendInstallPromptNotification(version: String, apkPath: String) {
-        try {
-            val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(
-                    CHANNEL_ID_UPGRADE,
-                    "Installation Prompts",
-                    NotificationManager.IMPORTANCE_HIGH
-                ).apply {
-                    description = "App installation prompt notifications"
-                }
-                notificationManager.createNotificationChannel(channel)
-            }
-
-            val openIntent = Intent(applicationContext, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                putExtra("upgrade_available", true)
-                putExtra("new_version", version)
-                putExtra("apk_path", apkPath)
-            }
-            val openPending = PendingIntent.getActivity(
-                applicationContext, 0, openIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-            // Get changelog
-            val prefs = applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val changelog = prefs.getString(KEY_CHANGELOG, "See release notes for details.") ?: ""
-
-            val notification = NotificationCompat.Builder(applicationContext, CHANNEL_ID_UPGRADE)
-                .setContentTitle("📥 Ready to Install v$version")
-                .setContentText("APK downloaded. Tap to install HackerLauncher $version.")
-                .setStyle(NotificationCompat.BigTextStyle()
-                    .bigText("HackerLauncher $version is ready to install.\n\nWhat's new:\n${changelog.take(500)}\n\nTap to install."))
-                .setSmallIcon(android.R.drawable.ic_menu_upload)
-                .setContentIntent(openPending)
-                .setAutoCancel(true)
-                .setCategory(NotificationCompat.CATEGORY_RECOMMENDATION)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .build()
-
-            notificationManager.notify(3002, notification)
-        } catch (e: Exception) {
-            Logger.e(TAG, "Failed to send install prompt: ${e.message}")
-        }
-    }
-
-    private fun sendUpgradeNotification(version: String, downloadUrl: String, changelog: String, isPrerelease: Boolean) {
-        try {
-            val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channel = NotificationChannel(
-                    CHANNEL_ID_UPGRADE,
-                    "Upgrade Alerts",
-                    NotificationManager.IMPORTANCE_HIGH
-                ).apply {
-                    description = "App upgrade available notifications"
-                }
-                notificationManager.createNotificationChannel(channel)
-
-                if (isPrerelease) {
-                    val betaChannel = NotificationChannel(
-                        CHANNEL_ID_BETA,
-                        "Beta Alerts",
-                        NotificationManager.IMPORTANCE_HIGH
-                    ).apply {
-                        description = "Beta/pre-release upgrade notifications"
-                    }
-                    notificationManager.createNotificationChannel(betaChannel)
-                }
-            }
-
-            val channelId = if (isPrerelease) CHANNEL_ID_BETA else CHANNEL_ID_UPGRADE
-
-            val openIntent = Intent(applicationContext, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                putExtra("upgrade_available", true)
-                putExtra("new_version", version)
-            }
-            val openPending = PendingIntent.getActivity(
-                applicationContext, 0, openIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-            val title = if (isPrerelease) {
-                "🧪 Beta Update Available!"
-            } else {
-                "Upgrade Available!"
-            }
-
-            val notification = NotificationCompat.Builder(applicationContext, channelId)
-                .setContentTitle(title)
-                .setContentText("HackerLauncher $version is available. Tap to update.")
-                .setStyle(NotificationCompat.BigTextStyle()
-                    .bigText(buildString {
-                        append("A new version of HackerLauncher ($version) is available for download.\n\n")
-                        if (isPrerelease) append("⚠ This is a BETA/PRE-RELEASE version.\n\n")
-                        append("What's new:\n${changelog.take(500)}\n\n")
-                        append(if (downloadUrl.isNotEmpty()) "Tap to download." else "Check Settings for update.")
-                    }))
-                .setSmallIcon(android.R.drawable.ic_menu_upload)
-                .setContentIntent(openPending)
-                .setAutoCancel(true)
-                .setCategory(NotificationCompat.CATEGORY_RECOMMENDATION)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .build()
-
-            notificationManager.notify(3001, notification)
-        } catch (e: Exception) {
-            Logger.e(TAG, "Failed to send upgrade notification: ${e.message}")
         }
     }
 }

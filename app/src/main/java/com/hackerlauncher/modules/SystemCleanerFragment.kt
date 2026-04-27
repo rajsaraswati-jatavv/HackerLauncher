@@ -208,6 +208,462 @@ class SystemCleanerFragment : Fragment() {
         } catch (_: Exception) {
             // Fallback: create minimal references
         }
+
+        // ========== FEATURE 3: Add Cleanup Feature Buttons ==========
+        addCleanupFeatureViews(view)
+    }
+
+    // ========== FEATURE 3: RAM Boost, Junk Cleaner, Cache Cleaner, Storage Analyzer, Battery Optimizer ==========
+    private lateinit var btnRamBoost: MaterialButton
+    private lateinit var btnJunkCleaner: MaterialButton
+    private lateinit var btnCacheCleaner: MaterialButton
+    private lateinit var btnStorageAnalyzer: MaterialButton
+    private lateinit var btnBatteryOptimizer: MaterialButton
+    private lateinit var tvCleanupResult: TextView
+    private lateinit var cleanupProgressBar: ProgressBar
+    private var cleanupJob: Job? = null
+
+    private fun addCleanupFeatureViews(view: View) {
+        try {
+            val root = view.findViewById<LinearLayout>(R.id.tvStorageDetail).parent as? ViewGroup
+            if (root != null) {
+                // Section header
+                val sectionHeader = TextView(requireContext()).apply {
+                    text = "═══ SYSTEM TOOLS ═══"
+                    setTextColor(0xFF00FFFF.toInt())
+                    textSize = 13f
+                    setTypeface(android.graphics.Typeface.MONOSPACE, android.graphics.Typeface.BOLD)
+                    setPadding(0, 16, 0, 4)
+                }
+                root.addView(sectionHeader)
+
+                // Row 1: RAM Boost + Junk Cleaner
+                val row1 = LinearLayout(requireContext()).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                }
+
+                btnRamBoost = MaterialButton(requireContext()).apply {
+                    text = "⚡ RAM BOOST"
+                    setTextColor(0xFF00FF00.toInt())
+                    textSize = 11f
+                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                        marginEnd = 4
+                    }
+                    setOnClickListener { performRamBoost() }
+                }
+
+                btnJunkCleaner = MaterialButton(requireContext()).apply {
+                    text = "🗑️ JUNK CLEAN"
+                    setTextColor(0xFFFFFF00.toInt())
+                    textSize = 11f
+                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                        marginStart = 4
+                    }
+                    setOnClickListener { performJunkClean() }
+                }
+
+                row1.addView(btnRamBoost)
+                row1.addView(btnJunkCleaner)
+                root.addView(row1)
+
+                // Row 2: Cache Cleaner + Storage Analyzer
+                val row2 = LinearLayout(requireContext()).apply {
+                    orientation = LinearLayout.HORIZONTAL
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                }
+
+                btnCacheCleaner = MaterialButton(requireContext()).apply {
+                    text = "💾 CACHE CLEAN"
+                    setTextColor(0xFF00CCFF.toInt())
+                    textSize = 11f
+                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                        marginEnd = 4
+                    }
+                    setOnClickListener { performCacheClean() }
+                }
+
+                btnStorageAnalyzer = MaterialButton(requireContext()).apply {
+                    text = "📊 STORAGE"
+                    setTextColor(0xFFFF8800.toInt())
+                    textSize = 11f
+                    layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply {
+                        marginStart = 4
+                    }
+                    setOnClickListener { showStorageAnalyzer() }
+                }
+
+                row2.addView(btnCacheCleaner)
+                row2.addView(btnStorageAnalyzer)
+                root.addView(row2)
+
+                // Row 3: Battery Optimizer
+                btnBatteryOptimizer = MaterialButton(requireContext()).apply {
+                    text = "🔋 BATTERY OPTIMIZER"
+                    setTextColor(0xFFFF4444.toInt())
+                    textSize = 11f
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    setOnClickListener { showBatteryOptimizer() }
+                }
+                root.addView(btnBatteryOptimizer)
+
+                // Progress bar for cleanup operations
+                cleanupProgressBar = ProgressBar(requireContext(), null, android.R.attr.progressBarStyleHorizontal).apply {
+                    max = 100
+                    progress = 0
+                    visibility = View.GONE
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                }
+                root.addView(cleanupProgressBar)
+
+                // Result display
+                tvCleanupResult = TextView(requireContext()).apply {
+                    text = ""
+                    setTextColor(0xFF00FF00.toInt())
+                    textSize = 11f
+                    setTypeface(android.graphics.Typeface.MONOSPACE)
+                    setPadding(0, 4, 0, 8)
+                    visibility = View.GONE
+                }
+                root.addView(tvCleanupResult)
+            }
+        } catch (_: Exception) {}
+    }
+
+    /** RAM Boost: Kill background processes using ActivityManager */
+    private fun performRamBoost() {
+        if (cleanupJob?.isActive == true) return
+        cleanupProgressBar.visibility = View.VISIBLE
+        cleanupProgressBar.progress = 0
+        tvCleanupResult.visibility = View.VISIBLE
+        tvCleanupResult.text = "[>] Boosting RAM..."
+        tvCleanupResult.setTextColor(0xFFFFFF00.toInt())
+
+        cleanupJob = lifecycleScope.launch {
+            val am = requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val memInfo = ActivityManager.MemoryInfo()
+            am.getMemoryInfo(memInfo)
+            val beforeAvail = memInfo.availMem
+
+            // Animate progress
+            for (i in 1..30) {
+                delay(50)
+                withContext(Dispatchers.Main) { cleanupProgressBar.progress = i }
+            }
+
+            // Kill background processes
+            var killedCount = 0
+            val processes = am.runningAppProcesses ?: emptyList()
+            for (proc in processes) {
+                if (proc.importance > ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    try {
+                        am.killBackgroundProcesses(proc.processName)
+                        killedCount++
+                    } catch (_: Exception) {}
+                }
+            }
+
+            // Animate to completion
+            for (i in 31..100) {
+                delay(20)
+                withContext(Dispatchers.Main) { cleanupProgressBar.progress = i }
+            }
+
+            am.getMemoryInfo(memInfo)
+            val afterAvail = memInfo.availMem
+            val freedBytes = afterAvail - beforeAvail
+            val freedMb = freedBytes / (1024 * 1024)
+            val availMb = afterAvail / (1024 * 1024)
+            val totalMb = memInfo.totalMem / (1024 * 1024)
+            val usedPercent = ((totalMb - availMb) * 100 / totalMb)
+
+            withContext(Dispatchers.Main) {
+                tvCleanupResult.text = buildString {
+                    appendLine("═══ RAM BOOST RESULT ═══")
+                    appendLine("Processes Killed: $killedCount")
+                    appendLine("RAM Freed: ${freedMb}MB")
+                    appendLine("Available: ${availMb}MB / ${totalMb}MB")
+                    appendLine("Usage: $usedPercent%")
+                    append("Status: ✅ OPTIMIZED")
+                }
+                tvCleanupResult.setTextColor(0xFF00FF00.toInt())
+                cleanupProgressBar.visibility = View.GONE
+            }
+        }
+    }
+
+    /** Junk Cleaner: Clean cache files from all apps */
+    private fun performJunkClean() {
+        if (cleanupJob?.isActive == true) return
+        cleanupProgressBar.visibility = View.VISIBLE
+        cleanupProgressBar.progress = 0
+        tvCleanupResult.visibility = View.VISIBLE
+        tvCleanupResult.text = "[>] Scanning junk files..."
+        tvCleanupResult.setTextColor(0xFFFFFF00.toInt())
+
+        cleanupJob = lifecycleScope.launch {
+            var totalJunkSize = 0L
+            var junkFileCount = 0
+
+            val junkDirs = mutableListOf<File>()
+            requireContext().cacheDir?.let { junkDirs.add(it) }
+            requireContext().externalCacheDir?.let { junkDirs.add(it) }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                requireContext().codeCacheDir?.let { junkDirs.add(it) }
+            }
+            junkDirs.add(File(Environment.getExternalStorageDirectory(), ".thumbnails"))
+            junkDirs.add(File(Environment.getExternalStorageDirectory(), "tmp"))
+            junkDirs.add(File(Environment.getExternalStorageDirectory(), "temp"))
+
+            // Calculate total junk size first
+            for (dir in junkDirs) {
+                if (dir.exists() && dir.isDirectory) {
+                    totalJunkSize += calculateDirectorySize(dir)
+                }
+            }
+
+            // Animate progress during cleaning
+            for ((index, dir) in junkDirs.withIndex()) {
+                if (dir.exists() && dir.isDirectory) {
+                    val files = dir.listFiles() ?: continue
+                    for (file in files) {
+                        try {
+                            if (file.isFile) {
+                                file.delete()
+                                junkFileCount++
+                            }
+                        } catch (_: Exception) {}
+                    }
+                }
+                val progress = ((index + 1) * 100 / junkDirs.size)
+                withContext(Dispatchers.Main) { cleanupProgressBar.progress = progress }
+                delay(50)
+            }
+
+            val freedMb = totalJunkSize / (1024 * 1024)
+            withContext(Dispatchers.Main) {
+                tvCleanupResult.text = buildString {
+                    appendLine("═══ JUNK CLEAN RESULT ═══")
+                    appendLine("Files Cleaned: $junkFileCount")
+                    appendLine("Space Freed: ${freedMb}MB")
+                    appendLine("Directories Scanned: ${junkDirs.size}")
+                    append("Status: ✅ CLEANED")
+                }
+                tvCleanupResult.setTextColor(0xFF00FF00.toInt())
+                cleanupProgressBar.visibility = View.GONE
+            }
+        }
+    }
+
+    /** Cache Cleaner: Clean app-specific cache */
+    private fun performCacheClean() {
+        if (cleanupJob?.isActive == true) return
+        cleanupProgressBar.visibility = View.VISIBLE
+        cleanupProgressBar.progress = 0
+        tvCleanupResult.visibility = View.VISIBLE
+        tvCleanupResult.text = "[>] Cleaning app caches..."
+        tvCleanupResult.setTextColor(0xFFFFFF00.toInt())
+
+        cleanupJob = lifecycleScope.launch {
+            val pm = requireContext().packageManager
+            val packages = pm.getInstalledApplications(0)
+            var totalFreed = 0L
+            var appsCleaned = 0
+
+            for ((index, appInfo) in packages.withIndex()) {
+                withContext(Dispatchers.IO) {
+                    try {
+                        // Clean app's external cache
+                        val cacheDir = File("${Environment.getExternalStorageDirectory()}/Android/data/${appInfo.packageName}/cache")
+                        if (cacheDir.exists() && cacheDir.isDirectory) {
+                            val size = calculateDirectorySize(cacheDir)
+                            if (deleteDirectory(cacheDir)) {
+                                totalFreed += size
+                                appsCleaned++
+                            }
+                        }
+                    } catch (_: Exception) {}
+                }
+
+                val progress = ((index + 1) * 100 / packages.size)
+                withContext(Dispatchers.Main) { cleanupProgressBar.progress = progress }
+            }
+
+            // Also clean own cache
+            val ownFreed = cleanOwnCache()
+            totalFreed += ownFreed
+
+            val freedMb = totalFreed / (1024 * 1024)
+            withContext(Dispatchers.Main) {
+                tvCleanupResult.text = buildString {
+                    appendLine("═══ CACHE CLEAN RESULT ═══")
+                    appendLine("Apps Cleaned: $appsCleaned")
+                    appendLine("Cache Freed: ${freedMb}MB")
+                    appendLine("Total Packages: ${packages.size}")
+                    append("Status: ✅ CACHES CLEARED")
+                }
+                tvCleanupResult.setTextColor(0xFF00FF00.toInt())
+                cleanupProgressBar.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun cleanOwnCache(): Long {
+        var freed = 0L
+        try {
+            val dirs = mutableListOf<File>()
+            requireContext().cacheDir?.let { dirs.add(it) }
+            requireContext().externalCacheDir?.let { dirs.add(it) }
+            for (dir in dirs) {
+                if (dir.exists()) {
+                    freed += calculateDirectorySize(dir)
+                    dir.listFiles()?.forEach { it.deleteRecursively() }
+                }
+            }
+        } catch (_: Exception) {}
+        return freed
+    }
+
+    /** Storage Analyzer: Show storage usage breakdown */
+    private fun showStorageAnalyzer() {
+        cleanupProgressBar.visibility = View.VISIBLE
+        cleanupProgressBar.progress = 0
+        tvCleanupResult.visibility = View.VISIBLE
+        tvCleanupResult.text = "[>] Analyzing storage..."
+        tvCleanupResult.setTextColor(0xFFFFFF00.toInt())
+
+        lifecycleScope.launch {
+            val categories = mutableMapOf<String, Long>()
+
+            withContext(Dispatchers.IO) {
+                val root = Environment.getExternalStorageDirectory()
+                val dirs = root.listFiles() ?: emptyArray()
+
+                for ((index, dir) in dirs.withIndex()) {
+                    if (dir.isDirectory) {
+                        val size = calculateDirectorySize(dir)
+                        if (size > 0) {
+                            categories[dir.name] = size
+                        }
+                    }
+                    withContext(Dispatchers.Main) {
+                        cleanupProgressBar.progress = ((index + 1) * 100 / dirs.size)
+                    }
+                }
+            }
+
+            // Sort by size descending
+            val sorted = categories.entries.sortedByDescending { it.value }
+            val totalUsed = sorted.sumOf { it.value }
+
+            withContext(Dispatchers.Main) {
+                tvCleanupResult.text = buildString {
+                    appendLine("═══ STORAGE ANALYSIS ═══")
+                    val stat = StatFs(Environment.getDataDirectory().path)
+                    val totalBytes = stat.totalBytes
+                    val availBytes = stat.availableBytes
+                    val usedBytes = totalBytes - availBytes
+                    appendLine("Total: ${formatFileSize(totalBytes)}")
+                    appendLine("Used:  ${formatFileSize(usedBytes)}")
+                    appendLine("Free:  ${formatFileSize(availBytes)}")
+                    appendLine("───────────────────────")
+
+                    for ((name, size) in sorted.take(15)) {
+                        val percent = if (totalUsed > 0) (size * 100 / totalUsed) else 0
+                        val bar = "█".repeat((percent / 5).coerceAtMost(20))
+                        appendLine("$name: ${formatFileSize(size)} $bar ${percent}%")
+                    }
+
+                    if (sorted.size > 15) {
+                        appendLine("... and ${sorted.size - 15} more directories")
+                    }
+                    append("Status: ✅ ANALYSIS COMPLETE")
+                }
+                tvCleanupResult.setTextColor(0xFF00FF00.toInt())
+                cleanupProgressBar.visibility = View.GONE
+            }
+        }
+    }
+
+    /** Battery Optimizer: Show battery-draining apps and option to force-stop them */
+    private fun showBatteryOptimizer() {
+        tvCleanupResult.visibility = View.VISIBLE
+        tvCleanupResult.text = "[>] Analyzing battery usage..."
+        tvCleanupResult.setTextColor(0xFFFFFF00.toInt())
+
+        lifecycleScope.launch {
+            val am = requireContext().getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val batteryIntent = requireContext().registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            val batteryLevel = batteryIntent?.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, 0) ?: 0
+            val batteryStatus = batteryIntent?.getIntExtra(android.os.BatteryManager.EXTRA_STATUS, -1) ?: -1
+            val isCharging = batteryStatus == android.os.BatteryManager.BATTERY_STATUS_CHARGING ||
+                    batteryStatus == android.os.BatteryManager.BATTERY_STATUS_FULL
+            val batteryTemp = batteryIntent?.getIntExtra(android.os.BatteryManager.EXTRA_TEMPERATURE, 0) ?: 0
+            val tempCelsius = batteryTemp / 10.0
+            val batteryVoltage = batteryIntent?.getIntExtra(android.os.BatteryManager.EXTRA_VOLTAGE, 0) ?: 0
+            val voltageVolts = batteryVoltage / 1000.0
+            val batteryTech = batteryIntent?.getStringExtra(android.os.BatteryManager.EXTRA_TECHNOLOGY) ?: "Unknown"
+
+            // Get running processes and their memory usage (proxy for battery drain)
+            val processes = am.runningAppProcesses ?: emptyList()
+            val drainingApps = mutableListOf<Triple<String, Int, Long>>() // name, importance, mem
+
+            withContext(Dispatchers.IO) {
+                for (proc in processes) {
+                    if (proc.importance > ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                        try {
+                            val memInfo = am.getProcessMemoryInfo(intArrayOf(proc.pid))
+                            val totalPss = memInfo.firstOrNull()?.totalPss?.toLong() ?: 0L
+                            drainingApps.add(Triple(proc.processName, proc.importance, totalPss * 1024))
+                        } catch (_: Exception) {}
+                    }
+                }
+                drainingApps.sortByDescending { it.third }
+            }
+
+            val topDraining = drainingApps.take(10)
+
+            withContext(Dispatchers.Main) {
+                tvCleanupResult.text = buildString {
+                    appendLine("═══ BATTERY OPTIMIZER ═══")
+                    appendLine("Level: $batteryLevel% ${if (isCharging) "⚡ Charging" else "🔋 Discharging"}")
+                    appendLine("Temperature: ${"%.1f".format(tempCelsius)}°C")
+                    appendLine("Voltage: ${"%.2f".format(voltageVolts)}V")
+                    appendLine("Technology: $batteryTech")
+                    appendLine("───────────────────────")
+                    appendLine("Top Battery-Draining Apps:")
+
+                    for ((name, importance, mem) in topDraining) {
+                        val impLabel = when (importance) {
+                            ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE -> "VIS"
+                            ActivityManager.RunningAppProcessInfo.IMPORTANCE_SERVICE -> "SVC"
+                            ActivityManager.RunningAppProcessInfo.IMPORTANCE_BACKGROUND -> "BG"
+                            else -> "OTH"
+                        }
+                        val memMb = mem / (1024 * 1024)
+                        appendLine("  [$impLabel] ${name.take(30)} ${memMb}MB")
+                    }
+
+                    appendLine("───────────────────────")
+                    appendLine("Background Processes: ${drainingApps.size}")
+                    append("Tap RAM BOOST to kill background apps")
+                }
+                tvCleanupResult.setTextColor(0xFF00FF00.toInt())
+                cleanupProgressBar.visibility = View.GONE
+            }
+        }
     }
 
     private fun checkStoragePermission() {

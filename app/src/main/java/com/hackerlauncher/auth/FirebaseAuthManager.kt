@@ -22,6 +22,8 @@ class FirebaseAuthManager {
             return try {
                 Class.forName("com.google.firebase.auth.FirebaseAuth")
                 val instance = com.google.firebase.auth.FirebaseAuth.getInstance()
+                // Verify the instance is usable (not from placeholder config)
+                instance.app.name // This will throw if FirebaseApp is misconfigured
                 firebaseAvailable = true
                 true
             } catch (e: Exception) {

@@ -5,9 +5,14 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import androidx.work.Configuration
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.hackerlauncher.services.*
 import com.hackerlauncher.utils.Logger
+import java.util.concurrent.TimeUnit
 
 class HackerApp : Application(), Configuration.Provider {
 
@@ -28,24 +33,18 @@ class HackerApp : Application(), Configuration.Provider {
             Logger.error("Failed to create notification channels: ${e.message}")
         }
 
-        try {
-            // WorkManager is now initialized via Configuration.Provider interface
-            // The default initializer is disabled in AndroidManifest
-            WorkManager.getInstance(this)
-            Logger.info("WorkManager initialized successfully")
-        } catch (e: Exception) {
-            Logger.error("WorkManager initialization failed: ${e.message}")
-            try {
-                WorkManager.initialize(this, workManagerConfiguration)
-            } catch (e2: Exception) {
-                Logger.error("WorkManager fallback init failed: ${e2.message}")
-            }
-        }
+        // WorkManager auto-initializes via Configuration.Provider interface
+        // The default initializer is disabled in AndroidManifest and on-demand
+        // initialization is handled by implementing Configuration.Provider
+
+        // Schedule WorkManager periodic jobs
+        scheduleHourlyAutoMessage()
+        scheduleAutoUpgradeCheck()
 
         // Stagger service starts - DO NOT start all at once (causes crash)
         startServicesStaggered()
 
-        Logger.info("HackerApp v10.0 CRASH-FIX initialized")
+        Logger.info("HackerApp v6.0.0 initialized")
     }
 
     override val workManagerConfiguration: Configuration
@@ -166,11 +165,83 @@ class HackerApp : Application(), Configuration.Provider {
         }, 12000L)
     }
 
+    /**
+     * FEATURE 1: Schedule hourly auto-message using WorkManager
+     * PeriodicWorkRequest that runs every 1 hour
+     * Uses ExistingPeriodicWorkPolicy.KEEP to avoid rescheduling
+     */
+    private fun scheduleHourlyAutoMessage() {
+        try {
+            val constraints = Constraints.Builder()
+                .setRequiresBatteryNotLow(false)
+                .setRequiresCharging(false)
+                .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+                .build()
+
+            val autoMessageWork = PeriodicWorkRequestBuilder<AutoMessageWorker>(
+                1, TimeUnit.HOURS
+            )
+                .setConstraints(constraints)
+                .addTag("auto_message_hourly")
+                .build()
+
+            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "auto_message_hourly",
+                ExistingPeriodicWorkPolicy.KEEP,
+                autoMessageWork
+            )
+
+            Logger.info("Hourly auto-message WorkManager job scheduled")
+        } catch (e: Exception) {
+            Logger.error("Failed to schedule auto-message: ${e.message}")
+        }
+    }
+
+    /**
+     * FEATURE 2: Schedule auto-upgrade check every 6 hours
+     * Checks GitHub API for latest release and prompts install
+     * Uses ExistingPeriodicWorkPolicy.KEEP to avoid rescheduling
+     */
+    private fun scheduleAutoUpgradeCheck() {
+        try {
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+
+            val upgradeWork = PeriodicWorkRequestBuilder<AutoUpgradeWorker>(
+                6, TimeUnit.HOURS
+            )
+                .setConstraints(constraints)
+                .addTag("auto_upgrade_check")
+                .build()
+
+            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "auto_upgrade_check",
+                ExistingPeriodicWorkPolicy.KEEP,
+                upgradeWork
+            )
+
+            Logger.info("Auto-upgrade check WorkManager job scheduled (every 6 hours)")
+        } catch (e: Exception) {
+            Logger.error("Failed to schedule auto-upgrade: ${e.message}")
+        }
+    }
+
     private fun tryStartService(serviceClass: Class<*>, action: String) {
         try {
             val intent = android.content.Intent(this, serviceClass).apply { this.action = action }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                startForegroundService(intent)
+                // Android 12+ requires app to be in foreground before starting foreground services
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    try {
+                        startForegroundService(intent)
+                    } catch (e: android.app.ForegroundServiceStartNotAllowedException) {
+                        Logger.error("Cannot start foreground service ${serviceClass.simpleName} from background: ${e.message}")
+                        return
+                    }
+                } else {
+                    startForegroundService(intent)
+                }
             } else {
                 startService(intent)
             }
