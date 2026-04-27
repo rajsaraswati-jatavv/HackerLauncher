@@ -81,43 +81,128 @@ jobs:
         tag_name: v${{ steps.version.outputs.version_name }}
         name: HackerLauncher v${{ steps.version.outputs.version_name }}
         body: |
-          # HackerLauncher v${{ steps.version.outputs.version_name }} - ULTIMATE EDITION
+          # HackerLauncher v${{ steps.version.outputs.version_name }}
 
-          ## v12.0.0 ULTIMATE - 100+ Features
+          ## 🔧 CRITICAL CRASH FIXES (This Version)
 
-          ### Critical Crash Fixes
-          - **BootReceiver** - Fixed wrong action strings causing ForegroundServiceDidNotStartInTimeException
-          - **AppLockService** - Fixed intruder photo never triggering (missing action handler)
-          - **Service Restart Storm** - Added 30-second rate-limiting between restart attempts
-          - **ProcessMonitorService ANR** - Fixed heavy notification updates blocking main thread
-          - **HackerForegroundService** - Added to Watchdog monitoring list
-          - **Coroutine Scope Leak** - Added scope.cancel() in onDestroy() for all 7 services
-          - **DaemonService WakeLock** - Added periodic re-acquisition before 12-hour expiry
+          - **Firebase Auto-Init Crash** - Disabled Firebase auto-initialization (placeholder google-services.json was causing IllegalStateException before app even started)
+          - **Notification Icon Crash** - Fixed RemoteServiceException (Android requires white notification icons, not colored)
+          - **WorkManager Double-Init Crash** - Fixed IllegalStateException from WorkManager being initialized twice
+          - **Missing FileProvider** - Added FileProvider declaration for file sharing
+          - **BootReceiver directBootAware** - Removed to prevent SecurityException on boot
+          - **AppLockService/OverlayService** - Added isServiceRunning() for watchdog compatibility
+          - **Android 12+ Foreground Service** - Added ForegroundServiceStartNotAllowedException handling
+          - **FirebaseAuthManager** - Added null safety for Firebase without real config
+          - **NetworkMonitorService** - Fixed WifiManager null safety and receiver registration
+          - **Compilation Errors** - Fixed type mismatches, missing imports, typos
 
-          ### 31 NEW Features Added
-          **Network Tools:** VPN Monitor, Port Scanner, DNS Changer, IP Geolocation, Whois Lookup, SSL Certificate Checker, HTTP Header Inspector, MAC Address Changer, Packet Capture, Connection Logger, WiFi Password Viewer, SIP Scanner, Network Booster
-          
-          **Security Tools:** Anti-Theft (remote lock/alarm/locate/wipe), Intruder Selfie (enhanced), Permission Analyzer, Deep Link Scanner, Honeypot Detector, Secure Vault (AES encrypted), Panic Button, Fake Location, Screen Pinning, Device Admin Manager
-          
-          **Utility Tools:** APK Extractor/Backup, Sensor Box, Screen Dimmer/Night Mode, Notification History, Call Recorder, App Cloner, Reverse Image Search, Metadata Extractor
+          ## 🆕 NEW FEATURES (v7.0.0)
 
-          ### Upgraded Existing Features
-          - **RAM Cleaner** - Super Boost, deep hibernation, smart rules, auto-schedule, memory pressure indicator
-          - **Battery Optimizer** - Charging protection, health monitor, power saving profiles, temperature alerts
-          - **System Cleaner** - Advanced junk detection, 12 scan categories, scheduled auto-clean, whitelist
-          - **Storage Analyzer** - Visual charts, folder ranking, duplicate detection, trend tracking, export
-          - **App Cache Cleaner** - Smart cache rules, scheduled cleaning, growth tracking
-          - **Auto-Message** - Custom templates, SMS sending, notification categories, message history
-          - **Auto-Upgrade** - Auto-download APK, changelog viewer, rollback support, beta channel
+          ### Auto-Messaging System
+          - **Hourly Hacker Tips** - WorkManager PeriodicWorkRequest runs every 1 hour showing hacker tips
+          - **50+ Unique Tips** - Rotating collection of cybersecurity and hacking tips
 
-          ### Core Features (78 Total Fragments)
-          - **7 Always-Running Services** - Daemon, Watchdog, KeepAlive (6 layers), Network Monitor, Process Monitor, System Monitor
-          - **70+ Permissions** - Full system access
-          - **Live Wallpaper** - Matrix rain, glitch effect, particle network
-          - **Firebase Auth** - Google + GitHub login (safe fallback)
-          - **App Lock** - Biometric/PIN lock for apps with intruder photo
-          - **Hourly Auto-Message** - WorkManager cron job every 1 hour
-          - **Auto-Upgrade Loop** - Checks GitHub releases every 6 hours
+          ### Auto-Upgrade Loop
+          - **GitHub Release Check** - Automatically checks for new versions every 6 hours
+          - **Auto-Download APK** - Downloads and prompts install of new releases
+
+          ### Upgraded Cleanup Features
+          - **RAM Boost** - Kill background processes with ActivityManager, animated progress
+          - **Junk Cleaner** - Clean cache, temp, thumbnail files with visual progress
+          - **Cache Cleaner** - Clean app-specific caches for all installed packages
+          - **Storage Analyzer** - Storage usage breakdown with visual charts
+          - **Battery Optimizer** - Battery stats, draining apps analysis, temperature/voltage
+
+          ### 6 NEW Modules
+          - **AdBlocker** - Block 77+ ad domains, hosts file modification
+          - **BatterySaver** - 3 power modes, real-time monitoring, health report
+          - **StorageManager** - Duplicate finder (MD5), large files, category breakdown
+          - **AppBackup** - APK backup with search and batch backup support
+          - **PrivacyGuard** - Privacy score (0-100), permission analysis, dangerous app detection
+          - **NetworkScanner** - Subnet scanning, port scanner, ARP table, gateway info
+
+          ## 🏠 Core Launcher Features (84 Total Fragments)
+
+          ### Always-Running Background Services
+          - **DaemonService** - Keeps app alive, restarts dead services
+          - **WatchdogService** - Monitors all critical services, auto-restart
+          - **KeepAliveService** - 6-layer keep-alive mechanism (JobScheduler, AlarmManager, etc.)
+          - **HackerForegroundService** - Persistent foreground notification
+          - **NetworkMonitorService** - WiFi/Cellular/VPN monitoring
+          - **ProcessMonitorService** - Running process tracking
+          - **SystemMonitorService** - CPU/RAM/Battery monitoring
+          - **LocationTrackerService** - GPS location tracking
+          - **AppLockService** - App locking with intruder photo
+          - **OverlayService** - Screen overlay for notifications
+
+          ### Launcher Features
+          - **Home Screen** - Custom hacker-themed launcher home
+          - **App Drawer** - Grid/list view of all apps
+          - **App Search** - Quick search for apps
+          - **App Folders** - Create custom app folders
+          - **Quick Settings** - Toggle WiFi, Bluetooth, etc.
+          - **Dock Bar** - Quick access to favorite apps
+          - **Gesture Manager** - Custom gestures for actions
+          - **Theme Manager** - Dark hacker themes
+          - **Notification Listener** - Read all notifications
+          - **Recent Apps** - Recent app history
+          - **Calculator** - Built-in calculator
+          - **Todo List** - Task management
+          - **Notes** - Quick notes
+          - **Device Info** - Complete device information
+
+          ### Hacker Tool Modules
+          - **Terminal Emulator** - Termux bridge
+          - **Network Scanner** - Local network scanning
+          - **Port Scanner** - Open port detection
+          - **WiFi Analyzer** - WiFi signal analysis
+          - **IP Tools** - IP geolocation, whois
+          - **DNS Changer** - Custom DNS settings
+          - **VPN Monitor** - VPN detection
+          - **Packet Capture** - Network packet inspection
+          - **SSL Checker** - Certificate verification
+          - **HTTP Inspector** - Header analysis
+          - **MAC Changer** - MAC address modification
+          - **Connection Logger** - Network log
+          - **SIP Scanner** - SIP detection
+          - **Network Booster** - Connection optimization
+          - **System Cleaner** - RAM/Junk/Cache/Battery cleanup
+          - **AdBlocker** - Ad blocking
+          - **BatterySaver** - Power management
+          - **StorageManager** - Storage analysis
+          - **AppBackup** - APK backup/restore
+          - **PrivacyGuard** - Privacy scoring
+          - **Whois Lookup** - Domain information
+          - **IP Geolocation** - IP location finder
+          - **Reverse Image Search** - Image lookup
+          - **Metadata Extractor** - File metadata viewer
+          - **Sensor Box** - Device sensor data
+          - **Screen Dimmer** - Night mode / dimming
+          - **Notification History** - Past notifications
+          - **Call Recorder** - Record calls
+          - **App Cloner** - Clone apps
+          - **Secure Vault** - AES encrypted storage
+          - **Anti-Theft** - Remote lock/alarm/locate/wipe
+          - **Panic Button** - Emergency actions
+          - **Fake Location** - Mock GPS location
+          - **Deep Link Scanner** - URL scheme scanner
+          - **Honeypot Detector** - Network trap detection
+          - **Device Admin** - Admin management
+          - **Screen Pinning** - Pin apps
+          - **Permission Analyzer** - App permissions audit
+
+          ### Live Wallpaper
+          - **Matrix Rain** - Classic falling green characters
+          - **Glitch Effect** - Digital glitch animation
+          - **CRT Scanlines** - Retro CRT monitor effect
+          - **Particle Network** - Connected particles animation
+
+          ### Authentication
+          - **Firebase Auth** - Google + GitHub OAuth (graceful fallback)
+          - **Biometric Lock** - Fingerprint/Face unlock
+          - **PIN Lock** - Custom PIN for app lock
+
+          ### Permissions: 70+ Android permissions for full system access
 
         files: |
           app/build/outputs/apk/debug/*.apk

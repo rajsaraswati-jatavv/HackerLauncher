@@ -13,8 +13,8 @@ android {
         applicationId "com.hackerlauncher"
         minSdk 26
         targetSdk 34
-        versionCode 6
-        versionName "6.0.0"
+        versionCode 7
+        versionName "7.0.0-CRASHFIX"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
