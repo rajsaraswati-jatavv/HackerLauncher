@@ -308,7 +308,7 @@ class PrivacyGuardFragment : Fragment() {
                 }
 
                 val dangerPerms = perms.filter { dangerousPermissions.containsKey(it) }
-                if (dangerPerPerms.size >= 3) {
+                if (dangerPerms.size >= 3) {
                     val appName = try { pm.getApplicationLabel(appInfo).toString() } catch (_: Exception) { appInfo.packageName }
                     val score = dangerPerms.sumOf { dangerousPermissions[it] ?: 0 }
                     appendOutput("🔴 [$score] $appName\n")

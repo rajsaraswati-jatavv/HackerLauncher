@@ -4,10 +4,12 @@ import com.hackerlauncher.R
 
 import android.Manifest
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -365,7 +367,7 @@ class SystemCleanerFragment : Fragment() {
 
             // Kill background processes
             var killedCount = 0
-            val processes = am.runningAppProcesses ?: emptyList()
+            val processes = am.runningAppProcesses ?: emptyList<ActivityManager.RunningAppProcessInfo>()
             for (proc in processes) {
                 if (proc.importance > ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
                     try {
@@ -581,7 +583,7 @@ class SystemCleanerFragment : Fragment() {
                     appendLine("───────────────────────")
 
                     for ((name, size) in sorted.take(15)) {
-                        val percent = if (totalUsed > 0) (size * 100 / totalUsed) else 0
+                        val percent = if (totalUsed > 0) ((size * 100 / totalUsed).toInt()) else 0
                         val bar = "█".repeat((percent / 5).coerceAtMost(20))
                         appendLine("$name: ${formatFileSize(size)} $bar ${percent}%")
                     }
@@ -617,7 +619,7 @@ class SystemCleanerFragment : Fragment() {
             val batteryTech = batteryIntent?.getStringExtra(android.os.BatteryManager.EXTRA_TECHNOLOGY) ?: "Unknown"
 
             // Get running processes and their memory usage (proxy for battery drain)
-            val processes = am.runningAppProcesses ?: emptyList()
+            val processes = am.runningAppProcesses ?: emptyList<ActivityManager.RunningAppProcessInfo>()
             val drainingApps = mutableListOf<Triple<String, Int, Long>>() // name, importance, mem
 
             withContext(Dispatchers.IO) {

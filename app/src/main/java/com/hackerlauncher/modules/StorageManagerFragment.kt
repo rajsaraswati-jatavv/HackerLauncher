@@ -173,7 +173,7 @@ class StorageManagerFragment : Fragment() {
 
             appendOutput("═══ FULL STORAGE ANALYSIS ═══\n\n")
             for ((name, size) in sorted) {
-                val pct = if (total > 0) (size * 100 / total) else 0
+                val pct = if (total > 0) ((size * 100 / total).toInt()) else 0
                 val bar = "█".repeat((pct / 3).coerceAtMost(25))
                 appendOutput("${name.take(15).padEnd(15)} ${formatSize(size).padEnd(10)} $bar $pct%\n")
             }
