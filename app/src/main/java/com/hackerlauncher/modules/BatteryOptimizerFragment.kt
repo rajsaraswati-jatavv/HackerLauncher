@@ -420,7 +420,12 @@ class BatteryOptimizerFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-        requireContext().registerReceiver(batteryReceiver, filter)
+        // ACTION_BATTERY_CHANGED is a system broadcast, needs RECEIVER_EXPORTED on Android 14+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            requireContext().registerReceiver(batteryReceiver, filter, android.content.Context.RECEIVER_EXPORTED)
+        } else {
+            requireContext().registerReceiver(batteryReceiver, filter)
+        }
     }
 
     override fun onPause() {

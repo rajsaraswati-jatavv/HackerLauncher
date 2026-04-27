@@ -60,7 +60,7 @@ import java.util.concurrent.Executors
 
 private const val TAG = "AppLockService"
 private const val CHANNEL_ID = "app_lock_channel"
-private const val NOTIFICATION_ID = 1001
+private const val NOTIFICATION_ID = 1009
 private const val POLL_INTERVAL = 500L
 private const val PREFS_NAME = "app_lock_prefs"
 private const val KEY_LOCKED_APPS = "locked_apps"

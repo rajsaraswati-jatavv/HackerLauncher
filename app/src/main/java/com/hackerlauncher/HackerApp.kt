@@ -29,9 +29,17 @@ class HackerApp : Application(), Configuration.Provider {
         }
 
         try {
-            WorkManager.initialize(this, workManagerConfiguration)
+            // WorkManager is now initialized via Configuration.Provider interface
+            // The default initializer is disabled in AndroidManifest
+            WorkManager.getInstance(this)
+            Logger.info("WorkManager initialized successfully")
         } catch (e: Exception) {
-            Logger.error("WorkManager already initialized: ${e.message}")
+            Logger.error("WorkManager initialization failed: ${e.message}")
+            try {
+                WorkManager.initialize(this, workManagerConfiguration)
+            } catch (e2: Exception) {
+                Logger.error("WorkManager fallback init failed: ${e2.message}")
+            }
         }
 
         // Stagger service starts - DO NOT start all at once (causes crash)

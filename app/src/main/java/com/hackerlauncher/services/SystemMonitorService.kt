@@ -596,7 +596,12 @@ class SystemMonitorService : Service() {
                 addAction(Intent.ACTION_SCREEN_ON)
                 addAction(Intent.ACTION_SCREEN_OFF)
             }
-            registerReceiver(screenReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            // ACTION_SCREEN_ON/OFF are system broadcasts - need RECEIVER_EXPORTED on Android 14+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(screenReceiver, filter, Context.RECEIVER_EXPORTED)
+            } else {
+                registerReceiver(screenReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            }
             Logger.d(TAG, "Screen receiver registered")
         } catch (e: Exception) {
             Logger.e(TAG, "Failed to register screen receiver", e)

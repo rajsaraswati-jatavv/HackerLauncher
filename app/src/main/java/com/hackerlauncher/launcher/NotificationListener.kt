@@ -104,7 +104,12 @@ class NotificationListener : NotificationListenerService() {
         super.onCreate()
         Log.d(TAG, "> notification_listener_created")
         val filter = IntentFilter(ACTION_NOTIFICATION_UPDATE)
-        registerReceiver(receiver, filter)
+        // Android 14+ requires RECEIVER_EXPORTED or RECEIVER_NOT_EXPORTED flag
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(receiver, filter, android.content.Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(receiver, filter)
+        }
     }
 
     override fun onDestroy() {

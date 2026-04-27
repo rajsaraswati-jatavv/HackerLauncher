@@ -184,6 +184,18 @@
         android:requestLegacyExternalStorage="true"
         tools:targetApi="34">
 
+        <!-- Disable default WorkManager initializer (we initialize manually in HackerApp) -->
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
         <!-- ============================================ -->
         <!-- MAIN ACTIVITIES                               -->
         <!-- ============================================ -->
@@ -328,7 +340,11 @@
         </service>
 
         <!-- Overlay Service -->
-        <service android:name=".services.OverlayService" android:exported="false" />
+        <service android:name=".services.OverlayService" android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="overlay_display_service" />
+        </service>
 
         <!-- Accessibility Service -->
         <service
@@ -428,7 +444,7 @@
         <service android:name=".services.KeepAliveService$KeepAliveJobService" android:exported="false" android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <!-- Location Geofence Receiver -->
-        <receiver android:name=".services.LocationTrackerService$GeofenceBroadcastReceiver"
+        <receiver android:name=".services.GeofenceBroadcastReceiver"
             android:exported="false" />
 
     </application>

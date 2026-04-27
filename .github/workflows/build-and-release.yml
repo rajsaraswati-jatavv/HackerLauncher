@@ -81,30 +81,38 @@ jobs:
         tag_name: v${{ steps.version.outputs.version_name }}
         name: HackerLauncher v${{ steps.version.outputs.version_name }}
         body: |
-          # HackerLauncher v${{ steps.version.outputs.version_name }} - CRASH FIX
+          # HackerLauncher v${{ steps.version.outputs.version_name }} - ULTRA EDITION
 
-          ## Critical Fixes
-          - **Firebase Crash Fix** - All Firebase calls wrapped in try-catch, safe with placeholder config
-          - **Service Start Crash Fix** - Staggered service starts (2s delay between each) prevents `ForegroundServiceDidNotStartInTimeException`
-          - **BootReceiver Fix** - Safe staggered service start on device boot
-          - **AppLock Activity Fix** - Correct class references in AndroidManifest
-          - **ProGuard Disabled** - Prevents missing class/resource crashes in release builds
+          ## Critical Crash Fixes (v11.0.0)
+          - **GeofenceBroadcastReceiver** - Fixed ClassNotFoundException (wrong class name format in manifest)
+          - **NotificationListener registerReceiver** - Added RECEIVER_NOT_EXPORTED flag for Android 14+ (was causing SecurityException crash)
+          - **OverlayService foregroundServiceType** - Added required foregroundServiceType for Android 14+ (was causing ForegroundServiceTypeMissingException)
+          - **WorkManager Double-Init** - Disabled default initializer in manifest, proper manual initialization (was causing IllegalStateException)
+          - **Duplicate Notification ID** - Changed AppLockService NOTIFICATION_ID from 1001 to 1009 (was conflicting with DaemonService)
+          - **KeepAliveService System Broadcasts** - Fixed RECEIVER_EXPORTED for system broadcasts (ACTION_SCREEN_ON etc.)
+          - **BatteryOptimizerFragment** - Fixed registerReceiver for system broadcasts on Android 14+
+          - **SystemMonitorService** - Fixed screen receiver registration on Android 14+
+          - **NetworkMonitorService** - Fixed connectivity receiver registration on Android 14+
 
           ## New Features
           - **Hourly Auto-Message Cron Job** - WorkManager PeriodicWorkRequest runs every 1 hour, sends system status notifications
-          - **Auto-Upgrade Loop** - Checks GitHub releases API every 6 hours, notifies when new version available
+          - **Auto-Upgrade Loop** - Checks GitHub releases API every 6 hours, notifies when new version available with download link
+          - **6-Layer Keep-Alive** - Foreground + AlarmManager + JobScheduler + WorkManager + BroadcastReceiver + ContentObserver
           - **WorkManager Custom Config** - Proper initialization via Configuration.Provider
 
-          ## All Features
-          - **47 Total Modules** - The most powerful Android launcher
+          ## All 47+ Features
           - **7 Always-Running Services** - Daemon, Watchdog, KeepAlive (6 layers), Network Monitor, Process Monitor, System Monitor
           - **60+ Permissions** - Full system access
           - **Live Wallpaper** - Matrix rain, glitch effect, particle network
           - **Firebase Auth** - Google + GitHub login (safe fallback)
-          - **App Lock** - Biometric/PIN lock for apps
-          - **RAM Cleaner** - Real-time graph, hibernation, smart clean
-          - **Storage Cleaner** - Duplicates, cache, big files, analyzer
+          - **App Lock** - Biometric/PIN lock for apps with intruder photo
+          - **RAM Cleaner** - Real-time graph, hibernation, smart clean, deep clean, kill all
+          - **Storage Cleaner** - Duplicates, cache, big files, analyzer, system cleaner
+          - **Battery Optimizer** - Charging alarm, health monitor, process killer
           - **System Monitor** - Battery, CPU, RAM, storage, network speed
+          - **Terminal** - Built-in terminal emulator
+          - **Network Tools** - WiFi arsenal, subnet scanner, speed test
+          - **Security Tools** - Password tools, crypto, OSINT, anonymity
 
         files: |
           app/build/outputs/apk/debug/*.apk

@@ -523,7 +523,12 @@ class NetworkMonitorService : Service() {
                 addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
                 addAction(ConnectivityManager.CONNECTIVITY_ACTION)
             }
-            registerReceiver(connectivityReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            // WiFi/Connectivity broadcasts are system broadcasts - need RECEIVER_EXPORTED on Android 14+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(connectivityReceiver, filter, Context.RECEIVER_EXPORTED)
+            } else {
+                registerReceiver(connectivityReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            }
             Logger.d(TAG, "Connectivity receiver registered")
         } catch (e: Exception) {
             Logger.e(TAG, "Failed to register connectivity receiver", e)

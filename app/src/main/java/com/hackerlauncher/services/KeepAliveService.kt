@@ -373,7 +373,12 @@ class KeepAliveService : Service() {
                 addAction(ACTION_ALARM_CHECK)
                 addAction(ACTION_RESTART_SERVICES)
             }
-            registerReceiver(systemEventsReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            // System broadcasts need RECEIVER_EXPORTED since they come from other apps (the system)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(systemEventsReceiver, filter, Context.RECEIVER_EXPORTED)
+            } else {
+                registerReceiver(systemEventsReceiver, filter)
+            }
             Logger.i(TAG, "Layer 5 (System Events): ACTIVE - ${filter.countActions()} events")
         } catch (e: Exception) {
             Logger.e(TAG, "Failed to register system event receivers", e)
