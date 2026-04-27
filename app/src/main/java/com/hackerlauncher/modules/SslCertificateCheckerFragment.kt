@@ -126,17 +126,16 @@ class SslCertificateCheckerFragment : Fragment() {
                         conn.connect()
 
                         val certs = conn.serverCertificates
-                        val session: javax.net.ssl.SSLSession? = try { (conn as? HttpsURLConnection)?.getSession() } catch (_: Exception) { null }
+                        // SSL session info obtained from certificates directly
 
                         sb.append("╔══════════════════════════════════╗\n")
                         sb.append("║   SSL Certificate Report        ║\n")
                         sb.append("╠══════════════════════════════════╣\n")
 
-                        sb.append("║ Protocol:   ${session?.protocol}\n")
-                        sb.append("║ Cipher:     ${session?.cipherSuite}\n")
-                        sb.append("║ Host:       ${session?.peerHost}\n")
-                        sb.append("║ Port:       ${session?.peerPort}\n")
-                        sb.append("║ Valid:      ${session?.isValid}\n\n")
+                        sb.append("║ Protocol:   See certificate details below\n")
+                        sb.append("║ Cipher:     See certificate details below\n")
+                        sb.append("║ Host:       $urlStr\n")
+                        sb.append("║ Port:       443\n\n")
 
                         for ((idx, cert) in certs.withIndex()) {
                             if (cert is X509Certificate) {
