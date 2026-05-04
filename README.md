@@ -8,7 +8,7 @@
 [![Language](https://img.shields.io/badge/Language-Kotlin-purple?logo=kotlin)](https://kotlinlang.org)
 [![Min SDK](https://img.shields.io/badge/Min%20SDK-26%20(Android%208.0)-orange)](https://developer.android.com)
 [![Target SDK](https://img.shields.io/badge/Target%20SDK-34%20(Android%2014)-blue)](https://developer.android.com)
-[![Version](https://img.shields.io/badge/Version-7.0.0-red)](https://github.com/rajsaraswati-jatavv/HackerLauncher/releases)
+[![Version](https://img.shields.io/badge/Version-7.0.0-red)](https://github.com/T3RMUXK1NG/HackerLauncher/releases)
 [![YouTube](https://img.shields.io/badge/YouTube-T3rmuxk1ng-red?logo=youtube)](https://youtube.com/@T3rmuxk1ng)
 [![License](https://img.shields.io/badge/License-Educational-yellow)](./LICENSE)
 
@@ -128,14 +128,14 @@ HackerLauncher/
 ## 🚀 Installation
 
 ### From Release APK
-1. Download the latest APK from [Releases](https://github.com/rajsaraswati-jatavv/HackerLauncher/releases)
+1. Download the latest APK from [Releases](https://github.com/T3RMUXK1NG/HackerLauncher/releases)
 2. Enable **Install from Unknown Sources** on your Android device
 3. Open the APK file and install
 4. Set HackerLauncher as your default home app
 
 ### Build from Source
 ```bash
-git clone https://github.com/rajsaraswati-jatavv/HackerLauncher.git
+git clone https://github.com/T3RMUXK1NG/HackerLauncher.git
 cd HackerLauncher
 ./gradlew assembleDebug
 ```

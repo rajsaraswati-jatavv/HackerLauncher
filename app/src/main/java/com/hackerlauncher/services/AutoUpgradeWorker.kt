@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit
  * - Compares version with current version
  * - If new version available, downloads APK and prompts install
  * - Scheduled as PeriodicWorkRequest every 6 hours
- * - GitHub repo: https://github.com/rajsaraswati-jatavv/HackerLauncher
+ * - GitHub repo: https://github.com/T3RMUXK1NG/HackerLauncher
  * - Scheduled in HackerApp.kt using WorkManager.getInstance(context).enqueueUniquePeriodicWork()
  * - Uses ExistingPeriodicWorkPolicy.KEEP so it doesn't reschedule if already scheduled
  *
@@ -49,7 +49,7 @@ class AutoUpgradeWorker(
         const val KEY_AVAILABLE_VERSION = "available_version"
         const val KEY_UPGRADE_AVAILABLE = "upgrade_available"
         const val KEY_CHECK_COUNT = "check_count"
-        const val GITHUB_REPO = "rajsaraswati-jatavv/HackerLauncher"
+        const val GITHUB_REPO = "T3RMUXK1NG/HackerLauncher"
         const val KEY_AUTO_DOWNLOAD = "auto_download"
         const val KEY_CHANGELOG = "changelog"
         const val KEY_ROLLBACK_APK_PATH = "rollback_apk_path"
